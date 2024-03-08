@@ -21,7 +21,7 @@ from django.views.static import serve
 from apps.homepage.views import homepage
 from apps.learning_area.views import learning
 from apps.note_area.views import note
-from apps.exercise_area.views import exercise
+from apps.exercise_area.views import exercise, file
 from apps.stats_area.views import stats
 
 
@@ -37,6 +37,7 @@ urlpatterns = [
     path('note/', note.note),
     path('exercise/', exercise.exercise),
     path('stats/', stats.stats),
+    path('download_pdf/', file.download_pdf),
     
     
 ]

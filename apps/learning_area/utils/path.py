@@ -18,17 +18,17 @@ USER_NOTEBOOK_PATH = os.path.join(NOTEBOOK_LEARNING_PATH, USER_EMAIL)
 def create_folder(lecturer, course, video_id):
     '''在個別用戶的學習區, 創建放置其筆記的資料夾空間'''
     
-    exists_entry = os.listdir(USER_NOTEBOOK_PATH)
+    exists_entry = os.listdir(USER_COMPUTER_PATH)
     for name in exists_entry:
         # 檢查看看此影片是否已經被用戶看過, 若有則不做任何事
         if video_id in name:
             # print('該url已看過')
-            exists_folder = os.path.join(USER_NOTEBOOK_PATH, name)
+            exists_folder = os.path.join(USER_COMPUTER_PATH, name)
             return exists_folder # 要進入這個已經存在的資料夾, 所以要返回這個路徑
     
     # 如果此url影片沒有被用戶看過, 則創建一個資料夾
     folder_name = lecturer + course + video_id
-    new_folder = os.path.join(USER_NOTEBOOK_PATH, folder_name) # 此新創的資料夾的路徑
+    new_folder = os.path.join(USER_COMPUTER_PATH, folder_name) # 此新創的資料夾的路徑
     os.makedirs(new_folder)
     # print('創建成功')
     return new_folder # 創建成功以後就要進入這個資料夾, 所以要返回這個路徑
@@ -36,7 +36,7 @@ def create_folder(lecturer, course, video_id):
     # 用戶可能在試用時會丟一些網址試試, 之後再開發要淘汰掉那些的功能.
     # 可行的方法如下: 再接收到新一個url之後, 空的資料夾就刪除.
     
-def find_path(partial_name, start_path=USER_NOTEBOOK_PATH):
+def find_path(partial_name, start_path=USER_COMPUTER_PATH):
     ''' 有一部分的檔案/資料夾名, 就找出它的路徑 '''
     for root, dirs, files in os.walk(start_path):
         for dir_name in dirs:

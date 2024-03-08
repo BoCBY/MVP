@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<!-- <link rel="stylesheet" href="{% static 'css/style1.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% endblock css %}
 
@@ -24,9 +24,10 @@ active
   <!-- 熱門科目的按鈕區 -->
   <div style='margin-top:0.5rem;'>
     <div>
-        <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">微積分</a>
-        <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">線性代數</a>
-        <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">普通物理</a>
+      <!-- exercise各科目的資料夾名稱要與這邊subject屬性一樣 -->
+      <button id="calculusBtn" subject='calculus' type="button" class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>微積分</button>
+      <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+      <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>普通物理</button>    
     </div>
     {% comment %} <div>
         <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">微積分</a>
@@ -34,8 +35,92 @@ active
         <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">普通物理</a>
     </div> {% endcomment %}
   </div>
-  <!-- 微積分的展示區塊 -->
-
+  
+  <!-- 各科目的modal展示 -->
+  <div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="exerciseModalLabel"><strong id='exerciseModalTitle'></strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class='container-fluid'>
+            <div class='d-flex'>
+              <div class='ml-auto'>
+                <button id="oneBtn" type="button" class="btn btn-sm btn-warning">試題</button>
+              </div>
+            </div>
+            <div period='present'>
+              <h6>當期試題</h6>
+            </div>
+            <div period='past'>
+              <h6>歷期試題</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+
+<script>
+  var subject = undefined;
+
+  $(function(){
+    calculus();
+    linearAlgebra();
+    generalPhysics();
+    oneBtn();
+  })
+
+  function calculus(){ 
+    $('#calculusBtn').click(function(){
+      subject = $(this).attr('subject');
+      $('#exerciseModalTitle').text($('#calculusBtn').text());
+      $('#exerciseModal').modal('show');
+    });
+  }
+
+  function linearAlgebra(){ 
+    $('#linAlgeBtn').click(function(){
+      subject = $(this).attr('subject');
+      $('#exerciseModalTitle').text($('#linAlgeBtn').text());
+      $('#exerciseModal').modal('show');
+    });
+  }
+
+  function generalPhysics(){ 
+    $('#GenPhyBtn').click(function(){
+      subject = $(this).attr('subject');
+      $('#exerciseModalTitle').text($('#GenPhyBtn').text());
+      $('#exerciseModal').modal('show');
+    });
+  }
+
+  function oneBtn(){
+    $('#oneBtn').click(function(){
+      $.ajax({
+        url:'/exercise/',
+        type:'post',
+        data:{'subject': subject},
+        success: function(res){
+          if(res.status){
+            window.location.href = '/download_pdf/?path=' + encodeURIComponent(res.pdf_path);
+          }else {
+            console.log(res.error)
+          }
+        }
+      });
+    });
+  }
+</script>
+
+{% endblock js %}
