@@ -25,9 +25,9 @@ active
   <div style='margin-top:0.5rem;'>
     <div>
       <!-- exercise各科目的資料夾名稱要與這邊subject屬性一樣 -->
-      <button id="calculusBtn" subject='calculus' type="button" class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>微積分</button>
-      <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
-      <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>普通物理</button>    
+      <button id="calculusBtn" subject='calculus' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>微積分</button>
+      <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+      <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>普通物理</button>    
     </div>
     {% comment %} <div>
         <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">微積分</a>
@@ -36,7 +36,7 @@ active
     </div> {% endcomment %}
   </div>
   
-  <!-- 各科目的modal展示 -->
+  <!-- 各科目的modal -->
   <div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
@@ -53,14 +53,70 @@ active
                 <button id="oneBtn" type="button" class="btn btn-sm btn-warning">試題</button>
               </div>
             </div>
-            <div period='present'>
-              <h6>當期試題</h6>
-            </div>
-            <div period='past'>
-              <h6>歷期試題</h6>
+            <div id='questions-container'>
+              <div period='present'>
+                <h6><strong>當期試題</strong></h6>
+              </div>
+              <div period='past'>
+                <h6 style='margin-top:0.3rem;'><strong>歷期試題</strong></h6> 
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 答案區的modal -->
+<div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="answerModalLabel">Modal title</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6>題號</h6>
+        <table id='questionNumTable'>
+          <tr>
+              <td><a href='#' class='question-number'>1</a></td>
+              <td><a href='#' class='question-number'>2</a></td>
+              <td><a href='#' class='question-number'>3</a></td>
+              <td><a href='#' class='question-number'>4</a></td>
+          </tr>
+          <tr>
+              <td><a href='#' class='question-number'>5</a></td>
+              <td><a href='#' class='question-number'>6</a></td>
+              <td><a href='#' class='question-number'>7</a></td>
+              <td><a href='#' class='question-number'>8</a></td>
+          </tr>
+          <tr>
+              <td><a href='#' class='question-number'>9</a></td>
+              <td><a href='#' class='question-number'>10</a></td>
+              <td><a href='#' class='question-number'>11</a></td>
+              <td><a href='#' class='question-number'>12</a></td>
+          </tr>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 個別題號的modal -->
+<div class="modal fade" id="questionNumModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ansQuestionNumModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
       </div>
     </div>
   </div>
@@ -72,36 +128,75 @@ active
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
 
 <script>
-  var subject = undefined;
+  var SUBJECT = undefined;
 
   $(function(){
-    calculus();
-    linearAlgebra();
-    generalPhysics();
+    subjectBtn();
     oneBtn();
+    regularQuestion();
+    answerArea();
+    ansQuestionNum();
   })
 
-  function calculus(){ 
-    $('#calculusBtn').click(function(){
-      subject = $(this).attr('subject');
-      $('#exerciseModalTitle').text($('#calculusBtn').text());
-      $('#exerciseModal').modal('show');
-    });
-  }
+  function subjectBtn(){ 
+    $('.subjectBtn').click(function(){
+      SUBJECT = $(this).attr('subject');
+      let title = $(this).text();
+      $.ajax({
+        url: '/exercise/',
+        type: 'post',
+        data: {
+          'purpose': 'makeTags',
+          'SUBJECT': SUBJECT
+        },
+        dataType: 'JSON',
+        success : function(res){
+          if (res.status){
+            // 先刪除已存的, 不然重複開啟按鈕會不斷生成標籤
+            $('div[period="present"] .row').remove();
+            $('div[period="past"] .row').remove();
 
-  function linearAlgebra(){ 
-    $('#linAlgeBtn').click(function(){
-      subject = $(this).attr('subject');
-      $('#exerciseModalTitle').text($('#linAlgeBtn').text());
-      $('#exerciseModal').modal('show');
-    });
-  }
+            // 創建當期試題(present)的標籤
+            let divRow = $('<div>').attr('class', 'row');
+            let divQueCol = $('<div>').attr('class', 'col-sm-5');
+            let divAnsCol = $('<div>').attr('class', 'col-sm-5');
+            let pdfIcon = $('<i>').attr('class', 'fa-regular fa-file-pdf');
+            let folderIcon = $('<i>').attr('class', 'fa-regular fa-folder');
+            let aQuestion = $('<a>').attr({'href':'#', 'class':'regular-question', 'date': res.present}).text(res.present+'.pdf');
+            let aAnswer = $('<a>').attr({'href':'#', 'class':'regular-answer', 'date': res.present}).text('答案區');
+            divQueCol.append(pdfIcon);
+            divQueCol.append(aQuestion);
+            divAnsCol.append(folderIcon);
+            divAnsCol.append(aAnswer);
+            divRow.append(divQueCol);
+            divRow.append(divAnsCol);
+            $('div[period="present"] h6').after(divRow);
 
-  function generalPhysics(){ 
-    $('#GenPhyBtn').click(function(){
-      subject = $(this).attr('subject');
-      $('#exerciseModalTitle').text($('#GenPhyBtn').text());
-      $('#exerciseModal').modal('show');
+            // 創建歷期試題(past)的標籤
+            $.each(res.past, function(index, date){
+              let divRow = $('<div>').attr('class', 'row');
+                let divQueCol = $('<div>').attr('class', 'col-sm-5');
+                let divAnsCol = $('<div>').attr('class', 'col-sm-5');
+                let pdfIcon = $('<i>').attr('class', 'fa-regular fa-file-pdf');
+                let folderIcon = $('<i>').attr('class', 'fa-regular fa-folder');
+                let aQuestion = $('<a>').attr({'href':'#', 'class':'regular-question', 'date': date}).text(date+'.pdf');
+                let aAnswer = $('<a>').attr({'href':'#', 'class':'regular-answer', 'date': date}).text('答案區');
+                divQueCol.append(pdfIcon);
+                divQueCol.append(aQuestion);
+                divAnsCol.append(folderIcon);
+                divAnsCol.append(aAnswer);
+                divRow.append(divQueCol);
+                divRow.append(divAnsCol);
+                $('div[period="past"] h6').after(divRow);
+            });
+            
+            $('#exerciseModalTitle').text(title);
+            $('#exerciseModal').modal('show');
+          }else{
+            alert(res.error);
+          }
+        }
+      });
     });
   }
 
@@ -110,17 +205,64 @@ active
       $.ajax({
         url:'/exercise/',
         type:'post',
-        data:{'subject': subject},
+        data:{ 
+          'purpose': 'oneBtn',
+          'SUBJECT': SUBJECT,
+        },
         success: function(res){
           if(res.status){
             window.location.href = '/download_pdf/?path=' + encodeURIComponent(res.pdf_path);
           }else {
-            console.log(res.error)
+            alert(res.error)
           }
         }
       });
     });
   }
+
+  function regularQuestion(){
+    $('#questions-container').on('click', '.regular-question', function(){
+      let date = $(this).attr('date');
+      let fileName = $(this).text();
+      let period = $(this).closest('[period]').attr('period');
+      // console.log(period)
+
+    $.ajax({
+      url:'/exercise/',
+      type:'post',
+      data:{
+        'purpose': 'regular',
+        'SUBJECT': SUBJECT,
+        'date': date,
+        'fileName': fileName,
+        'period': period,
+      },
+      success: function(res){
+        if (res.status){
+          window.location.href = '/download_pdf/?path=' + encodeURIComponent(res.pdf_path);
+        }else{
+          alert(res.error)
+        }
+      }
+    });
+  });
+}
+        
+function answerArea(){
+  $('#questions-container').on('click', '.regular-answer', function(){
+    $('#answerModalLabel').text($(this).attr('date'));
+    $('#answerModal').modal('show');
+    $('#exerciseModal').modal('hide');
+  })
+}
+
+function ansQuestionNum(){
+  $('#questionNumTable').on('click', '.question-number', function(){
+    console.log('!')
+    $('#questionNumModal').modal('show');
+  })
+}
+
 </script>
 
 {% endblock js %}

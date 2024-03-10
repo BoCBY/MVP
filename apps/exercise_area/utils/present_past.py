@@ -1,4 +1,6 @@
 import os
+import time
+import schedule
 import shutil
 from datetime import datetime
 from pdf import create_questions_pdf
@@ -36,13 +38,18 @@ def periodically():
     present_to_past('calculus') # 期限到把present移植到past, 並重構present的結構
     create_questions_pdf('calculus', False) # 創建本期試題
     
-    ''' 有幾門科目就要執行幾組, 並且參數是科目的名稱
+    # 有幾門科目就要執行幾組, 並且參數是科目的名稱
     present_to_past('linear_algebra')
     create_questions_pdf('linear_algebra', False)
     
     present_to_past('general_physics')
     create_questions_pdf('general_physics', False)
-    '''
+    
     return None
 
-# periodically()
+schedule.every(2).hours.do(periodically) # 自動執行函數
+
+# 主迴圈，用來不斷檢查是否有定時任務需要執行
+while True:
+    schedule.run_pending()
+    time.sleep(60*30)  # 每隔30分鐘檢查一次
