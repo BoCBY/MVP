@@ -38,6 +38,8 @@ urlpatterns = [
     path('exercise/', exercise.exercise),
     path('stats/', stats.stats),
     path('download_pdf/', file.download_pdf),
+    path('upload_file/', file.upload_file),
+    path('download_answer_panel/', file.download_answer_panel),
     
     
 ]

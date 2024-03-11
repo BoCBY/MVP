@@ -1,6 +1,6 @@
 import os
 from django.shortcuts import render, redirect, HttpResponse
-from django.http import JsonResponse, FileResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from apps.exercise_area.utils import pdf
 
@@ -31,17 +31,37 @@ def exercise(request):
         }
         return JsonResponse(context)
         
-    if request.POST['purpose'] == 'regular':
-        subject = request.POST.get('SUBJECT', '')
+    if request.POST['purpose'] == 'regularQuestion':
+        subject = request.POST.get('subject', '')
         date = request.POST.get('date', '')
         file_name = request.POST.get('fileName', '')
         period = request.POST.get('period', '')
-        pdf_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, file_name)
+        file_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, file_name)
     
-        if os.path.exists(pdf_path):
+        if os.path.exists(file_path):
             context = {
                 'status': True,
-                'pdf_path': pdf_path,
+                'file_path': file_path,
+            }
+            return JsonResponse(context)
+        context = {
+            'status': False,
+            'error': 'PDF file not found'
+        }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'regularAnswer':
+        subject = request.POST.get('subject', '')
+        date = request.POST.get('date', '')
+        number = request.POST.get('number', '')
+        period = request.POST.get('period', '')
+        file_name = request.POST.get('fileName', '')
+        file_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number, file_name)
+    
+        if os.path.exists(file_path):
+            context = {
+                'status': True,
+                'file_path': file_path,
             }
             return JsonResponse(context)
         context = {
@@ -51,7 +71,7 @@ def exercise(request):
         return JsonResponse(context)
     
     if request.POST['purpose'] == 'makeTags':
-        subject = request.POST.get('SUBJECT', '')
+        subject = request.POST.get('subject', '')
         present_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'present')
         past_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'past')
         inside_present = os.listdir(present_path)
@@ -70,6 +90,26 @@ def exercise(request):
             }
         return JsonResponse(context)
     
+    if request.POST['purpose'] == 'openQuestionNumModal':
+        subject = request.POST.get('subject', '')
+        date = request.POST.get('date', '')
+        number = request.POST.get('number', '')
+        period = request.POST.get('period', '')
+        folder_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number)
+        if os.path.exists(folder_path):
+            file_list = os.listdir(folder_path)
+            context = {
+                'status': True,
+                'file_list': file_list,
+            }
+            return JsonResponse(context)
+        
+        context = {
+                'status': False,
+                'error': '該資料夾不存在',
+            }
+        return JsonResponse(context)
+        
 
     
     

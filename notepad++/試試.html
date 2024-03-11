@@ -1,52 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Stylish Table Example</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Like/Dislike Feature</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-<h2>題號</h2>
+<div id="displayFileContainer" class="container" style="margin-top:0.3rem;">
+    <div class="row">
+        <div class="col-sm-12">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <a href="#" class="answer-file" data-likes="0" data-dislikes="0">Curry-202403111320.txt</a>
+            <button class="like-btn">Like</button>
+            <span class="like-count">0</span>
+            <button class="dislike-btn">Dislike</button>
+            <span class="dislike-count">0</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <a href="#" class="answer-file" data-likes="0" data-dislikes="0">LBJ-202403111318.txt</a>
+            <button class="like-btn">Like</button>
+            <span class="like-count">0</span>
+            <button class="dislike-btn">Dislike</button>
+            <span class="dislike-count">0</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <a href="#" class="answer-file" data-likes="0" data-dislikes="0">Wemby-202403111318.txt</a>
+            <button class="like-btn">Like</button>
+            <span class="like-count">0</span>
+            <button class="dislike-btn">Dislike</button>
+            <span class="dislike-count">0</span>
+        </div>
+    </div>
+</div>
 
-<table>
-    <tr>
-        <th>1</th>
-        <th>2</th>
-        <th>3</th>
-        <th>4</th>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>6</td>
-        <td>7</td>
-        <td>8</td>
-    </tr>
-    <tr>
-        <td>9</td>
-        <td>10</td>
-        <td>11</td>
-        <td>12</td>
-    </tr>
-</table>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $(".like-btn").click(function() {
+        var $file = $(this).siblings(".answer-file");
+        var currentLikes = parseInt($file.data("likes"));
+        var clickCount = parseInt($file.attr("data-click-count")) || 0;
+        if (clickCount % 2 === 0) {
+            $file.data("likes", currentLikes + 1);
+        } else {
+            $file.data("likes", currentLikes - 1);
+        }
+        $(this).next(".like-count").text(currentLikes);
+        $file.attr("data-click-count", clickCount + 1);
+    });
+
+    $(".dislike-btn").click(function() {
+        var $file = $(this).siblings(".answer-file");
+        var currentDislikes = parseInt($file.data("dislikes"));
+        var clickCount = parseInt($file.attr("data-click-count")) || 0;
+        if (clickCount % 2 === 0) {
+            $file.data("dislikes", currentDislikes + 1);
+        } else {
+            $file.data("dislikes", currentDislikes - 1);
+        }
+        $(this).next(".dislike-count").text(currentDislikes);
+        $file.attr("data-click-count", clickCount + 1);
+    });
+});
+</script>
 
 </body>
 </html>

@@ -1,0 +1,106 @@
+.regular-question {
+    margin-left: 0.3rem;
+}
+
+.regular-answer {
+    margin-left: 0.3rem;
+}
+
+.answer-file {
+    margin-left: 0.3rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+/* 一鍵生成試題按鈕的hover效果 */
+#oneBtn {
+    position: relative;
+    cursor: pointer;
+}
+
+#oneBtn:hover::after {
+    content: "下載隨機生成的試題";
+    position: absolute;
+    top: 0px; /* Adjust this value to position the text */
+    right: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+/* 上一頁的hover效果 */
+.previous {
+    position: relative;
+    cursor: pointer;
+}
+
+.previous:hover::after {
+    content: "上一頁";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    left: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+/* 上傳的hover效果 */
+.upload {
+    position: relative;
+    cursor: pointer;
+}
+
+.upload:hover::after {
+    content: "上傳本題詳解筆記板";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    right: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+/* 不讓上傳檔案的輸入框出現 */
+.hidden {
+    display: none;
+}
+
+/* 搜尋框的樣式 */
+.search-container {
+    position: relative;
+    display: inline-block;
+}
+
+.fa-solid.fa-magnifying-glass {
+    position: absolute;
+    left: 3px;
+    top: 57%;
+    font-size: 20px; /* Adjusted size */
+    transform: translateY(-50%);
+    color: #888;
+}
+
+#searchInput {
+    padding-left: 25px; /* Adjust as needed */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    height: 30px; /* Adjust as needed */
+    width: 180px;
+    font-size: 18px;
+    outline: none;
+}

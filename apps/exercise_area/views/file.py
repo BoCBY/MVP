@@ -1,6 +1,9 @@
 import os
-from django.http import FileResponse
+import random
+from datetime import datetime
+from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, HttpResponse
 
 EXERCISE = os.path.join('structure', 'Server', 'non_cust', 'exercise')
@@ -9,11 +12,13 @@ COMPUTER_EXERCISE_PATH = os.path.join(COMPUTER_DESK, EXERCISE)
 NOTEBOOK_DESK = os.path.join('C:\\', 'Users', 'jerry', 'OneDrive', '桌面')
 NOTEBOOK_EXERCISE_PATH = os.path.join(NOTEBOOK_DESK, EXERCISE)
 
+'''在Django中
+   從線上下載不同類型的檔案的code只有在content_type那裏會不一樣而已, 根據檔案的類型輸入對應的值就可以了
+   至於在網路上呈現, 則是response['content-Disposition']的值不一樣而已, 'attachment'是下載; inline是線上看'''
+
 def download_pdf(request):
     '''給用戶下載試題檔案'''
     path = request.GET.get('path', '')
-    print(path)
-    print(type(path))
     if os.path.exists(path):
         with open(path, 'rb') as file:
             response = HttpResponse(file.read(), content_type='application/pdf')
@@ -23,20 +28,46 @@ def download_pdf(request):
             os.remove(path) # 把伺服器裡的一鍵生成檔案刪除, 定期的試題則保留
         return response
     return HttpResponse("PDF file not found", status=404)
-    
-def serve_pdf(request, subject, date, file_name):
-    file_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'present', date, file_name)
-    if os.path.exists(file_path):
-        with open(file_path, 'rb') as file:
-            response = FileResponse(file)
-            return response
-    return HttpResponse('The requested file was not found.')
 
+def download_answer_panel(request):
+    '''給用戶下載筆記板檔案(暫時先用.txt呈現)'''
+    path = request.GET.get('path', '')
+    if os.path.exists(path):
+        with open(path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(path)
+        
+        return response
+    return HttpResponse("file not found", status=404)
+
+@csrf_exempt
 def upload_file(request):
-    if request.method == 'POST' and request.FILES:
+    if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
-        folder_path = request.GET.get('path', '')
-        fs = FileSystemStorage(location=folder_path)
-        fs.save(file.name, file)
-        return HttpResponse('File uploaded successfully.')
-    return HttpResponse('File upload failed.')
+        subject = request.POST.get('subject', '')
+        date = request.POST.get('date', '')
+        number = request.POST.get('number', '')
+        period = request.POST.get('period', '')
+        
+        path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number)
+        name_list = ['Jerry', 'Cora', 'KG', 'LBJ', 'KD', 'Curry', 'Wemby']
+        id = random.sample(name_list, 1)[0]
+        upload_time = datetime.now().strftime('%Y%m%d%H%M')
+        file_name = id + '-' + upload_time + '.txt' # 未來正式上傳的檔名 id會是用戶ID, 副檔名是筆記板檔案的副檔名
+        file_path = os.path.join(path, file_name)
+        with open(file_path, 'wb') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+        
+        context = {
+            'status': True,
+            'message': '上傳成功!',
+            'file_name': file_name,
+        }
+        return JsonResponse(context)
+    
+    context = {
+            'status': False,
+            'error': '上傳過程中出現錯誤'
+        }
+    return JsonResponse(context)
