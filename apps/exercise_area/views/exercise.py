@@ -96,11 +96,21 @@ def exercise(request):
         number = request.POST.get('number', '')
         period = request.POST.get('period', '')
         folder_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number)
+        file_dict = {}
         if os.path.exists(folder_path):
             file_list = os.listdir(folder_path)
+            for file_name in file_list:
+                if file_name.endswith('.txt'): # 之後有筆記板就要改成筆記板檔案的副檔名
+                    file_path = os.path.join(folder_path, file_name)
+                    with open(file_path, 'r') as file:
+                        like_line = file.readline().strip()
+                        dislike_line = file.readline().strip()
+                        like = int(like_line.split(': ')[1])
+                        dislike = int(dislike_line.split(': ')[1])
+                        file_dict[file_name] = {'like': like, 'dislike': dislike}
             context = {
                 'status': True,
-                'file_list': file_list,
+                'file_dict': file_dict,
             }
             return JsonResponse(context)
         

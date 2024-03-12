@@ -165,6 +165,7 @@ active
     prevPage();
     upLoad();
     search();
+    likeDislike();
   })
 
   function subjectBtn(){ 
@@ -341,16 +342,26 @@ function ansQuestionNum(){
           $('#displayFileContainer').empty();
 
           // 開始建DOM標籤
-          $.each(res.file_list, function(index, fileName){
+          $.each(res.file_dict, function(fileName, likeDislikeData){
             let divRow = $('<div>').attr('class', 'row');
             let divGrid = $('<div>').attr('class', 'col-sm-12');
             let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
-            let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'like': '', 'dislike': '',}).text(fileName);
+            let likeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-up like-btn');
+            let dislikeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-down dislike-btn');
+            // a與span標籤中喜歡數與不喜歡數是儲存在資料本身的, 要到後台獲取然後填上去
+            let spanLike = $('<span>').attr('class', 'like-count').text(likeDislikeData.like); // 對應a的data-like
+            let spanDislike = $('<span>').attr('class', 'dislike-count').text(likeDislikeData.dislike); // 對應a的data-dislike
+            let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'data-like': likeDislikeData.like, 'data-dislike': likeDislikeData.dislike,}).text(fileName);
             divGrid.append(notePanelIcon);
             divGrid.append(a);
+            divGrid.append(likeIcon);
+            divGrid.append(spanLike);
+            divGrid.append(dislikeIcon);
+            divGrid.append(spanDislike);
             divRow.append(divGrid);
             $('#displayFileContainer').append(divRow);
           })
+          likeDislikeCount();
           $('#questionNumModal').modal('show');
         }else{
           alert(res.error)
@@ -404,15 +415,23 @@ function uploadFile(file) {
     contentType: false,
     success: function(res) {
       if(res.status){
-      alert(res.message);
-      let divRow = $('<div>').attr('class', 'row');
-      let divGrid = $('<div>').attr('class', 'col-sm-12');
-      let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
-      let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'like': '', 'dislike': '',}).text(res.file_name);
-      divGrid.append(notePanelIcon);
-      divGrid.append(a);
-      divRow.append(divGrid);
-      $('#displayFileContainer').append(divRow);
+        alert(res.message);
+        let divRow = $('<div>').attr('class', 'row');
+        let divGrid = $('<div>').attr('class', 'col-sm-12');
+        let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
+        let likeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-up like-btn');
+        let dislikeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-down dislike-btn');
+        let spanLike = $('<span>').attr('class', 'like-count').text(0);
+        let spanDislike = $('<span>').attr('class', 'dislike-count').text(0);
+        let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'data-like': '0', 'data-dislike': '0',}).text(res.file_name);
+        divGrid.append(notePanelIcon);
+        divGrid.append(a);
+        divGrid.append(likeIcon);
+        divGrid.append(spanLike);
+        divGrid.append(dislikeIcon);
+        divGrid.append(spanDislike);
+        divRow.append(divGrid);
+        $('#displayFileContainer').append(divRow);
     }else{
       alert(res.error);
     }
@@ -441,6 +460,200 @@ function filter() {
 function search(){
   $('#searchInput').on('input', filter);
 }
+
+function likeDislike(){
+  $('#displayFileContainer').on('click', '.like-btn', function() {
+    let $this = $(this);
+    const file = $this.parent().find('.answer-file');
+    let fileName = file.text();
+    let likeCount = parseInt(file.attr('data-like'));
+    let dislikeCount = parseInt(file.attr('data-dislike'));
+
+    if ($this.hasClass('fa-regular')) {
+        // Like the file
+        file.attr('data-like', ++likeCount);
+        $this.removeClass('fa-regular').addClass('fa-solid');
+        $this.next('.like-count').text(likeCount);
+        // 執行到這裡, 後台關於這份檔案的讚數要去+1
+        $.ajax({
+          url: '/like_dislike/',
+          type: 'post',
+          data: {
+            'action': 'like+1',
+            'subject': SUBJECT,
+            'date': DATE,
+            'period': PERIOD,
+            'number': NUMBER,
+            'fileName': fileName,
+          },
+          dataType: 'JSON',
+          success: function(res){
+            if(res.status){
+              // 接著判斷, 如果原本是按倒讚的情形
+              if ($this.siblings('.dislike-btn').hasClass('fa-solid')){
+                file.attr('data-dislike', --dislikeCount);
+                $this.siblings('.dislike-btn').removeClass('fa-solid').addClass('fa-regular');
+                $this.siblings('.dislike-btn').next('.dislike-count').text(dislikeCount);
+                // 執行到這裡, 後台關於這份檔案的倒讚數要-1
+                $.ajax({
+                  url: '/like_dislike/',
+                  type: 'post',
+                  data: {
+                    'action': 'dislike-1',
+                    'subject': SUBJECT,
+                    'date': DATE,
+                    'period': PERIOD,
+                    'number': NUMBER,
+                    'fileName': fileName,
+                  },
+                  dataType: 'JSON',
+                  success: function(res){
+                    if(res.status){
+                      console.log(res.message)
+                    }else{
+                      console.log(res.error)
+                    }
+              }
+            }); // inner ajax end
+            }
+          }else{
+              console.log(res.error) 
+            }
+          }
+        }); // outer ajax end
+        
+    } else {
+        // Cancel like
+        file.attr('data-like', --likeCount);
+        $this.removeClass('fa-solid').addClass('fa-regular');
+        $this.next('.like-count').text(likeCount);
+        // 執行到這裡, 後台關於這份檔案的讚數要去-1
+        $.ajax({
+          url: '/like_dislike/',
+          type: 'post',
+          data: {
+            'action': 'like-1',
+            'subject': SUBJECT,
+            'date': DATE,
+            'period': PERIOD,
+            'number': NUMBER,
+            'fileName': fileName,
+          },
+          dataType: 'JSON',
+          success: function(res){
+            if(res.status){
+              console.log(res.message)
+            }else{
+              console.log(res.error)
+            }
+      }
+    }); // ajax end
+    }
+    });
+
+  $('#displayFileContainer').on('click', '.dislike-btn', function() {
+    let $this = $(this);
+    const file = $this.parent().find('.answer-file');
+    let fileName = file.text();
+    let likeCount = parseInt(file.attr('data-like'));
+    let dislikeCount = parseInt(file.attr('data-dislike'));
+
+    if ($this.hasClass('fa-regular')) {
+        // Dislike the file
+        file.attr('data-dislike', ++dislikeCount);
+        $this.removeClass('fa-regular').addClass('fa-solid');
+        $this.next('.dislike-count').text(dislikeCount);
+        // 執行到這裡, 後台關於這份檔案的倒讚數要+1
+        $.ajax({
+          url: '/like_dislike/',
+          type: 'post',
+          data: {
+            'action': 'dislike+1',
+            'subject': SUBJECT,
+            'date': DATE,
+            'period': PERIOD,
+            'number': NUMBER,
+            'fileName': fileName,
+          },
+          dataType: 'JSON',
+          success: function(res){
+            if(res.status){
+              // 接著判斷, 如果原本是按讚的情形
+              if ($this.siblings('.like-btn').hasClass('fa-solid')){
+                file.attr('data-like', --likeCount);
+                $this.siblings('.like-btn').removeClass('fa-solid').addClass('fa-regular');
+                $this.siblings('.like-btn').next('.like-count').text(likeCount);
+                // 執行到這裡, 後台關於這份檔案的讚數要-1
+                $.ajax({
+                  url: '/like_dislike/',
+                  type: 'post',
+                  data: {
+                    'action': 'like-1',
+                    'subject': SUBJECT,
+                    'date': DATE,
+                    'period': PERIOD,
+                    'number': NUMBER,
+                    'fileName': fileName,
+                  },
+                  dataType: 'JSON',
+                  success: function(res){
+                    if(res.status){
+                      console.log(res.message)
+                    }else{
+                      console.log(res.error)
+                    }
+              }
+            }); // inner ajax end
+            }
+          }else{
+              console.log(res.error) 
+            }
+          }
+        }); // outer ajax end
+        
+    } else {
+        // Cancel dislike
+        file.attr('data-dislike', --dislikeCount);
+        $this.removeClass('fa-solid').addClass('fa-regular');
+        $this.next('.dislike-count').text(dislikeCount);
+        // 執行到這裡, 後台關於這份檔案的倒讚數要-1
+        $.ajax({
+          url: '/like_dislike/',
+          type: 'post',
+          data: {
+            'action': 'dislike-1',
+            'subject': SUBJECT,
+            'date': DATE,
+            'period': PERIOD,
+            'number': NUMBER,
+            'fileName': fileName,
+          },
+          dataType: 'JSON',
+          success: function(res){
+            if(res.status){
+              console.log(res.message)
+            }else{
+              console.log(res.error)
+            }
+      }
+    }); // ajax end
+    }
+  });
+}
+
+function likeDislikeCount(){
+  $('.row').each(function () {
+    var $row = $(this);
+    var $answerFile = $row.find('.answer-file');
+    var $likeCount = $row.find('.like-count');
+    var $dislikeCount = $row.find('.dislike-count');
+
+    $likeCount.text($answerFile.data('like'));
+    $dislikeCount.text($answerFile.data('dislike'));
+  });
+}
+
+
 </script>
 
 {% endblock js %}

@@ -1,17 +1,17 @@
 import os
 
+folder_path = r'C:\Users\admin\Desktop\structure\Server\non_cust\exercise\calculus\present\202403101348\answer\7'
 
-def list_files(startpath):
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, '').count(os.sep)
-        indent = ' ' * 4 * (level)
-        print(f'{indent}{os.path.basename(root)}/')
-        subindent = ' ' * 4 * (level + 1)
-        for file in files:
-            print(f'{subindent}{file}')
+data_dict = {}
 
-# Specify the path of the folder you want to display
-path = r'C:\Users\admin\Desktop\structure\Server\non_cust\exercise\calculus\past'
+for file_name in os.listdir(folder_path):
+    if file_name.endswith('.txt'):
+        file_path = os.path.join(folder_path, file_name)
+        with open(file_path, 'r') as file:
+            like_line = file.readline().strip()
+            dislike_line = file.readline().strip()
+            like = int(like_line.split(': ')[1])
+            dislike = int(dislike_line.split(': ')[1])
+            data_dict[file_name] = {'like': like, 'dislike': dislike}
 
-# Call the function to list the files and folders
-list_files(path)
+print(data_dict)
