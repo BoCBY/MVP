@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/exercise_style.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercise_style1.css' %}">
 
 {% endblock css %}
 
@@ -21,19 +21,19 @@ active
 {% block content %}
 
 <div class='container'>
-  <!-- 熱門科目的按鈕區 -->
   <div style='margin-top:0.5rem;'>
-    <div>
-      <!-- exercise各科目的資料夾名稱要與這邊subject屬性一樣 -->
-      <button id="calculusBtn" subject='calculus' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>微積分</button>
-      <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>線性代數</button>
-      <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>普通物理</button>    
+    <div id="allSubjectContainer"> 
+      <!-- exercise各科目的資料夾名稱要與這邊各button的subject屬性一樣 -->
+      <!-- 一個大主科就給他一個div去存放 -->
+      <!-- 大主科裡面的每一個科目就給他一顆button -->
+      <div id="mathContainer">
+        <button id="calculusBtn" subject='calculus' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>微積分</button>
+        <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>線性代數</button>    
+      </div>
+      <div id="physicsContainer">
+        <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>普通物理</button>
+      </div>
     </div>
-    {% comment %} <div>
-        <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">微積分</a>
-        <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">線性代數</a>
-        <a class="btn btn-sm btn-outline-secondary" style='padding: 0.1rem 0.2rem;' href="#">普通物理</a>
-    </div> {% endcomment %}
   </div>
   
   <!-- 各科目的modal -->
@@ -110,7 +110,7 @@ active
 
 <!-- 個別題號的modal -->
 <div class="modal fade" id="questionNumModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title" id="ansQuestionNumModalLabel">Modal title</h6>
@@ -120,20 +120,28 @@ active
       </div>
       <div class="modal-body">
         <div id= 'queNumTopContainer' class='container'>
-          <div class='d-flex'>
-            <div id='prevPageContainer'>
+          <div class='d-flex align-items-center'>
+            <div id='prevPageContainer' class='mr-auto'>
               <a href='#' id='question-number-previous' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
             </div>
-            <div id='uploadContainer' class='ml-auto'>
+            <div id='searchContainer' class='search-container'>
+              <a href='#'><i id='searchIcon' class="fa-solid fa-magnifying-glass"></i></a>
+              <input id='searchInput' type='text' placeholder='搜尋' style='display:none;'>
+            </div>
+            <div id='uploadContainer' style='margin-top:12px;'>
               <label for="fileInput" id="uploadIcon">
-                <a href='#'><i class="fa-solid fa-file-arrow-up upload"></i></a>
+                <a href='#'><i class="fa-solid fa-file-arrow-up upload" style="color:#888;"></i></a>
               </label>
               <input type="file" id="fileInput" accept=".txt" style="display: none"> <!-- 測試時只先接受.txt檔, 正式的話就只接受筆記板的那個檔 -->
             </div>
-          </div>
-          <div id='searchContainer' class='search-container'>
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id='searchInput' type='text' placeholder='搜尋'>
+            <div id='sortContainer'>
+              <a href='#'><i id='sortIcon' class="fa-solid fa-sort sort" style="color:#888;"></i></a>
+              <div id='sortDropdown' class='dropdown-content'>
+                  <a href='#' id='sortLike'>評  價</a>
+                  <a href='#' id='sortDate'>上傳時間</a>
+              </div>
+            </div>
+
           </div>
         </div>
         <div id='displayFileContainer' class='container' style='margin-top:0.3rem;'>
@@ -166,9 +174,10 @@ active
     upLoad();
     search();
     likeDislike();
+    sort();
   })
 
-  function subjectBtn(){ 
+function subjectBtn(){ 
     $('.subjectBtn').click(function(){
       SUBJECT = $(this).attr('subject');
       let title = $(this).text();
@@ -228,9 +237,9 @@ active
         }
       });
     });
-  }
+}
 
-  function oneBtn(){
+function oneBtn(){
     $('#oneBtn').click(function(){
       $.ajax({
         url:'/exercise/',
@@ -248,9 +257,9 @@ active
         }
       });
     });
-  }
+}
 
-  function regularQuestion(){
+function regularQuestion(){
     $('#questions-container').on('click', '.regular-question', function(){
       let date = $(this).attr('date');
       let fileName = $(this).text();
@@ -344,14 +353,14 @@ function ansQuestionNum(){
           // 開始建DOM標籤
           $.each(res.file_dict, function(fileName, likeDislikeData){
             let divRow = $('<div>').attr('class', 'row');
-            let divGrid = $('<div>').attr('class', 'col-sm-12');
+            let divGrid = $('<div>').attr('class', 'col-sm-12 d-flex align-items-center');
             let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
             let likeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-up like-btn');
             let dislikeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-down dislike-btn');
             // a與span標籤中喜歡數與不喜歡數是儲存在資料本身的, 要到後台獲取然後填上去
             let spanLike = $('<span>').attr('class', 'like-count').text(likeDislikeData.like); // 對應a的data-like
             let spanDislike = $('<span>').attr('class', 'dislike-count').text(likeDislikeData.dislike); // 對應a的data-dislike
-            let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'data-like': likeDislikeData.like, 'data-dislike': likeDislikeData.dislike,}).text(fileName);
+            let a = $('<a>').attr({'href': '#', 'class': 'answer-file mr-auto', 'data-like': likeDislikeData.like, 'data-dislike': likeDislikeData.dislike,}).text(fileName);
             divGrid.append(notePanelIcon);
             divGrid.append(a);
             divGrid.append(likeIcon);
@@ -417,13 +426,13 @@ function uploadFile(file) {
       if(res.status){
         alert(res.message);
         let divRow = $('<div>').attr('class', 'row');
-        let divGrid = $('<div>').attr('class', 'col-sm-12');
+        let divGrid = $('<div>').attr('class', 'col-sm-12 d-flex align-items-center');
         let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
         let likeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-up like-btn');
         let dislikeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-down dislike-btn');
         let spanLike = $('<span>').attr('class', 'like-count').text(0);
         let spanDislike = $('<span>').attr('class', 'dislike-count').text(0);
-        let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'data-like': '0', 'data-dislike': '0',}).text(res.file_name);
+        let a = $('<a>').attr({'href': '#', 'class': 'answer-file mr-auto', 'data-like': '0', 'data-dislike': '0',}).text(res.file_name);
         divGrid.append(notePanelIcon);
         divGrid.append(a);
         divGrid.append(likeIcon);
@@ -436,6 +445,19 @@ function uploadFile(file) {
       alert(res.error);
     }
   }
+  });
+}
+
+function toggleSearchInput() {
+  $('#searchInput').toggle();
+  if ($('#searchInput').is(":visible")) {
+      $('#searchInput').focus(); // Focus on the input field when it becomes visible
+  }
+
+  $(document).on('click', function(event) {
+    if (!$(event.target).closest('#searchContainer').length && !$(event.target).is('#searchContainer')) {
+        $('#searchInput').hide();
+    }
   });
 }
 
@@ -458,6 +480,7 @@ function filter() {
 }
 
 function search(){
+  $('#searchIcon').click(toggleSearchInput)
   $('#searchInput').on('input', filter);
 }
 
@@ -653,7 +676,81 @@ function likeDislikeCount(){
   });
 }
 
+function sortDate(){
+  const fileItems = $('.answer-file');
 
+  // Convert jQuery object to Array for easier sorting
+  const fileArray = $.makeArray(fileItems);
+
+  // Sort the array based on the number in the text of the <a> tag
+  fileArray.sort((a, b) => {
+    const numA = parseInt($(a).text().split('-')[1].replace('.txt', '')); // .txt要改成筆記檔的副檔名
+    const numB = parseInt($(b).text().split('-')[1].replace('.txt', '')); // .txt要改成筆記檔的副檔名
+    return numB - numA; // Descending order
+  });
+
+  // Remove existing items
+  $('#displayFileContainer').empty();
+
+  // Re-append sorted items
+  fileArray.forEach((file) => {
+    $('#displayFileContainer').append($(file).parent().parent());
+  });
+}
+
+function sortLike(){
+  const fileItems = $('.answer-file');
+
+  // Convert jQuery object to Array for easier sorting
+  const fileArray = $.makeArray(fileItems);
+
+  // Sort the array based on the number like-dislike
+  fileArray.sort(function(a, b) {
+    const aLike = parseInt($(a).data('like'));
+    const aDislike = parseInt($(a).data('dislike'));
+    const aValue = aLike - aDislike;
+
+    const bLike = parseInt($(b).data('like'));
+    const bDislike = parseInt($(b).data('dislike'));
+    const bValue = bLike - bDislike;
+
+    return bValue - aValue; // Sort in descending order
+  });
+
+  // Remove existing items
+  $('#displayFileContainer').empty();
+
+  // Re-append sorted items
+  fileArray.forEach((file) => {
+    $('#displayFileContainer').append($(file).parent().parent());
+  });
+}
+
+function sort(){
+  // Toggle dropdown menu when sort icon is clicked
+  $('#sortIcon').click(function() {
+    $('#sortDropdown').toggle();
+  });
+
+  // Close the dropdown menu if the user clicks outside of it
+  $(document).click(function(event) {
+    if (!$(event.target).closest('#sortContainer').length) {
+        $('#sortDropdown').hide();
+    }
+  });
+
+  // Handle sorting logic when the user selects an option
+  $('#sortDate').click(function() {
+    sortDate();
+    $('#sortDropdown').hide();
+  });
+
+  $('#sortLike').click(function() {
+    sortLike();
+    $('#sortDropdown').hide();
+  });
+
+}
 </script>
 
 {% endblock js %}

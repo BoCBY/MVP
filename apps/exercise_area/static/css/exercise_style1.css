@@ -10,6 +10,10 @@
     margin-left: 0.3rem;
 }
 
+.dislike-btn {
+    margin-left: 1rem;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
@@ -57,14 +61,55 @@ th, td {
     white-space: nowrap;
 }
 
+#iconContainer {
+    display: flex;
+    align-items: center;
+}
+
 /* 上傳的hover效果 */
 .upload {
     position: relative;
     cursor: pointer;
+    margin-right: 10px;
 }
 
 .upload:hover::after {
-    content: "上傳本題詳解筆記板";
+    content: "上傳本題詳解";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    right: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+#searchIcon {
+    position: relative;
+    cursor: pointer;
+}
+
+#searchIcon:hover::after {
+    content: "搜尋";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    right: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+#sortIcon {
+    position: relative;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#sortIcon:hover::after {
+    content: "排序";
     position: absolute;
     top: -20px; /* Adjust this value to position the text */
     right: calc(100% + 3px);
@@ -84,23 +129,46 @@ th, td {
 .search-container {
     position: relative;
     display: inline-block;
+    margin-right: 10px;
 }
 
 .fa-solid.fa-magnifying-glass {
-    position: absolute;
+    /*position: absolute;
     left: 3px;
-    top: 57%;
+    top: 57%;*/
     font-size: 20px; /* Adjusted size */
-    transform: translateY(-50%);
+    /*transform: translateY(-50%);*/
     color: #888;
 }
 
 #searchInput {
-    padding-left: 25px; /* Adjust as needed */
+    padding-left: 5px; /* Adjust as needed */
     border-radius: 5px;
     border: 1px solid #ccc;
     height: 30px; /* Adjust as needed */
-    width: 180px;
+    width: 150px;
     font-size: 18px;
     outline: none;
+}
+
+/* 排序下拉選單的樣式 */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 5px 7px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centered Scrollable Div</title>
+<style>
+    /* Center the div */
+    .centered {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid #ccc;
+        padding: 10px;
+        max-width: 80%; /* Set maximum width */
+        max-height: 80vh; /* Set maximum height */
+        overflow: auto; /* Enable scrollbars when content overflows */
+    }
+
+    /* Optional: Style the scrollbar */
+    .centered::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .centered::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .centered::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    .centered::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+</head>
+<body>
+<div class="centered">
+    <!-- Content here -->
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.asdasdsadsadasdasdsadasdasd</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+</div>
+</body>
+</html>

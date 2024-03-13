@@ -1,120 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Like/Dislike System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Add your custom styles here */
-    </style>
+  <title>Your Page Title</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div id="displayFileContainer" class="container" style="margin-top: 0.3rem;">
-        <div class="row">
-            <div class="col-sm-12">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <a href="#" class="answer-file" data-like="23" data-dislike="31">Curry-202403111320.txt</a>
-                <i class="fa-regular fa-thumbs-up like-btn"></i>
-                <span class="like-count">23</span>
-                <i class="fa-regular fa-thumbs-down dislike-btn"></i>
-                <span class="dislike-count">31</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <a href="#" class="answer-file" data-like="7" data-dislike="9">Curry-202403111320.txt</a>
-                <i class="fa-regular fa-thumbs-up like-btn"></i>
-                <span class="like-count">7</span>
-                <i class="fa-regular fa-thumbs-down dislike-btn"></i>
-                <span class="dislike-count">9</span>
-            </div>
-        </div>
-		<div class="row">
-            <div class="col-sm-12">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <a href="#" class="answer-file" data-like="100" data-dislike="10">Curry-202403111320.txt</a>
-                <i class="fa-regular fa-thumbs-up like-btn"></i>
-                <span class="like-count">100</span>
-                <i class="fa-regular fa-thumbs-down dislike-btn"></i>
-                <span class="dislike-count">10</span>
-            </div>
-        </div>
-		<div class="row">
-            <div class="col-sm-12">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <a href="#" class="answer-file" data-like="54" data-dislike="3">Curry-202403111320.txt</a>
-                <i class="fa-regular fa-thumbs-up like-btn"></i>
-                <span class="like-count">54</span>
-                <i class="fa-regular fa-thumbs-down dislike-btn"></i>
-                <span class="dislike-count">3</span>
-            </div>
-        </div>
-		<div class="row">
-            <div class="col-sm-12">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <a href="#" class="answer-file" data-like="20" data-dislike="15">Curry-202403111320.txt</a>
-                <i class="fa-regular fa-thumbs-up like-btn"></i>
-                <span class="like-count">20</span>
-                <i class="fa-regular fa-thumbs-down dislike-btn"></i>
-                <span class="dislike-count">15</span>
-            </div>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 d-flex">
+        <i class="fa-solid fa-pen-to-square"></i>
+        <a href="#" class="answer-file mr-auto" data-like="553" data-dislike="33">Jerry-20240115.txt</a>
+        <i class="fa-regular fa-thumbs-up like-btn"></i>
+        <span class="like-count">553</span>
+        <i class="fa-regular fa-thumbs-down dislike-btn"></i>
+        <span class="dislike-count">33</span>
+      </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.like-btn').on('click', function() {
-                const file = $(this).parent().find('.answer-file');
-                let likeCount = parseInt(file.attr('data-like'));
-                let dislikeCount = parseInt(file.attr('data-dislike'));
-
-                if ($(this).hasClass('fa-regular')) {
-                    // Like the file
-                    file.attr('data-like', ++likeCount);
-					$(this).removeClass('fa-regular').addClass('fa-solid');
-                    $(this).next('.like-count').text(likeCount);
-					if ($(this).siblings('.dislike-btn').hasClass('fa-solid')){
-						file.attr('data-dislike', --dislikeCount);
-						$(this).siblings('.dislike-btn').removeClass('fa-solid').addClass('fa-regular');
-						$(this).siblings('.dislike-btn').next('.dislike-count').text(dislikeCount);
-					}
-                    
-                } else {
-                    // Cancel like
-                    file.attr('data-like', --likeCount);
-                    $(this).removeClass('fa-solid').addClass('fa-regular');
-                    $(this).next('.like-count').text(likeCount);
-                }
-            });
-
-            $('.dislike-btn').on('click', function() {
-                const file = $(this).parent().find('.answer-file');
-                let likeCount = parseInt(file.attr('data-like'));
-                let dislikeCount = parseInt(file.attr('data-dislike'));
-
-                if ($(this).hasClass('fa-regular')) {
-                    // Dislike the file
-                    file.attr('data-dislike', ++dislikeCount);
-                    $(this).removeClass('fa-regular').addClass('fa-solid');
-                    $(this).next('.dislike-count').text(dislikeCount);
-					if ($(this).siblings('.like-btn').hasClass('fa-solid')){
-						file.attr('data-like', --likeCount);
-						$(this).siblings('.like-btn').removeClass('fa-solid').addClass('fa-regular');
-						$(this).siblings('.like-btn').next('.like-count').text(likeCount);
-					}
-                    
-                } else {
-                    // Cancel dislike
-                    file.attr('data-dislike', --dislikeCount);
-                    $(this).removeClass('fa-solid').addClass('fa-regular');
-                    $(this).next('.dislike-count').text(dislikeCount);
-                }
-            });
-        });
-    </script>
+  </div>
 </body>
 </html>

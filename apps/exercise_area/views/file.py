@@ -50,7 +50,7 @@ def upload_file(request):
         period = request.POST.get('period', '')
         
         path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number)
-        name_list = ['Jerry', 'Cora', 'KG', 'LBJ', 'KD', 'Curry', 'Wemby']
+        name_list = ['Jerry', 'Cora', 'KG', 'LBJ', 'KD', 'Curry', 'Wemby', 'Euler', 'Gauss', 'Newton', 'Einstein', 'Feymann', 'Dirac', 'Maxwell']
         id = random.sample(name_list, 1)[0]
         upload_time = datetime.now().strftime('%Y%m%d%H%M')
         file_name = id + '-' + upload_time + '.txt' # 未來正式上傳的檔名 id會是用戶ID, 副檔名是筆記板檔案的副檔名
