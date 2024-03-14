@@ -3,55 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Centered Scrollable Div</title>
+<title>Fixed Size Scrollable Div</title>
 <style>
-    /* Center the div */
-    .centered {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border: 1px solid #ccc;
-        padding: 10px;
-        max-width: 80%; /* Set maximum width */
-        max-height: 80vh; /* Set maximum height */
-        overflow: auto; /* Enable scrollbars when content overflows */
+    .container {
+        width: 300px; /* Fixed width */
+        height: 200px; /* Fixed height */
+        overflow: auto; /* Enable scrolling */
+        border: 1px solid #ccc; /* Add border for visibility */
+        margin: 0 auto; /* Center align horizontally */
     }
 
-    /* Optional: Style the scrollbar */
-    .centered::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .centered::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    .centered::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-
-    .centered::-webkit-scrollbar-thumb:hover {
-        background: #555;
+    .content {
+        width: 500px; /* Set a width larger than the container for demonstration */
+        height: 500px; /* Set a height larger than the container for demonstration */
     }
 </style>
 </head>
 <body>
-<div class="centered">
-    <!-- Content here -->
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.asdasdsadsadasdasdsadasdasd</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec quam a odio maximus aliquam.</p>
+<div class="container">
+    <div class="content">
+        <!-- Your content here -->
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+        Sed nisi. Nulla quis sem at nibh elementum imperdiet.
+    </div>
 </div>
 </body>
 </html>

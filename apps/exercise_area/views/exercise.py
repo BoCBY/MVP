@@ -36,7 +36,7 @@ def exercise(request):
         date = request.POST.get('date', '')
         file_name = request.POST.get('fileName', '')
         period = request.POST.get('period', '')
-        file_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, file_name)
+        file_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, period, date, file_name)
     
         if os.path.exists(file_path):
             context = {
@@ -56,7 +56,7 @@ def exercise(request):
         number = request.POST.get('number', '')
         period = request.POST.get('period', '')
         file_name = request.POST.get('fileName', '')
-        file_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number, file_name)
+        file_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, period, date, 'answer', number, file_name)
     
         if os.path.exists(file_path):
             context = {
@@ -72,8 +72,8 @@ def exercise(request):
     
     if request.POST['purpose'] == 'makeTags':
         subject = request.POST.get('subject', '')
-        present_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'present')
-        past_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'past')
+        present_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, 'present')
+        past_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, 'past')
         inside_present = os.listdir(present_path)
         inside_past = os.listdir(past_path)
         if os.path.exists(present_path) and os.path.exists(past_path):
@@ -95,7 +95,7 @@ def exercise(request):
         date = request.POST.get('date', '')
         number = request.POST.get('number', '')
         period = request.POST.get('period', '')
-        folder_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number)
+        folder_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, period, date, 'answer', number)
         file_dict = {}
         if os.path.exists(folder_path):
             file_list = os.listdir(folder_path)

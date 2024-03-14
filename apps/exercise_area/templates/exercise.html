@@ -22,16 +22,34 @@ active
 
 <div class='container'>
   <div style='margin-top:0.5rem;'>
+    <div class='search-container'>
+      <a href='#'><i id='subjectSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+      <input id='subjectSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+    </div>
     <div id="allSubjectContainer"> 
       <!-- exercise各科目的資料夾名稱要與這邊各button的subject屬性一樣 -->
       <!-- 一個大主科就給他一個div去存放 -->
       <!-- 大主科裡面的每一個科目就給他一顆button -->
-      <div id="mathContainer">
-        <button id="calculusBtn" subject='calculus' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>微積分</button>
-        <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>線性代數</button>    
+      <div id="math" class="subject-container">
+        <h5 class='header-style'>數學</h5>
+        <div class='container'>
+          <div class='search-container'>
+            <a href='#'><i id='mathSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+            <input id='mathSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+          </div>
+          <button id="calculusBtn" subject='calculus' type="button" class="btn btn-lg btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>微積分</button>
+          <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-lg btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>線性代數</button> 
+        </div>
       </div>
-      <div id="physicsContainer">
-        <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-sm btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>普通物理</button>
+      <div id="physics" class="subject-container">
+        <h5 class='header-style'>物理</h5>
+        <div class='container'>
+          <div class='search-container'>
+            <a href='#'><i id='physicsSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+            <input id='physicsSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+          </div>
+          <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-lg btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>普通物理</button>
+        </div>
       </div>
     </div>
   </div>
@@ -124,9 +142,9 @@ active
             <div id='prevPageContainer' class='mr-auto'>
               <a href='#' id='question-number-previous' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
             </div>
-            <div id='searchContainer' class='search-container'>
-              <a href='#'><i id='searchIcon' class="fa-solid fa-magnifying-glass"></i></a>
-              <input id='searchInput' type='text' placeholder='搜尋' style='display:none;'>
+            <div class='search-container'>
+              <a href='#'><i id='ansSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+              <input id='ansSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
             </div>
             <div id='uploadContainer' style='margin-top:12px;'>
               <label for="fileInput" id="uploadIcon">
@@ -172,7 +190,10 @@ active
     ansQuestionNum();
     prevPage();
     upLoad();
-    search();
+    searchModule.init('subjectSearchIcon', 'subjectSearchInput', '#allSubjectContainer h5'); // 整頁的大科目搜尋
+    searchModule.init('mathSearchIcon', 'mathSearchInput', '#math button'); // 數學裡的科目搜尋
+    searchModule.init('physicsSearchIcon', 'physicsSearchInput', '#physics button'); // 物理裡的科目搜尋
+    searchModule.init('ansSearchIcon', 'ansSearchInput', '#displayFileContainer a'); // 題號區的答案搜尋
     likeDislike();
     sort();
   })
@@ -448,41 +469,75 @@ function uploadFile(file) {
   });
 }
 
-function toggleSearchInput() {
-  $('#searchInput').toggle();
-  if ($('#searchInput').is(":visible")) {
-      $('#searchInput').focus(); // Focus on the input field when it becomes visible
+// Define a search module
+const searchModule = (function() {
+  // Private functions
+  function toggleSearchInput(searchInputId) {
+      $(`#${searchInputId}`).toggle();
+      if ($(`#${searchInputId}`).is(":visible")) {
+          $(`#${searchInputId}`).focus(); // Focus on the input field when it becomes visible
+      }
+  
+      $(document).on('click', function(event) {
+          if (!$(event.target).closest('.search-container').length && !$(event.target).is('.search-container')) {
+              $(`#${searchInputId}`).hide();
+          }
+      });
+  }
+  
+  function filter(searchInputId, searchArea) {
+      let searchText = $(`#${searchInputId}`).val().toLowerCase();
+  
+      if(searchArea === '#displayFileContainer a'){
+      // for ansSearchInput
+        $(searchArea).each(function() {
+            let text = $(this).text().toLowerCase();
+    
+            if (text.includes(searchText)) {
+                $(this).parent().parent().show();
+            } else {
+                $(this).parent().parent().hide();
+            }
+        });
+      }else if(searchArea === '#allSubjectContainer h5'){
+          // for subjectSearchInput
+          $(searchArea).each(function() {
+              let text = $(this).text();
+              if (text.includes(searchText)) {
+                  $(this).closest(".subject-container").show();
+              } else {
+                  $(this).closest(".subject-container").hide();
+              }
+          });
+      }else{
+          // for each subject searchInput ex: mathSearchInput, physicsSearchInput 
+          $(searchArea).each(function() {
+              let text = $(this).text();
+      
+              if (text.includes(searchText)) {
+                  $(this).show();
+              } else {
+                  $(this).hide();
+              }
+      });
+  }
   }
 
-  $(document).on('click', function(event) {
-    if (!$(event.target).closest('#searchContainer').length && !$(event.target).is('#searchContainer')) {
-        $('#searchInput').hide();
-    }
-  });
-}
+  // Public function
+  function init(searchIconId, searchInputId, searchArea) {
+      $(`#${searchIconId}`).click(function() {
+          toggleSearchInput(searchInputId);
+      });
+      $(`#${searchInputId}`).on('input', function() {
+          filter(searchInputId, searchArea);
+      });
+  }
 
-function filter() {
-  // Get the search input value
-  let searchText = $('#searchInput').val().toLowerCase();
-
-  // Loop through each file link
-  $('#displayFileContainer a').each(function() {
-      // Get the text content of the file link and convert it to lowercase
-      let text = $(this).text().toLowerCase();
-
-      // Show or hide the file link based on whether the search text is found in the link text
-      if (text.includes(searchText)) {
-          $(this).parent().parent().show();
-      } else {
-          $(this).parent().parent().hide();
-      }
-  });
-}
-
-function search(){
-  $('#searchIcon').click(toggleSearchInput)
-  $('#searchInput').on('input', filter);
-}
+  // Expose public functions
+  return {
+      init: init
+  };
+})();
 
 function likeDislike(){
   $('#displayFileContainer').on('click', '.like-btn', function() {

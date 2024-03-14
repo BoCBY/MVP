@@ -18,10 +18,10 @@ def create_questions_pdf(subject, one_button=False):
 
     # Define the file paths for the PDF files
     pdf_files = {
-        'easy': os.path.join(COMPUTER_EXERCISE_PATH, easy_path),
-        'medium': os.path.join(COMPUTER_EXERCISE_PATH, medium_path),
-        'med_up': os.path.join(COMPUTER_EXERCISE_PATH, med_up_path),
-        'hard': os.path.join(COMPUTER_EXERCISE_PATH, hard_path)
+        'easy': os.path.join(NOTEBOOK_EXERCISE_PATH, easy_path),
+        'medium': os.path.join(NOTEBOOK_EXERCISE_PATH, medium_path),
+        'med_up': os.path.join(NOTEBOOK_EXERCISE_PATH, med_up_path),
+        'hard': os.path.join(NOTEBOOK_EXERCISE_PATH, hard_path)
     }
 
     # Initialize a new PDF document for the exam
@@ -40,7 +40,7 @@ def create_questions_pdf(subject, one_button=False):
     # Save the exam document to a new PDF file
     if one_button:
         one_button_path = os.path.join(subject, 'one_button', 'random_questions.pdf')
-        question_doc_path = os.path.join(COMPUTER_EXERCISE_PATH, one_button_path)
+        question_doc_path = os.path.join(NOTEBOOK_EXERCISE_PATH, one_button_path)
         question_doc.save(question_doc_path)
         question_doc.close()
         print('one_button檔案創建成功')
@@ -48,7 +48,7 @@ def create_questions_pdf(subject, one_button=False):
 
     current_time = datetime.now().strftime('%Y%m%d%H%M')
     regular_path = os.path.join(subject, 'present', current_time, current_time + '.pdf')
-    question_doc_path = os.path.join(COMPUTER_EXERCISE_PATH, regular_path)
+    question_doc_path = os.path.join(NOTEBOOK_EXERCISE_PATH, regular_path)
     question_doc.save(question_doc_path)
     question_doc.close()
     print('regular檔案創建成功')

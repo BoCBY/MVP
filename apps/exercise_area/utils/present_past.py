@@ -16,9 +16,9 @@ def present_to_past(subject):
        並重建present的結構'''
        
     # 把present資料夾移到past
-    present_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'present')
+    present_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, 'present')
     in_present_folder_path = os.path.join(present_path, os.listdir(present_path)[0])
-    past_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'past')
+    past_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, 'past')
     shutil.move(in_present_folder_path, past_path)
     print('移植成功')
      

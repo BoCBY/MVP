@@ -49,7 +49,7 @@ def upload_file(request):
         number = request.POST.get('number', '')
         period = request.POST.get('period', '')
         
-        path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number)
+        path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, period, date, 'answer', number)
         name_list = ['Jerry', 'Cora', 'KG', 'LBJ', 'KD', 'Curry', 'Wemby', 'Euler', 'Gauss', 'Newton', 'Einstein', 'Feymann', 'Dirac', 'Maxwell']
         id = random.sample(name_list, 1)[0]
         upload_time = datetime.now().strftime('%Y%m%d%H%M')
