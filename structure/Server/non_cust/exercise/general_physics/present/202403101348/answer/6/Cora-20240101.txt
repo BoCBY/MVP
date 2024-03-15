@@ -1,2 +1,0 @@
-like: 1236
-dislike: 22

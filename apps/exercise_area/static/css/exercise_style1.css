@@ -1,7 +1,8 @@
 /* 每一門科目的區域 */
 .subject-container {
     width: 800px; /* Fixed width */
-    height: 92px; /* Fixed height */  /* 如果按鈕多到水平拉條跑出來的話, 就用108px */
+    height: 144px; /* Fixed height */  /* 筆電測試: 如果按鈕比較少, 沒有水平拉條出現就用92px. 如果按鈕多到水平拉條跑出來的話, 就用108px */
+                                       /* 桌機測試: 如果按鈕比較少, 沒有水平拉條出現就用144px. 如果按鈕多到水平拉條跑出來的話, 就用160px */
     overflow-x: auto; /* Enable scrolling in x direction */
     overflow-y: hidden; /* disable scrolling in y direction */
     white-space: nowrap; /* the buttons are displayed in a single line without wrapping */

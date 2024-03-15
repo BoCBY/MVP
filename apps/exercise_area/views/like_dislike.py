@@ -19,7 +19,7 @@ def like_dislike(request):
     period = request.POST.get('period', '')
     number = request.POST.get('number', '')
     file_name = request.POST.get('fileName', '')
-    file_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, period, date, 'answer', number, file_name)
+    file_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number, file_name)
     
     # like數儲存在文件的第一行, dislike數則在第二行. (行數是有offset的)
     if request.POST['action'] == 'like+1':

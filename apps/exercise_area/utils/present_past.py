@@ -16,14 +16,14 @@ def present_to_past(subject):
        並重建present的結構'''
        
     # 把present資料夾移到past
-    present_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, 'present')
+    present_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'present')
     in_present_folder_path = os.path.join(present_path, os.listdir(present_path)[0])
-    past_path = os.path.join(NOTEBOOK_EXERCISE_PATH, subject, 'past')
+    past_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'past')
     shutil.move(in_present_folder_path, past_path)
     print('移植成功')
      
     # 重新創建present的結構
-    current_time = datetime.now().strftime('%Y%m%d%H%M') # 測試階段才要小時跟分, 正式的就到日即可
+    current_time = datetime.now().strftime('%Y%m%d') # 測試階段才要小時跟分, 正式的就到日即可
     new_in_present_folder = os.path.join(present_path, current_time)
     os.makedirs(new_in_present_folder) # 創建第一層資料夾(以創建日期為名)
     answer_area = os.path.join(new_in_present_folder, 'answer')
@@ -49,7 +49,8 @@ def periodically():
 
 schedule.every(2).hours.do(periodically) # 自動執行函數
 
-# 主迴圈，用來不斷檢查是否有定時任務需要執行
+ # 主迴圈，用來不斷檢查是否有定時任務需要執行
 while True:
     schedule.run_pending()
     time.sleep(60*30)  # 每隔30分鐘檢查一次
+    
