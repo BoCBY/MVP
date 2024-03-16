@@ -1,4 +1,5 @@
 {% extends "navbar.html" %}
+{% load static %}
 
 {% block note_active %}
 active
@@ -9,10 +10,151 @@ active
 {% endblock note_active_span %}
 <!-- 上面這些完善導航條的外觀顯示 -->
 
+{% block css %}
 
+<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
+
+{% endblock css %}
 
 {% block content %}
+<div class='area-container'>
+    <p class='all-notes' style='margin-top:0.3rem;'><a id='toAllNotes' href='#'>所有筆記板</a></p>
+    <div id='wholeAreaContainer'>
+        <div id="selfDefined" class="region-container">
+            <div class='d-flex justify-content-center'>
+                <h5 class='header-style'>自由筆記區</h5>
+                <div class='search-container'>
+                    <a href='#'><i id='selfDefinedSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                    <input id='selfDefinedSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                </div>
+            </div>
+            <div class='display-data-container'>
 
-<h1>筆記區</h1>
+            </div>
+        </div>
+        <div id="exerciseAns" class="region-container">
+            <div class='d-flex justify-content-center'>
+                <h5 class='header-style'>習題答案筆記區</h5>
+                <div class='search-container'>
+                    <a href='#'><i id='exerciseAnsSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                    <input id='exerciseAnsSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                </div>
+            </div>
+            <div class='display-data-container'>
+
+            </div>
+        </div>
+        <div id="learningArea" class="region-container" style='height:350px;'>
+            <div class='d-flex justify-content-center'>
+                <h5 class='header-style'>學習影片筆記區</h5>
+            </div>
+            <div class='container display-data-container'>
+                <div id='courseName'>
+                    <p style='margin-bottom:0.2rem;'><strong>課名</strong></p>
+                    <div class='search-container'>
+                        <a href='#'><i id='courseNameSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                        <input id='courseNameSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                    </div>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>微積分</button>
+                </div>
+                <div id='lecturer'>
+                    <div class='d-flex jus'>
+                        <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>授課者</strong></p>
+                        <div class='search-container'>
+                            <a href='#'><i id='courseNameSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                            <input id='courseNameSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                        </div>
+                    </div>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>林秀豪</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
+
+{% block js %}
+
+<script>
+
+  $(function(){
+    searchModule.init('learningAreaSearchIcon', 'learningAreaSearchInput', '#allSubjectContainer h5');
+    searchModule.init('exerciseAnsSearchIcon', 'exerciseAnsSearchInput', '#allSubjectContainer h5');
+    searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
+  })
+
+// Define a search module
+const searchModule = (function() {
+    // Private functions
+    function toggleSearchInput(searchInputId) {
+        $(`#${searchInputId}`).toggle();
+        if ($(`#${searchInputId}`).is(":visible")) {
+            $(`#${searchInputId}`).focus(); // Focus on the input field when it becomes visible
+        }
+    
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.search-container').length && !$(event.target).is('.search-container')) {
+                $(`#${searchInputId}`).hide();
+            }
+        });
+    }
+    
+    function filter(searchInputId, searchArea) {
+        let searchText = $(`#${searchInputId}`).val().toLowerCase();
+    
+        if(searchArea === '#displayFileContainer a'){
+        // for ansSearchInput
+          $(searchArea).each(function() {
+              let text = $(this).text().toLowerCase();
+      
+              if (text.includes(searchText)) {
+                  $(this).parent().parent().show();
+              } else {
+                  $(this).parent().parent().hide();
+              }
+          });
+        }else if(searchArea === '#allSubjectContainer h5'){
+            // for subjectSearchInput
+            $(searchArea).each(function() {
+                let text = $(this).text();
+                if (text.includes(searchText)) {
+                    $(this).closest(".subject-container").show();
+                } else {
+                    $(this).closest(".subject-container").hide();
+                }
+            });
+        }else{
+            // for each subject searchInput ex: mathSearchInput, physicsSearchInput 
+            $(searchArea).each(function() {
+                let text = $(this).text();
+        
+                if (text.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+        });
+    }
+    }
+  
+    // Public function
+    function init(searchIconId, searchInputId, searchArea) {
+        $(`#${searchIconId}`).click(function(event) {
+            event.preventDefault();
+            toggleSearchInput(searchInputId);
+        });
+        $(`#${searchInputId}`).on('input', function() {
+            filter(searchInputId, searchArea);
+        });
+    }
+  
+    // Expose public functions
+    return {
+        init: init
+    };
+  })();
+
+</script>
+
+{% endblock js %}

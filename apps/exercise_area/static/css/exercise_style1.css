@@ -1,12 +1,20 @@
+.area-container {
+    max-width: 70%; /* Set the maximum width as needed */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 0 15px; /* Optional: Add padding to the container */
+  }
+
 /* 每一門科目的區域 */
 .subject-container {
-    width: 800px; /* Fixed width */
-    height: 144px; /* Fixed height */  /* 筆電測試: 如果按鈕比較少, 沒有水平拉條出現就用92px. 如果按鈕多到水平拉條跑出來的話, 就用108px */
-                                       /* 桌機測試: 如果按鈕比較少, 沒有水平拉條出現就用144px. 如果按鈕多到水平拉條跑出來的話, 就用160px */
+    width: 100%; /* Fixed width */
+    height: 136px; /* Fixed height */  /* 筆電測試: 如果按鈕比較少, 沒有水平拉條出現就用92px. 如果按鈕多到水平拉條跑出來的話, 就用108px */
+                                       /* 桌機測試: 如果按鈕比較少, 沒有水平拉條出現就用136px. 如果按鈕多到水平拉條跑出來的話, 就用144px */
     overflow-x: auto; /* Enable scrolling in x direction */
     overflow-y: hidden; /* disable scrolling in y direction */
     white-space: nowrap; /* the buttons are displayed in a single line without wrapping */
     border: 1px solid #ccc; /* Add border for visibility */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow effect */
     margin: 0 auto; /* Center align horizontally */
     margin-top: 20px;
 }
@@ -15,7 +23,7 @@
 .header-style {
     text-align: center;
     font-family: 'Arial Black', sans-serif;
-    font-size: 2rem;
+    font-size: 1.7rem;
     color: #333;
     text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
     margin-bottom: 1rem;

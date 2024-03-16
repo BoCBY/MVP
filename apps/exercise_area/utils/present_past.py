@@ -47,10 +47,12 @@ def periodically():
     
     return None
 
-schedule.every(2).hours.do(periodically) # 自動執行函數
+#schedule.every(2).hours.do(periodically) # 自動執行函數
 
  # 主迴圈，用來不斷檢查是否有定時任務需要執行
-while True:
-    schedule.run_pending()
-    time.sleep(60*30)  # 每隔30分鐘檢查一次
+#while True:
+    #schedule.run_pending()
+    #time.sleep(60*30)  # 每隔30分鐘檢查一次
+    
+# periodically()
     

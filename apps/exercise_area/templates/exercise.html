@@ -10,20 +10,20 @@ active
 {% endblock exercise_active_span %}
 <!-- 上面這些完善導航條的外觀顯示 -->
 
-{% block css %}
+  {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/exercise_style1.css' %}">
+  <link rel="stylesheet" href="{% static 'css/exercise_style1.css' %}">
 
-{% endblock css %}
+  {% endblock css %}
 
 
 
 {% block content %}
 
-<div class='container'>
+<div class='area-container'>
   <div style='margin-top:0.5rem;'>
     <div class='search-container'>
-      <a href='#'><i id='subjectSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+      <a href='#'><i id='subjectSearchIcon' class="fa-solid fa-magnifying-glass search-icon" style='margin-left:0.6rem;'></i></a>
       <input id='subjectSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
     </div>
     <div id="allSubjectContainer"> 
@@ -173,8 +173,6 @@ active
 {% endblock content %}
 
 {% block js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
-
 <script>
   var SUBJECT = undefined;
   var DATE = undefined; // 跟著modal title日期的全域變數, regularQuestion函數的date局域變數與此無關
@@ -525,7 +523,8 @@ const searchModule = (function() {
 
   // Public function
   function init(searchIconId, searchInputId, searchArea) {
-      $(`#${searchIconId}`).click(function() {
+      $(`#${searchIconId}`).click(function(event) {
+          event.preventDefault();
           toggleSearchInput(searchInputId);
       });
       $(`#${searchInputId}`).on('input', function() {
@@ -804,7 +803,6 @@ function sort(){
     sortLike();
     $('#sortDropdown').hide();
   });
-
 }
 </script>
 

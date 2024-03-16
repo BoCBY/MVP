@@ -27,7 +27,7 @@ def create_folder(lecturer, course, video_id):
             return exists_folder # 要進入這個已經存在的資料夾, 所以要返回這個路徑
     
     # 如果此url影片沒有被用戶看過, 則創建一個資料夾
-    folder_name = lecturer + course + video_id
+    folder_name = lecturer + '[]' + course + '[]' + video_id
     new_folder = os.path.join(USER_COMPUTER_PATH, folder_name) # 此新創的資料夾的路徑
     os.makedirs(new_folder)
     # print('創建成功')
