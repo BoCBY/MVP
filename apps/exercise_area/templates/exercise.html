@@ -22,9 +22,9 @@ active
 
 <div class='area-container'>
   <div style='margin-top:0.5rem;'>
-    <div class='search-container'>
-      <a href='#'><i id='subjectSearchIcon' class="fa-solid fa-magnifying-glass search-icon" style='margin-left:0.6rem;'></i></a>
-      <input id='subjectSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+    <div class='search-container d-flex justify-content-end'>
+      <a href='#'><i id='subjectSearchIcon' class="fa-solid fa-magnifying-glass search-icon" style='margin-left:0.6rem; transform: translateY(-45%);'></i></a>
+      <input id='subjectSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none; margin-left:5px;'>
     </div>
     <div id="allSubjectContainer"> 
       <!-- exercise各科目的資料夾名稱要與這邊各button的subject屬性一樣 -->
@@ -33,51 +33,71 @@ active
       <div id="math" class="subject-container">
         <h5 class='header-style'>數學</h5>
         <div class='container'>
-          <div class='search-container'>
-            <a href='#'><i id='mathSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-            <input id='mathSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
-          </div>
-          <button id="calculusBtn" subject='calculus' type="button" class="btn btn-lg btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>微積分</button>
-          <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-lg btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>線性代數</button> 
+          <button id="calculusBtn" subject='calculus' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
+          <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem;'>線性代數</button> 
+          <button id="mathMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
         </div>
       </div>
       <div id="physics" class="subject-container">
         <h5 class='header-style'>物理</h5>
         <div class='container'>
-          <div class='search-container'>
-            <a href='#'><i id='physicsSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-            <input id='physicsSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
-          </div>
-          <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-lg btn-outline-secondary subjectBtn" style='padding: 0.1rem 0.2rem;'>普通物理</button>
+          <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>普通物理</button>
+          <button id="physicsMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
         </div>
       </div>
     </div>
   </div>
+</div>
   
-  <!-- 各科目的modal -->
-  <div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title" id="exerciseModalLabel"><strong id='exerciseModalTitle'></strong></h6>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class='container-fluid'>
-            <div class='d-flex'>
-              <div class='ml-auto'>
-                <button id="oneBtn" type="button" class="btn btn-sm btn-warning">試題</button>
-              </div>
+<!-- 放置各科目button的modal -->
+<div class="modal fade" id="showMoreModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="showMoreModalLabel"><strong id='showMoreModalTitle'>Modal title</strong></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id= 'showMoreTopContainer' class='container'>
+            <div class='search-container d-flex justify-content-end'>
+              <a href='#'><i id='showMoreSearchIcon' class="fa-solid fa-magnifying-glass search-icon" style='transform: translateY(-45%);'></i></a>
+              <input id='showMoreSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none; margin-left:5px;'>
             </div>
-            <div id='questions-container'>
-              <div period='present'>
-                <h6><strong>當期試題</strong></h6>
-              </div>
-              <div period='past'>
-                <h6 style='margin-top:0.3rem;'><strong>歷期試題</strong></h6> 
-              </div>
+        </div>
+        <div id='subjectBtnContainer' class='container' style='margin-top:0.3rem;'>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 各科目的modal -->
+<div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exerciseModalLabel"><strong id='exerciseModalTitle'></strong></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class='container-fluid'>
+          <div id='exerciseTopContainer' class='d-flex'>
+            <a href='#' id='exerciseModalPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+            <div class='ml-auto'>
+              <button id="oneBtn" type="button" class="btn btn-sm btn-warning">試題</button>
+            </div>
+          </div>
+          <div id='questions-container'>
+            <div period='present'>
+              <h6><strong>當期試題</strong></h6>
+            </div>
+            <div period='past'>
+              <h6 style='margin-top:0.3rem;'><strong>歷期試題</strong></h6> 
             </div>
           </div>
         </div>
@@ -86,19 +106,20 @@ active
   </div>
 </div>
 
+
 <!-- 答案區的modal -->
 <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 class="modal-title" id="answerModalLabel">Modal title</h6>
+        <h6 class="modal-title" id="answerModalLabel"><strong id='answerModalTitle'>Modal title</strong></h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div id= 'ansTopContainer' style='margin-bottom:0.2rem;'>
-          <a href='#' id='answer-previous' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+          <a href='#' id='answerPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
         </div>
         <h6><strong>題號</strong></h6>
         <table id='questionNumTable'>
@@ -131,7 +152,7 @@ active
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 class="modal-title" id="ansQuestionNumModalLabel">Modal title</h6>
+        <h6 class="modal-title" id="ansQuestionNumModalLabel"><strong id='ansQuestionNumModalTitle'>Modal title</strong></h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -140,7 +161,7 @@ active
         <div id= 'queNumTopContainer' class='container'>
           <div class='d-flex align-items-center'>
             <div id='prevPageContainer' class='mr-auto'>
-              <a href='#' id='question-number-previous' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+              <a href='#' id='questionNumberPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
             </div>
             <div class='search-container'>
               <a href='#'><i id='ansSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
@@ -174,12 +195,14 @@ active
 
 {% block js %}
 <script>
+  var MAINTITLE = undefined;
   var SUBJECT = undefined;
   var DATE = undefined; // 跟著modal title日期的全域變數, regularQuestion函數的date局域變數與此無關
   var NUMBER = undefined;
   var PERIOD = undefined; // regularQuestion函數的period局域變數與此無關
   
   $(function(){
+    showMore();
     subjectBtn();
     oneBtn();
     regularQuestion();
@@ -189,17 +212,46 @@ active
     prevPage();
     upLoad();
     searchModule.init('subjectSearchIcon', 'subjectSearchInput', '#allSubjectContainer h5'); // 整頁的大科目搜尋
-    searchModule.init('mathSearchIcon', 'mathSearchInput', '#math button'); // 數學裡的科目搜尋
-    searchModule.init('physicsSearchIcon', 'physicsSearchInput', '#physics button'); // 物理裡的科目搜尋
+    searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#subjectBtnContainer button'); // 搜尋大科目裡面的小科目
     searchModule.init('ansSearchIcon', 'ansSearchInput', '#displayFileContainer a'); // 題號區的答案搜尋
     likeDislike();
     sort();
   })
 
+function showMore(){
+  $('.show-more').click(function(){
+    let $this = $(this);
+    MAINTITLE = $this.closest('.subject-container').find('h5.header-style').text();
+    $('#subjectBtnContainer').empty();
+    
+    $('#showMoreModalTitle').text(MAINTITLE);
+    
+    /* 用if-else區隔大科目(如: 數學一個區塊, 物理一個區塊, 化學一個區塊, 經濟學一個區塊, ...), 如果題池有增加科目的話, 就要來這邊, 依照其所屬的科目歸類, 並在那個區塊把按鈕加上去 */
+    
+    if ($this.attr('id').includes('math')){ 
+      // 顯示數學的科目按鈕
+      let calculusBtn = $('<button>').attr({'id':'calculusBtn', 'subject':'calculus', 'type':'button', 'class':'btn btn-outline-secondary subject-btn', 'style':'padding: 0.1rem 0.2rem; margin: 0.2rem;'}).text('微積分');
+      let linAlgeBtn = $('<button>').attr({'id':'linAlgeBtn', 'subject':'linear_algebra', 'type':'button', 'class':'btn btn-outline-secondary subject-btn', 'style':'padding: 0.1rem 0.2rem; margin: 0.2rem;'}).text('線性代數');
+      // <button id="calculusBtn" subject='calculus' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem;'>微積分</button>
+      // <button id="linAlgeBtn" subject='linear_algebra' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+      $('#subjectBtnContainer').append(calculusBtn);
+      $('#subjectBtnContainer').append(linAlgeBtn);
+    }else if($this.attr('id').includes('physics')){
+      // 顯示物理的科目按鈕
+      let GenPhyBtn = $('<button>').attr({'id':'GenPhyBtn', 'subject':'general_physics', 'type':'button', 'class':'btn btn-outline-secondary subject-btn', 'style':'padding: 0.1rem 0.2rem;'}).text('普通物理');
+      // <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem;'>普通物理</button>
+      $('#subjectBtnContainer').append(GenPhyBtn);
+    }
+    $('#showMoreModal').modal('show');
+  });
+}
+
 function subjectBtn(){ 
-    $('.subjectBtn').click(function(){
+    $('#subjectBtnContainer').on('click', '.subject-btn', function(){
+      $('#showMoreModal').modal('hide');
       SUBJECT = $(this).attr('subject');
       let title = $(this).text();
+      let modalTitle = MAINTITLE + ' - ' + title;
       $.ajax({
         url: '/exercise/',
         type: 'post',
@@ -248,7 +300,7 @@ function subjectBtn(){
                 $('div[period="past"] h6').after(divRow);
             });
             
-            $('#exerciseModalTitle').text(title);
+            $('#exerciseModalTitle').text(modalTitle);
             $('#exerciseModal').modal('show');
           }else{
             alert(res.error);
@@ -323,7 +375,6 @@ function regularAnswer(){
       },
       success: function(res){
         if (res.status){
-          console.log('JJJJ')
           window.location.href = '/download_answer_panel/?path=' + encodeURIComponent(res.file_path);
         }else{
           alert(res.error)
@@ -338,7 +389,7 @@ function answerArea(){
     DATE = $(this).attr('date');
     PERIOD = $(this).closest('[period]').attr('period');
     let prevModalTitle = $('#exerciseModalTitle').text()
-    $('#answerModalLabel').text(prevModalTitle +' - '+ DATE);
+    $('#answerModalTitle').text(prevModalTitle +' - '+ DATE);
     $('#answerModal').modal('show');
     $('#exerciseModal').modal('hide');
   })
@@ -347,8 +398,8 @@ function answerArea(){
 function ansQuestionNum(){
   $('#questionNumTable').on('click', '.question-number', function(){
     NUMBER = $(this).text()
-    let prevModalTitle = $('#answerModalLabel').text()
-    $('#ansQuestionNumModalLabel').text(prevModalTitle + ' - ' + NUMBER)
+    let prevModalTitle = $('#answerModalTitle').text()
+    $('#ansQuestionNumModalTitle').text(prevModalTitle + ' - ' + NUMBER)
     $('#answerModal').modal('hide');
 
     $.ajax({
@@ -400,12 +451,17 @@ function ansQuestionNum(){
 }
 
 function prevPage(){
-  $('#queNumTopContainer').on('click', '#question-number-previous', function(){
+  $('#exerciseTopContainer').on('click', '#exerciseModalPrevious', function(){
+    $('#exerciseModal').modal('hide');
+    $('#showMoreModal').modal('show');
+  });
+
+  $('#queNumTopContainer').on('click', '#questionNumberPrevious', function(){
     $('#questionNumModal').modal('hide');
     $('#answerModal').modal('show');
   });
 
-  $('#ansTopContainer').on('click', '#answer-previous', function(){
+  $('#ansTopContainer').on('click', '#answerPrevious', function(){
     $('#answerModal').modal('hide');
     $('#exerciseModal').modal('show');
   });
@@ -508,7 +564,7 @@ const searchModule = (function() {
               }
           });
       }else{
-          // for each subject searchInput ex: mathSearchInput, physicsSearchInput 
+          // for each subject searchInput in show-more modal 
           $(searchArea).each(function() {
               let text = $(this).text();
       

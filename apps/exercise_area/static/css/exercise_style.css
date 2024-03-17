@@ -7,7 +7,7 @@
 /* 每一門科目的區域 */
 .subject-container {
     width: 100%; /* Fixed width */
-    height: 136px; /* Fixed height */  /* 筆電測試: 如果按鈕比較少, 沒有水平拉條出現就用92px. 如果按鈕多到水平拉條跑出來的話, 就用108px */
+    height: 150px; /* Fixed height */  /* 筆電測試: 如果按鈕比較少, 沒有水平拉條出現就用92px. 如果按鈕多到水平拉條跑出來的話, 就用108px */
                                        /* 桌機測試: 如果按鈕比較少, 沒有水平拉條出現就用136px. 如果按鈕多到水平拉條跑出來的話, 就用144px */
     overflow-x: auto; /* Enable scrolling in x direction */
     overflow-y: hidden; /* disable scrolling in y direction */
@@ -26,7 +26,7 @@
     font-size: 1.7rem;
     color: #333;
     text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
-    margin-bottom: 1rem;
+    margin-top: 0.7rem;
 }
 
 .regular-question {

@@ -35,42 +35,65 @@ active
         <div id="exerciseAns" class="region-container">
             <div class='d-flex justify-content-center'>
                 <h5 class='header-style'>習題答案筆記區</h5>
-                <div class='search-container'>
-                    <a href='#'><i id='exerciseAnsSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-                    <input id='exerciseAnsSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+            </div>
+            <div class='container display-data-container'>
+                <div id='course'>
+                    <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>科目</strong></p>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+                    <button id="exerciseAnsMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
                 </div>
             </div>
             <div class='display-data-container'>
 
             </div>
         </div>
-        <div id="learningArea" class="region-container" style='height:350px;'>
+        <div id="learningArea" class="region-container" style='height:330px;'>
             <div class='d-flex justify-content-center'>
                 <h5 class='header-style'>學習影片筆記區</h5>
             </div>
             <div class='container display-data-container'>
-                <div id='courseName'>
-                    <p style='margin-bottom:0.2rem;'><strong>課名</strong></p>
-                    <div class='search-container'>
-                        <a href='#'><i id='courseNameSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-                        <input id='courseNameSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
-                    </div>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>微積分</button>
+                <div id='course'>
+                    <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>課名</strong></p>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+                    <button id="learningAreaCourseMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
                 </div>
                 <div id='lecturer'>
-                    <div class='d-flex jus'>
-                        <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>授課者</strong></p>
-                        <div class='search-container'>
-                            <a href='#'><i id='courseNameSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-                            <input id='courseNameSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
-                        </div>
-                    </div>
+                    <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>授課者</strong></p>
+                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>朱樺</button>
                     <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>林秀豪</button>
+                    <button id="learningAreaLecturerMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- 學習影片筆記區與習題答案筆記區的show-more modal -->
+<div class="modal fade" id="showMoreModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="showMoreModalLabel"><strong id='showMoreModalTitle'>Modal title</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id= 'showMoreTopContainer' class='container'>
+              <div class='search-container d-flex justify-content-end'>
+                <a href='#'><i id='showMoreSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='showMoreSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+              </div>
+          </div>
+          <div id='displayDataContainer' class='container' style='margin-top:0.3rem;'>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock content %}
 
@@ -79,9 +102,10 @@ active
 <script>
 
   $(function(){
-    searchModule.init('learningAreaSearchIcon', 'learningAreaSearchInput', '#allSubjectContainer h5');
+    searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#allSubjectContainer h5');
     searchModule.init('exerciseAnsSearchIcon', 'exerciseAnsSearchInput', '#allSubjectContainer h5');
     searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
+    showMore();
   })
 
 // Define a search module
@@ -155,6 +179,21 @@ const searchModule = (function() {
     };
   })();
 
+function showMore(){
+    $('.show-more').click(function(){
+        let $this = $(this);
+        let head = $(this).closest('.region-container').find('h5.header-style').text();
+        let head2 = $(this).parent().find('p').text();
+        title = head + ' - ' + head2
+        $('#showMoreModalTitle').text(title);
+        if ($this.attr('id'))
+        $('#showMoreModal').modal('show');
+    })
+}
+
+function selfDefinedShowMore(){
+
+}
 </script>
 
 {% endblock js %}

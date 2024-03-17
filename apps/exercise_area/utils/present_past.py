@@ -30,7 +30,12 @@ def present_to_past(subject):
     os.makedirs(answer_area) # 創建答案區資料夾
     for i in range(1, 13):
         # 在答案區資料夾裡面創建1~12題的資料夾
-        os.makedirs(os.path.join(answer_area, str(i)))
+        this_folder = os.path.join(answer_area, str(i))
+        os.makedirs(this_folder)
+        gitkeep_file = os.path.join(this_folder, 'gitkeep.bmp') # .txt檔被我用來判斷是否要呈現在前端頁面的條件
+        with open(gitkeep_file, 'w') as f:
+            pass
+        
     print('成功重構present')
 
 def periodically():
@@ -54,5 +59,5 @@ def periodically():
     #schedule.run_pending()
     #time.sleep(60*30)  # 每隔30分鐘檢查一次
     
-# periodically()
+periodically()
     
