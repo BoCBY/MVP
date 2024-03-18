@@ -18,7 +18,7 @@ active
 
 {% block content %}
 <div class='area-container'>
-    <p class='all-notes' style='margin-top:0.3rem;'><a id='toAllNotes' href='#'>所有筆記板</a></p>
+    <a href='#'><button id="toAllNotes" type="button" class="btn btn-info" style='margin-top:0.5rem;'>所有筆記板</button></a>
     <div id='wholeAreaContainer'>
         <div id="selfDefined" class="region-container">
             <div class='d-flex justify-content-center'>
@@ -37,7 +37,7 @@ active
                 <h5 class='header-style'>習題答案筆記區</h5>
             </div>
             <div class='container display-data-container'>
-                <div id='course'>
+                <div id='subject'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>科目</strong></p>
                     <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
                     <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
@@ -55,14 +55,14 @@ active
             <div class='container display-data-container'>
                 <div id='course'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>課名</strong></p>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+                    <button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
+                    <button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem;'>線性代數</button>
                     <button id="learningAreaCourseMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
                 </div>
                 <div id='lecturer'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>授課者</strong></p>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>朱樺</button>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>林秀豪</button>
+                    <button type="button" class="btn btn-outline-secondary learning-area-lecturer" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>朱樺</button>
+                    <button type="button" class="btn btn-outline-secondary learning-area-lecturer" style='padding: 0.1rem 0.2rem;'>林秀豪</button>
                     <button id="learningAreaLecturerMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
                 </div>
             </div>
@@ -181,13 +181,48 @@ const searchModule = (function() {
 
 function showMore(){
     $('.show-more').click(function(){
+        /* 處理標題 */
         let $this = $(this);
         let head = $(this).closest('.region-container').find('h5.header-style').text();
         let head2 = $(this).parent().find('p').text();
         title = head + ' - ' + head2
         $('#showMoreModalTitle').text(title);
-        if ($this.attr('id'))
-        $('#showMoreModal').modal('show');
+
+        /* 處理傳送到後台的資料 */
+        let id = $this.attr('id');
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'showMore',
+                'id': id,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if (res.status){
+                    $('#displayDataContainer').empty();
+                    if(id==='learningAreaCourseMore'){
+                        // 製造學習影片區課名的按鈕
+                        $.each(res.data, function(index, course){
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(course);
+                            $('#displayDataContainer').append(button);
+                            })
+                    }else if(id==='learningAreaLecturerMore'){
+                        // 製造學習影片區授課者的按鈕
+                        $.each(res.data, function(index, course){
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-lecturer-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(course);
+                            $('#displayDataContainer').append(button);
+                            })
+                    }
+
+                    //<button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
+                    //<button type="button" class="btn btn-outline-secondary learning-area-lecturer" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>朱樺</button>
+                    $('#showMoreModal').modal('show');
+                }else{
+
+                }
+            }
+        })
     })
 }
 

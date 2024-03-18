@@ -58,5 +58,9 @@ class Description(BootstrapForm):
         txt_description = self.cleaned_data.get('description')
         if '-' in txt_description:
             txt_description = txt_description.replace('-', '－') # 在前端頁面中, 倘若在這個輸入框包含'-', 則有些(例如刪除)功能就無法順暢運作.
-        
+        invalid_characters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
+        for char in txt_description:
+            if char in invalid_characters:
+                raise ValidationError(f'內容不可包含字元:"{char}"')
+
         return txt_description

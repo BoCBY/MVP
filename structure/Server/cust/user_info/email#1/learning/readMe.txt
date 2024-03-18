@@ -3,4 +3,4 @@
 
 存放的是rich-text的內容檔案，搞懂rich-text的技術就可以一鍵存放到此。
 
-資料夾名稱用video id命名
+資料夾名稱用video_id命名  --> 整體名稱結構是: 講者名[]課名[]video_id

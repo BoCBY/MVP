@@ -62,5 +62,5 @@ def periodically():
     #schedule.run_pending()
     #time.sleep(60*30)  # 每隔30分鐘檢查一次
     
-periodically()
+#periodically()
     
