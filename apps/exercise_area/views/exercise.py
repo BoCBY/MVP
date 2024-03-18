@@ -75,7 +75,7 @@ def exercise(request):
         present_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'present')
         past_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, 'past')
         inside_present = os.listdir(present_path)
-        inside_past = os.listdir(past_path)
+        inside_past = [file for file in os.listdir(past_path) if not file.endswith('.bmp')]
         if os.path.exists(present_path) and os.path.exists(past_path):
             context = {
                 'status': True,

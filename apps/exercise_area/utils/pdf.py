@@ -56,4 +56,5 @@ def create_questions_pdf(subject, one_button=False):
     
 #create_questions_pdf('linear_algebra')
 #create_questions_pdf('general_physics')
+create_questions_pdf('data_structure')
  

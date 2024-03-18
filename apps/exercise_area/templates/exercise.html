@@ -27,9 +27,10 @@ active
       <input id='subjectSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none; margin-left:5px;'>
     </div>
     <div id="allSubjectContainer"> 
-      <!-- exercise各科目的資料夾名稱要與這邊各button的subject屬性一樣 -->
+      <!-- 後台中, exercise裡面, 各科目的資料夾名稱要與這邊各button的subject屬性一樣 -->
       <!-- 一個大主科就給他一個div去存放 -->
       <!-- 大主科裡面的每一個科目就給他一顆button -->
+      <!-- 這裡的大科目要放置的button就1~2顆有代表性的即可, 在這裡不一定每次新建小科目都要新增按鈕 -->
       <div id="math" class="subject-container">
         <h5 class='header-style'>數學</h5>
         <div class='container'>
@@ -43,6 +44,13 @@ active
         <div class='container'>
           <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>普通物理</button>
           <button id="physicsMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
+        </div>
+      </div>
+      <div id="computerScience" class="subject-container">
+        <h5 class='header-style'>資訊科學</h5>
+        <div class='container'>
+          <button id="dataStructureBtn" subject='data_structure' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>資料結構</button> 
+          <button id="computerScienceMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
         </div>
       </div>
     </div>
@@ -195,6 +203,7 @@ active
 
 {% block js %}
 <script>
+  var MAIN = undefined;
   var MAINTITLE = undefined;
   var SUBJECT = undefined;
   var DATE = undefined; // 跟著modal title日期的全域變數, regularQuestion函數的date局域變數與此無關
@@ -221,12 +230,15 @@ active
 function showMore(){
   $('.show-more').click(function(){
     let $this = $(this);
+    MAIN = $this.closest('.subject-container').attr('id')
     MAINTITLE = $this.closest('.subject-container').find('h5.header-style').text();
+    //console.log(MAIN);
     $('#subjectBtnContainer').empty();
     
     $('#showMoreModalTitle').text(MAINTITLE);
     
-    /* 用if-else區隔大科目(如: 數學一個區塊, 物理一個區塊, 化學一個區塊, 經濟學一個區塊, ...), 如果題池有增加科目的話, 就要來這邊, 依照其所屬的科目歸類, 並在那個區塊把按鈕加上去 */
+    /* 這裡以上的程式碼都不用動, 接著的遵循以下指令:
+    用if-else區隔大科目(如: 數學一個區塊, 物理一個區塊, 化學一個區塊, 經濟學一個區塊, ...), 如果題池有增加科目的話, 就來這邊, 依照其所屬的科目歸類, 並在那個區塊把按鈕加上去; 若要新增的科目需要創建一個主科目區塊, 就先創造該區塊再在那個區塊中建立按鈕. */
     
     if ($this.attr('id').includes('math')){ 
       // 顯示數學的科目按鈕
@@ -241,17 +253,35 @@ function showMore(){
       let GenPhyBtn = $('<button>').attr({'id':'GenPhyBtn', 'subject':'general_physics', 'type':'button', 'class':'btn btn-outline-secondary subject-btn', 'style':'padding: 0.1rem 0.2rem;'}).text('普通物理');
       // <button id="GenPhyBtn" subject='general_physics' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem;'>普通物理</button>
       $('#subjectBtnContainer').append(GenPhyBtn);
+    }else if($this.attr('id').includes('computerScience')){
+      let dataStructureBtn = $('<button>').attr({'id':'dataStructureBtn', 'subject':'data_structure', 'type':'button', 'class':'btn btn-outline-secondary subject-btn', 'style':'padding: 0.1rem 0.2rem; margin: 0.2rem;'}).text('資料結構');
+      // <button id="dataStructureBtn" subject='data_structure' type="button" class="btn btn-outline-secondary subject-btn" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>資料結構</button> 
+      $('#subjectBtnContainer').append(dataStructureBtn);
     }
+    //else if($this.attr('id').includes('chemistry')) {如果這樣就是化學區塊 -> 製造化學的button, 如同數學與物理的作法}
+     //else if($this.attr('id').includes('economics')) {如果這樣就是經濟區塊 -> 製造經濟的button, 如同數學與物理的作法}
+
     $('#showMoreModal').modal('show');
   });
 }
 
 function subjectBtn(){ 
-    $('#subjectBtnContainer').on('click', '.subject-btn', function(){
+    $('#subjectBtnContainer, .subject-container').on('click', '.subject-btn', function(){
       $('#showMoreModal').modal('hide');
       SUBJECT = $(this).attr('subject');
       let title = $(this).text();
-      let modalTitle = MAINTITLE + ' - ' + title;
+      let mainTitle = $(this).closest('.subject-container').find('h5.header-style').text();
+      let outsideBtnModalTitle = mainTitle + ' - ' + title;
+      let insideBtnModalTitle = MAINTITLE + ' - ' + title;
+      if ($(this).closest('.subject-container').length) { // outside button
+        $('#exerciseModalTitle').text(outsideBtnModalTitle);
+        $('#exerciseModalPrevious').hide();
+        MAIN = $(this).closest('.subject-container').attr('id');
+        //console.log(MAIN);
+      }else if($(this).closest('#subjectBtnContainer').length) { // inside button
+        $('#exerciseModalTitle').text(insideBtnModalTitle);
+        $('#exerciseModalPrevious').show();
+      }
       $.ajax({
         url: '/exercise/',
         type: 'post',
@@ -300,7 +330,6 @@ function subjectBtn(){
                 $('div[period="past"] h6').after(divRow);
             });
             
-            $('#exerciseModalTitle').text(modalTitle);
             $('#exerciseModal').modal('show');
           }else{
             alert(res.error);

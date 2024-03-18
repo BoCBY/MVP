@@ -50,6 +50,9 @@ def periodically():
     present_to_past('general_physics')
     create_questions_pdf('general_physics', False)
     
+    present_to_past('data_structure')
+    create_questions_pdf('data_structure', False)
+    
     return None
 
 #schedule.every(2).hours.do(periodically) # 自動執行函數
