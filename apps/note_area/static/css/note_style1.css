@@ -101,3 +101,22 @@
     border-radius: 5px;
     white-space: nowrap;
 }
+
+/* 重新命名圖標的hover效果 */
+.rename {
+    position: relative;
+    cursor: pointer;
+}
+
+.rename:hover::after {
+    content: "重新命名";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}

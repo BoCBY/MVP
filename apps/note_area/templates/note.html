@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
 
 {% endblock css %}
 
@@ -28,7 +28,7 @@ active
                     <input id='selfDefinedSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
                 </div>
             </div>
-            <div class='display-data-container'>
+            <div class='container display-data-container'>
 
             </div>
         </div>
@@ -39,13 +39,12 @@ active
             <div class='container display-data-container'>
                 <div id='subject'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>科目</strong></p>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
-                    <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
-                    <button id="exerciseAnsMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
+                    <div id='subjectBtnContainer'>
+                        <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
+                        <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
+                        <button id="exerciseAnsMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
                 </div>
-            </div>
-            <div class='display-data-container'>
-
             </div>
         </div>
         <div id="learningArea" class="region-container" style='height:330px;'>
@@ -55,20 +54,47 @@ active
             <div class='container display-data-container'>
                 <div id='course'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>課名</strong></p>
-                    <button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
-                    <button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem;'>線性代數</button>
-                    <button id="learningAreaCourseMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
+                    <div id='courseBtnContainer'>
+                        
+                    </div>
                 </div>
                 <div id='lecturer'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>授課者</strong></p>
-                    <button type="button" class="btn btn-outline-secondary learning-area-lecturer" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>朱樺</button>
-                    <button type="button" class="btn btn-outline-secondary learning-area-lecturer" style='padding: 0.1rem 0.2rem;'>林秀豪</button>
-                    <button id="learningAreaLecturerMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
+                    <div id='lecturerBtnContainer'>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- 重新命名的輸入框modal -->
+<div class="modal fade" id="renameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="renameModalLabel"><strong id='renameModalTitle'>重新命名</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class='prev-page-container'>
+                <a href='#' id='renamePrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+            </div>
+            <div id='oldNameContainer'><strong>現在名稱: <span id='oldName'></span></strong></div>
+            <div class="input-group rename-container" style='margin-top:0.3rem;'>
+                <input type="text" id="renameInput" style="width:150px;" placeholder='重新命名'>
+                <div class='input-group-append'>
+                    <button type="button" id="renameSubmit" class="btn btn-primary" style='padding: 0.1rem 0.2rem;'>確定</button>
+                </div>
+                <span id='renameError' style='color:red; font-size:0.7rem;'></span>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- 學習影片筆記區與習題答案筆記區的show-more modal -->
 <div class="modal fade" id="showMoreModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -95,6 +121,43 @@ active
     </div>
   </div>
 
+<!-- 學習影片區的modal -->
+<div class="modal fade" id="learningAreaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="learningAreaModalLabel"><strong id='learningAreaModalTitle'>學習影片</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id= 'learningAreaTopContainer' style='margin-bottom:0.2rem;'>
+            <a href='#' id='learningAreaPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">授課者</th>
+                <th scope="col">課名</th>
+                <th scope="col">VIDEO ID(BV開頭的多為來自B站)</th>
+              </tr>
+            </thead>
+            <tbody id=learningAreaDataTable>
+    <!--    <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>   留一列以供查看結構-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
 {% endblock content %}
 
 {% block js %}
@@ -102,10 +165,14 @@ active
 <script>
 
   $(function(){
-    searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#allSubjectContainer h5');
+    searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#displayDataContainer button');
     searchModule.init('exerciseAnsSearchIcon', 'exerciseAnsSearchInput', '#allSubjectContainer h5');
     searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
     showMore();
+    loadBtns();
+    rename();
+    prevPage();
+    showLearningAreaData();
   })
 
 // Define a search module
@@ -180,11 +247,11 @@ const searchModule = (function() {
   })();
 
 function showMore(){
-    $('.show-more').click(function(){
+    $('.display-data-container').on('click', '.show-more', function(){
         /* 處理標題 */
         let $this = $(this);
         let head = $(this).closest('.region-container').find('h5.header-style').text();
-        let head2 = $(this).parent().find('p').text();
+        let head2 = $(this).parent().parent().find('p').text();
         title = head + ' - ' + head2
         $('#showMoreModalTitle').text(title);
 
@@ -204,15 +271,22 @@ function showMore(){
                     if(id==='learningAreaCourseMore'){
                         // 製造學習影片區課名的按鈕
                         $.each(res.data, function(index, course){
-                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(course);
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(' '+course);
+                            let renameIcon = $('<i>').attr({'class':'bi bi-pen rename', 'style':'font-size:0.8rem;'});
+                            button.prepend(renameIcon);
                             $('#displayDataContainer').append(button);
                             })
                     }else if(id==='learningAreaLecturerMore'){
                         // 製造學習影片區授課者的按鈕
-                        $.each(res.data, function(index, course){
-                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-lecturer-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(course);
+                        $.each(res.data, function(index, lecturer){
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-lecturer', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(' '+lecturer);
+                            let renameIcon = $('<i>').attr({'class':'bi bi-pen rename', 'style':'font-size:0.8rem;'});
+                            button.prepend(renameIcon);    
                             $('#displayDataContainer').append(button);
                             })
+                    }else{
+                        // 製造習題答案區的科目按鈕
+
                     }
 
                     //<button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
@@ -222,8 +296,197 @@ function showMore(){
 
                 }
             }
-        })
+        }) // end of ajax
     })
+}
+
+function loadBtns(){
+    $.ajax({
+        url: '/note/',
+        type: 'post',
+        data:{
+            'purpose': 'mainPageBtn',
+        },
+        dataType: 'JSON',
+        success: function(res){
+            if (res.status){
+                $('#courseBtnContainer').empty();
+                $('#lecturerBtnContainer').empty();
+                
+                //製造學習影片區課名的按鈕
+                $.each(res.data.course_list, function(index, course){
+                    let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;', 'outside': true}).text(' '+course)
+                    let renameIcon = $('<i>').attr({'class':'bi bi-pen rename', 'style':'font-size:0.8rem;'});
+                    button.prepend(renameIcon);
+                    if (index === 0) {
+                        button.css('margin-left', '1.5rem');
+                    }
+                    $('#courseBtnContainer').append(button)
+                }); 
+                let courseMoreBtn = $('<button>').attr({'id':'learningAreaCourseMore', 'type':'button', 'class':'btn btn-outline-dark show-more', 'style':'padding: 0.1rem 0.2rem;'});
+                let courseMoreIcon = $('<i>').attr({'class':'fa-solid fa-ellipsis'});
+                courseMoreBtn.append(courseMoreIcon);
+                $('#courseBtnContainer').append(courseMoreBtn);
+
+                //製造學習影片區授課者的按鈕
+                $.each(res.data.lecturer_list, function(index, lecturer){
+                    let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-lecturer', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;', 'outside': true}).text(' '+lecturer)
+                    let renameIcon = $('<i>').attr({'class':'bi bi-pen rename', 'style':'font-size:0.8rem;'});
+                    button.prepend(renameIcon);
+                    if (index === 0) {
+                        button.css('margin-left', '1.5rem');
+                    }
+                    $('#lecturerBtnContainer').append(button)
+                }); 
+                let lecturerMoreBtn = $('<button>').attr({'id':'learningAreaLecturerMore', 'type':'button', 'class':'btn btn-outline-dark show-more', 'style':'padding: 0.1rem 0.2rem;'});
+                let lecturerMoreIcon = $('<i>').attr({'class':'fa-solid fa-ellipsis'});
+                lecturerMoreBtn.append(lecturerMoreIcon);
+                $('#lecturerBtnContainer').append(lecturerMoreBtn);
+
+                // 製造習題答案區的按鈕
+
+            }else{
+
+            }
+        }
+    }) // end of ajax
+}
+
+function rename(){
+    const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+    let oldName = undefined;
+    let $button = undefined;
+    // 點擊重新命名圖標
+    $('.display-data-container, #displayDataContainer').on('click', '.rename', function(){
+        $button = $(this).parent()
+        oldName = $(this).parent().text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除
+
+        if ($button.attr('outside')){
+            $('.prev-page-container').hide();
+            $('#oldName').text(oldName);
+            $('#renameError').empty();
+            $('#renameInput').val('');
+            $('#showMoreModal').modal('hide');
+            $('#renameModal').modal('show');
+        }else{
+            $('.prev-page-container').show();
+            $('#oldName').text(oldName);
+            $('#renameError').empty();
+            $('#renameInput').val('');
+            $('#showMoreModal').modal('hide');
+            $('#renameModal').modal('show');
+        }
+    });
+        
+    // 點擊確定按鈕
+    $('#renameSubmit').click(function () {
+        let newName = $('#renameInput').val();
+        if (newName.trim().length ===0) {
+            $('#renameError').text('輸入不可為空');
+            $('#renameInput').val('');
+            return;
+        }
+        
+        for (let i = 0; i < invalidCharacters.length; i++) {
+            if (newName.includes(invalidCharacters[i])) {
+                $('#renameError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
+                return; // Stop the loop after the first invalid character is found
+            }
+        }
+
+        // 去後台修改資料夾名稱
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'renameLearning',
+                'oldName': oldName,
+                'newName': newName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    alert(res.data);
+                    $button.html('<i class="bi bi-pen rename" style="font-size:0.8rem;"></i> ' + newName);
+                    $('#renameModal').modal('hide');
+                    $('#renameInput').val('');
+                    if (!$button.attr('outside')){
+                        $('#showMoreModal').modal('show');
+                    }
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+        })
+}
+
+
+function prevPage(){
+    $('.prev-page-container').on('click', '#renamePrevious', function(event){
+        event.preventDefault();
+        $('#renameModal').modal('hide');
+        $('#showMoreModal').modal('show');
+    });
+    
+    $('#learningAreaTopContainer').on('click', '#learningAreaPrevious', function(event){
+        event.preventDefault();
+        $('#learningAreaModal').modal('hide');
+        $('#showMoreModal').modal('show');
+    });
+    
+}
+
+function showLearningAreaData(){
+    $('.display-data-container, #displayDataContainer').on('click', '.learning-area-course, .learning-area-lecturer', function(){
+        let $button = $(this);
+        let filterText = $button.text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除
+        $('#showMoreModal').modal('hide');
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'showLearningAreaData',
+                'filterText': filterText,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#learningAreaDataTable').empty();
+                    $.each(res.data, function(index, dataList){
+                        let tableRow = $('<tr>').attr({'class':'to-period-panel-modal'});
+                        let thead = $('<th>').attr({'scope':'row'}).text(index+1);
+                        let lecturerCell = $('<td>').text(dataList[0]);
+                        let courseCell = $('<td>').text(dataList[1]);
+                        let videoIdCell = $('<td>');
+                        let aVideoId = $('<a>').attr({'href':'#', 'class':'to-learning-area-iframe'}).text(dataList[2]);
+                        videoIdCell.append(aVideoId);
+                        tableRow.append(thead);
+                        tableRow.append(lecturerCell);
+                        tableRow.append(courseCell);
+                        tableRow.append(videoIdCell);
+                        $('#learningAreaDataTable').append(tableRow);
+                    });
+
+                    if ($button.attr('outside')){
+                        //不要顯示上一頁圖標
+                        $('#learningAreaPrevious').hide();
+                        $('#learningAreaModal').modal('show');
+                    }else{
+                        $('#learningAreaPrevious').show();
+                        $('#learningAreaModal').modal('show');
+                    }
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+        
+    });
+}
+
+function loadSelfDefinedBtns(){
+
 }
 
 function selfDefinedShowMore(){

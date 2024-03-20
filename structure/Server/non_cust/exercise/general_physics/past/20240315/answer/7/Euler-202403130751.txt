@@ -1,2 +1,2 @@
-like: 1
+like: 2
 dislike: 0
