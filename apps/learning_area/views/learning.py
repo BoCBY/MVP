@@ -18,6 +18,38 @@ def learning(request):
     
     if 'url' in request.POST:
     # 獲取使用者要觀看的影片基本資訊(接收ajax請求)
+        # 在筆記區要開啟選擇的影片至學習區開啟
+        if request.POST.get('purpose') == 'newTab': 
+            lecturer = request.POST.get('lecturer', '')
+            course = request.POST.get('course', '')
+            url = request.POST.get('url', '')
+            video_id = request.POST.get('videoId')
+            if len(video_id) == 11: #YT影片
+                url = url_conversion.yt_conversion(url)
+            elif len(video_id) == 12: #BILI影片
+                url = url_conversion.bili_conversion(url)
+            
+            # 創建或查看此url影片的資料夾
+            folder_path = path.create_folder(lecturer, course, video_id)
+            suffix_name_list = os.listdir(folder_path)
+            name_list = [os.path.splitext(name)[0] for name in suffix_name_list]
+            file_name_list = [name.replace(';', ':').split('-') for name in name_list]
+            start_end_dict = {}              
+            for time, description in file_name_list:
+                # start_end_dict的 key是檔案名, value是字典, 字典內容為起始跟終止的秒數, 如下所示.
+                start, end = time.split('~')
+                start = process_time.total_seconds(start)
+                end = process_time.total_seconds(end)
+                start_end_dict[time + '-' + description] = {'start':start, 'end': end}
+            
+            context = {'status': True,
+                    'lecturer': lecturer,
+                    'course': course,
+                    'url': url,
+                    'start_end_dict': start_end_dict
+                    }
+            return JsonResponse(context)
+            
         form = forms.FilmModelForm(data=request.POST)
         if form.is_valid():
             # 用戶填寫正確, 就獲取填寫的內容

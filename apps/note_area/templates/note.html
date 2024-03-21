@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
 
 {% endblock css %}
 
@@ -109,7 +109,7 @@ active
         <div class="modal-body">
           <div id= 'showMoreTopContainer' class='container'>
               <div class='search-container d-flex justify-content-end'>
-                <a href='#'><i id='showMoreSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <a href='#'><i id='showMoreSearchIcon' class="fa-solid fa-magnifying-glass search-icon" style='transform: translateY(-45%);'></i></a>
                 <input id='showMoreSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
               </div>
           </div>
@@ -132,19 +132,28 @@ active
           </button>
         </div>
         <div class="modal-body">
-          <div id= 'learningAreaTopContainer' style='margin-bottom:0.2rem;'>
-            <a href='#' id='learningAreaPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
-          </div>
+            <div id= 'learningAreaTopContainer' class='container' style='margin-bottom:0.2rem;'>
+                <div class='d-flex align-items-center'>
+                    <div id='prevPageContainer' class='mr-auto'>
+                        <a href='#' id='learningAreaPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+                    </div>
+                    <div class='search-container'>
+                        <a href='#'><i id='learningAreaSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                        <input id='learningAreaSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                    </div>
+                </div>
+                <div class='total-row' style='font-size:1rem;'><strong id='totalRow'></strong></div>
+            </div>
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="colspan=3">#</th>
                 <th scope="col">授課者</th>
                 <th scope="col">課名</th>
                 <th scope="col">VIDEO ID(BV開頭的多為來自B站)</th>
               </tr>
             </thead>
-            <tbody id=learningAreaDataTable>
+            <tbody id=learningAreaDataTableBody>
     <!--    <tr>
                 <th scope="row">1</th>
                 <td>Mark</td>
@@ -157,6 +166,40 @@ active
       </div>
     </div>
 </div>
+<!-- 各影片時段的筆記板modal -->
+<div class="modal fade" id="periodPanelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="periodPanelModalLabel"><strong id='periodPanelModalTitle'>各時段筆記板</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id= 'periodPanelTopContainer' class='container'>
+            <div class='d-flex align-items-center'>
+              <div id='periodPanelPrevPageContainer' class='mr-auto'>
+                <a href='#' id='periodPanelPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+              </div>
+              <div class='search-container'>
+                <a href='#'><i id='periodPanelSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='periodPanelSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+              </div>
+              <div id='sortContainer'>
+                <a href='#'><i id='sortIcon' class="fa-solid fa-sort sort" style="color:#888;"></i></a>
+              </div>
+  
+            </div>
+          </div>
+          <div id='periodPanelContainer' class='container' style='margin-top:0.3rem;'>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  
 
 {% endblock content %}
 
@@ -166,13 +209,16 @@ active
 
   $(function(){
     searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#displayDataContainer button');
-    searchModule.init('exerciseAnsSearchIcon', 'exerciseAnsSearchInput', '#allSubjectContainer h5');
+    searchModule.init('learningAreaSearchIcon', 'learningAreaSearchInput', '#learningAreaDataTableBody tr');
     searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
     showMore();
     loadBtns();
     rename();
     prevPage();
     showLearningAreaData();
+    copyLink();
+    toLearningArea();
+    periodPanel();
   })
 
 // Define a search module
@@ -208,7 +254,7 @@ const searchModule = (function() {
         }else if(searchArea === '#allSubjectContainer h5'){
             // for subjectSearchInput
             $(searchArea).each(function() {
-                let text = $(this).text();
+                let text = $(this).text().toLowerCase();
                 if (text.includes(searchText)) {
                     $(this).closest(".subject-container").show();
                 } else {
@@ -216,9 +262,9 @@ const searchModule = (function() {
                 }
             });
         }else{
-            // for each subject searchInput ex: mathSearchInput, physicsSearchInput 
+            // for showMoreModal, learningArea 
             $(searchArea).each(function() {
-                let text = $(this).text();
+                let text = $(this).text().toLowerCase();
         
                 if (text.includes(searchText)) {
                     $(this).show();
@@ -357,8 +403,9 @@ function rename(){
     let oldName = undefined;
     let $button = undefined;
     // 點擊重新命名圖標
-    $('.display-data-container, #displayDataContainer').on('click', '.rename', function(){
-        $button = $(this).parent()
+    $('.display-data-container, #displayDataContainer').on('click', '.rename', function(event){
+        event.stopPropagation();
+        $button = $(this).parent();
         oldName = $(this).parent().text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除
 
         if ($button.attr('outside')){
@@ -421,7 +468,6 @@ function rename(){
         })
 }
 
-
 function prevPage(){
     $('.prev-page-container').on('click', '#renamePrevious', function(event){
         event.preventDefault();
@@ -452,20 +498,32 @@ function showLearningAreaData(){
             dataType: 'JSON',
             success: function(res){
                 if(res.status){
-                    $('#learningAreaDataTable').empty();
+                    $('#learningAreaDataTableBody').empty();
+                    let length = res.data.length.toString();
+                    $('#totalRow').text('共'+length+'項')
                     $.each(res.data, function(index, dataList){
                         let tableRow = $('<tr>').attr({'class':'to-period-panel-modal'});
                         let thead = $('<th>').attr({'scope':'row'}).text(index+1);
-                        let lecturerCell = $('<td>').text(dataList[0]);
-                        let courseCell = $('<td>').text(dataList[1]);
+                        let lecturerCell = $('<td>').attr({'class':'lecturer'}).text(dataList[0]);
+                        let courseCell = $('<td>').attr({'class':'course'}).text(dataList[1]);
+                        // video ID那格要製作下拉選單
                         let videoIdCell = $('<td>');
-                        let aVideoId = $('<a>').attr({'href':'#', 'class':'to-learning-area-iframe'}).text(dataList[2]);
-                        videoIdCell.append(aVideoId);
+                        let dropdownDiv = $('<div>').attr({'class':'btn-group dropright'});
+                        let aVideoId = $('<a>').attr({'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown', 'aria-expanded':'false'}).text(dataList[2]);
+                        let dropmenuDiv = $('<div>').attr({'class':'dropdown-menu'});
+                        let aCopyLink = $('<a>').attr({'href':'#', 'class':'dropdown-item copy-link'}).text('複製影片連結');
+                        let aToLearningArea = $('<a>').attr({'href':'#', 'class':'dropdown-item to-learning-area'}).text('前往學習區');
+                        dropmenuDiv.append(aCopyLink);
+                        dropmenuDiv.append(aToLearningArea);
+                        dropdownDiv.append(aVideoId);
+                        dropdownDiv.append(dropmenuDiv);
+                        videoIdCell.append(dropdownDiv);
+
                         tableRow.append(thead);
                         tableRow.append(lecturerCell);
                         tableRow.append(courseCell);
                         tableRow.append(videoIdCell);
-                        $('#learningAreaDataTable').append(tableRow);
+                        $('#learningAreaDataTableBody').append(tableRow);
                     });
 
                     if ($button.attr('outside')){
@@ -482,6 +540,121 @@ function showLearningAreaData(){
             }
         }); // end of ajax
         
+    });
+}
+
+function copyLink(){
+    $('#learningAreaDataTableBody').on('click', '.copy-link', function(event) {
+        event.preventDefault();
+        // Get the text of the clicked link
+        const videoId = $(this).parent().prev().text();
+        let videoLink = undefined;
+        if (videoId.length === 11){ // yt的video id包含11個字元
+            let ytPrefix = 'https://www.youtube.com/watch?v=';
+            videoLink = ytPrefix + videoId;
+        }else if (videoId.length === 12){ // bilibili的video id包含12個字元
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId;
+        }
+        
+        // Create a temporary textarea element
+        let $temp = $('<textarea>');
+        $(this).closest('.modal').append($temp);
+        $temp.val(videoLink).select();
+        document.execCommand('copy');
+        $temp.remove();
+      });
+}
+
+function toLearningArea(){
+    $('#learningAreaDataTableBody').on('click', '.to-learning-area', function(event) {
+        event.preventDefault();
+        // 獲取這一列的基本資訊
+        let lecturer = $(this).closest('.to-period-panel-modal').find('.lecturer').text();
+        let course = $(this).closest('.to-period-panel-modal').find('.course').text();
+        const videoId = $(this).parent().prev().text();
+        let videoLink = undefined;
+        if (videoId.length === 11){ // yt的video id包含11個字元
+            let ytPrefix = 'https://www.youtube.com/watch?v=';
+            videoLink = ytPrefix + videoId;
+        }else if (videoId.length === 12){ // bilibili的video id包含12個字元
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId;
+        }
+
+        // 開一個新分頁(在同一個視窗中)給學習區
+        let learningAreaUrl = 'http://127.0.0.1:8000/learning/';
+        let newTab = window.open(learningAreaUrl, '_blank'); 
+
+        // 自learning.html中的filmInfoSave函數中拿過來的 --> 只有那些selector會用到learning.html中DOM的id或class時, 才需要加上newTab.document(下一行有例子), 其餘完全不用動!
+        // 舉例: $("#phase").empty() -> $("#phase", newTab.document).empty()
+        $(newTab).on('load', function(){
+            $.ajax({
+                url: "/learning/",
+                type: "post",
+                data: {
+                    'purpose':'newTab',
+                    'url': videoLink,
+                    'lecturer': lecturer,
+                    'course': course,
+                    'videoId': videoId,
+                },
+                dataType: "JSON",
+                success: function(res){
+                  if(res.status){ 
+                    console.log(res.url)
+                    $("#phase", newTab.document).empty()
+                    //填寫正確就在頁面中顯示
+                    $("#courLectName", newTab.document).text(res.course+"-"+res.lecturer)
+                    $("#filmUrl", newTab.document).attr('src', res.url)
+                    console.log(res.url)
+                    
+                    //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
+                    localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
+                    localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer) // 課名-講者名
+                    localStorage.setItem('lastWatchedVideoNotes', JSON.stringify(res.start_end_dict)); // 影片的筆記
+                    
+                    // 把url影片對應的資料夾裡面的每一份筆記檔案展示在段落重點區  
+                    $.each(res.start_end_dict, function(key, value){ 
+                      nameArray = key.split("-");
+                      // 創建li標籤, 裡頭包含icon, a和strong標籤
+                      let li = $('<li>').attr({'start':value.start, 'end':value.end})
+                      let a = $('<a>').attr('href', '#');
+                      let strong = $('<strong>').attr('class','film-second').text(nameArray[0]);
+                      let notePanelIcon = $('<i>').attr({'class': 'fa-solid fa-pen-to-square note-panel', 'style': 'margin-right:0.3rem;'})
+                      // 創建p標籤, 並且把它加進上面已經創好的li標籤裡
+                      let p = $('<p>').attr({'style': 'position:relative;',}).text(nameArray[1]);
+                      let deletePanelIcon = $('<i>').attr({'class': 'fa-solid fa-trash-can delete-panel', 'style': 'position: absolute; bottom: 0; right: 0;'});
+                      a.append(strong);
+                      p.append(deletePanelIcon);
+                      li.append(notePanelIcon);
+                      li.append(a);
+                      li.append(p);
+        
+                      // 把整個li標籤加進ul標籤
+                      $('#phase', newTab.document).append(li);
+                    });
+                    $("#filmInfoModal", newTab.document).modal("hide");
+        
+                    }else{ 
+                      // 填寫錯誤就產生錯誤訊息
+                      $.each(res.errors, function(name,errorList){
+                        $('#id_' + name, newTab.document).next().text(errorList[0]);
+                    })
+                  }
+                }
+            })
+          });
+    });
+}
+
+function periodPanel(){
+    $('#learningAreaDataTableBody').on('click', '.to-period-panel-modal', function(event){
+        if (!$(event.target).hasClass('dropdown-toggle') &&
+            !$(event.target).hasClass('copy-link') &&
+            !$(event.target).hasClass('to-learning-area')) {
+            $('#periodPanelModal').modal('show');
+        }
     });
 }
 

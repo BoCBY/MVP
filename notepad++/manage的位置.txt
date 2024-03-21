@@ -8,3 +8,9 @@ https://www.bilibili.com/video/BV15K42187vj/?spm_id_from=333.337.search-card.all
 
 
 https://youtu.be/D7RfX84uFHw -> 這個網址也要把它變成嵌入式(YT)的url
+
+
+
+<tbody id="learningAreaDataTableBody"><tr class="to-period-panel-modal"><th scope="row">1</th><td>人生導師</td><td>跑跑卡丁車</td><td><a href="#" class="to-learning-area-iframe">BV15K42187vj</a></td></tr><tr class="to-period-panel-modal"><th scope="row">2</th><td>爆哥</td><td>跑跑卡丁車</td><td><a href="#" class="to-learning-area-iframe">aPSWWQSicmM</a></td></tr></tbody>
+
+I want to show a dropdown list with two options(點擊複製連結, 前往學習區) when clicking a tag
