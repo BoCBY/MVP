@@ -20,7 +20,7 @@ from django.urls import path, re_path
 from django.views.static import serve
 from apps.homepage.views import homepage
 from apps.learning_area.views import learning
-from apps.note_area.views import note
+from apps.note_area.views import note, note_panel
 from apps.exercise_area.views import exercise, file, like_dislike
 from apps.stats_area.views import stats
 
@@ -37,10 +37,10 @@ urlpatterns = [
     path('note/', note.note),
     path('exercise/', exercise.exercise),
     path('stats/', stats.stats),
-    path('download_pdf/', file.download_pdf),
+    path('serve_pdf/', file.serve_pdf),
     path('upload_file/', file.upload_file),
     path('download_answer_panel/', file.download_answer_panel),
     path('like_dislike/', like_dislike.like_dislike),
-    
+    path('view_panel/', note_panel.view_panel),
       
 ]

@@ -350,7 +350,7 @@ function oneBtn(){
         },
         success: function(res){
           if(res.status){
-            window.location.href = '/download_pdf/?path=' + encodeURIComponent(res.pdf_path);
+            window.location.href = '/serve_pdf/?path=' + encodeURIComponent(res.pdf_path);
           }else {
             alert(res.error)
           }
@@ -378,7 +378,10 @@ function regularQuestion(){
       },
       success: function(res){
         if (res.status){
-          window.location.href = '/download_pdf/?path=' + encodeURIComponent(res.file_path);
+          let newTab = window.open('/serve_pdf/?path=' + encodeURIComponent(res.file_path), '_blank');
+          /*setTimeout(function(){
+            newTab.document.title = fileName;
+          }, 2000);*/
         }else{
           alert(res.error)
         }
@@ -404,7 +407,10 @@ function regularAnswer(){
       },
       success: function(res){
         if (res.status){
-          window.location.href = '/download_answer_panel/?path=' + encodeURIComponent(res.file_path);
+          let newTab = window.open('/download_answer_panel/?path=' + encodeURIComponent(res.file_path), '_blank');
+          setTimeout(function() {// 為新開頁面設置title
+            newTab.document.title = fileName;
+        }, 100);
         }else{
           alert(res.error)
         }

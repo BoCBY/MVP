@@ -67,11 +67,28 @@ def note(request):
         return JsonResponse(context)
     
     if request.POST['purpose'] == 'renameLearning':
+        from_course = request.POST.get('fromCourse')
+        if from_course == 'false':
+            from_course = False
         old_name = request.POST.get('oldName', '')
         new_name = request.POST.get('newName', '')
         full_folder_name_list = os.listdir(USER_COMPUTER_PATH)
+        if from_course:
+            for folder_name in full_folder_name_list:
+                if old_name in folder_name.split('[]')[1]:
+                    old_path = os.path.join(USER_COMPUTER_PATH, folder_name)
+                    new_folder_name = folder_name.replace(old_name, new_name, 1)
+                    new_path = os.path.join(USER_COMPUTER_PATH, new_folder_name)
+                    os.rename(old_path, new_path)
+
+            context = {
+                'status': True,
+                'data': '重新命名成功!',
+            }
+            return JsonResponse(context)
+
         for folder_name in full_folder_name_list:
-            if old_name in folder_name:
+            if old_name in folder_name.split('[]')[0]:
                 old_path = os.path.join(USER_COMPUTER_PATH, folder_name)
                 new_folder_name = folder_name.replace(old_name, new_name, 1)
                 new_path = os.path.join(USER_COMPUTER_PATH, new_folder_name)
@@ -79,20 +96,62 @@ def note(request):
 
         context = {
             'status': True,
-            'data': '重新命名成功!',
+            'data': '重新命名3成功!',
         }
         return JsonResponse(context)
     
     if request.POST['purpose'] == 'showLearningAreaData':
-        filter_text = request.POST.get('filterText', '')
+        course_filter_text = request.POST.get('courseFilterText', '')
+        lecturer_filter_text = request.POST.get('lecturerFilterText', '')
         full_folder_name_list = os.listdir(USER_COMPUTER_PATH)
         data_list = []
-        for folder_name in full_folder_name_list:
-            if filter_text in folder_name:
-                data_list.append(folder_name.split('[]'))
+        if course_filter_text:
+            for folder_name in full_folder_name_list:
+                if course_filter_text in folder_name.split('[]')[1]:
+                    data_list.append(folder_name.split('[]'))
 
+            context = {
+                'status': True,
+                'data': data_list,
+            }
+            return JsonResponse(context)
+        if lecturer_filter_text:
+            for folder_name in full_folder_name_list:
+                if lecturer_filter_text in folder_name.split('[]')[0]:
+                    data_list.append(folder_name.split('[]'))
+
+            context = {
+                'status': True,
+                'data': data_list,
+            }
+            return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'notePanelTags':
+        video_id = request.POST.get('videoId', '')
+        full_folder_name_list = os.listdir(USER_COMPUTER_PATH)
+        video_notes_path = ''
+        for folder_name in full_folder_name_list:
+            if video_id in folder_name:
+                video_notes_path = os.path.join(USER_COMPUTER_PATH, folder_name)
+                break
+        panels_list = [panel_name.replace(';', ':') for panel_name in os.listdir(video_notes_path)]
         context = {
             'status': True,
-            'data': data_list,
+            'data': panels_list,
+        }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'showingNotePanel':
+        video_id = request.POST.get('videoId', '')
+        panel_name = request.POST.get('panelName', '').replace(':', ';')
+        panel_file_path = ''
+        full_folder_name_list = os.listdir(USER_COMPUTER_PATH)
+        for folder_name in full_folder_name_list:
+            if video_id in folder_name:
+                panel_file_path = os.path.join(USER_COMPUTER_PATH, folder_name, panel_name)
+                break
+        context = {
+            'status': True,
+            'data': panel_file_path,
         }
         return JsonResponse(context)

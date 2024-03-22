@@ -16,26 +16,30 @@ NOTEBOOK_EXERCISE_PATH = os.path.join(NOTEBOOK_DESK, EXERCISE)
    從線上下載不同類型的檔案的code只有在content_type那裏會不一樣而已, 根據檔案的類型輸入對應的值就可以了
    至於在網路上呈現, 則是response['content-Disposition']的值不一樣而已, 'attachment'是下載; inline是線上看'''
 
-def download_pdf(request):
+def serve_pdf(request):
     '''給用戶下載試題檔案'''
     path = request.GET.get('path', '')
     if os.path.exists(path):
+        if 'one_button'not in path:
+            with open(path, 'rb') as file:
+                response = HttpResponse(file.read(), content_type='application/pdf')
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(path)
+            return response
+          
         with open(path, 'rb') as file:
             response = HttpResponse(file.read(), content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(path)
-        
-        if 'one_button' in path:    
-            os.remove(path) # 把伺服器裡的一鍵生成檔案刪除, 定期的試題則保留
-        return response
+        os.remove(path) # 把伺服器裡的一鍵生成檔案刪除, 定期的試題則保留
+        return response      
     return HttpResponse("PDF file not found", status=404)
 
 def download_answer_panel(request):
     '''給用戶下載筆記板檔案(暫時先用.txt呈現)'''
     path = request.GET.get('path', '')
     if os.path.exists(path):
-        with open(path, 'rb') as file:
-            response = HttpResponse(file.read(), content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(path)
+        with open(path, 'r', encoding='utf-8') as file:
+            response = HttpResponse(file.read(), content_type='text/plain; charset=utf-8')
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(path)
         
         return response
     return HttpResponse("file not found", status=404)

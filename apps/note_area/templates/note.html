@@ -171,7 +171,17 @@ active
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h6 class="modal-title" id="periodPanelModalLabel"><strong id='periodPanelModalTitle'>各時段筆記板</strong></h6>
+          <h6 class="modal-title" id="periodPanelModalLabel">
+            <strong id='periodPanelModalTitle'>
+                <div class="btn-group dropright">
+                    <a href='#' id='dropdownTitle' class='dropdown-toggle' video-id='' data-toggle="dropdown" aria-expanded="false" style='color:black;'></a>
+                    <div class="dropdown-menu" style="">
+                        <a href="#" class="dropdown-item copy-link">複製影片連結</a>
+                        <a href="#" class="dropdown-item to-learning-area">前往學習區</a>
+                    </div>
+                </div>
+            </strong>
+          </h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -219,6 +229,7 @@ active
     copyLink();
     toLearningArea();
     periodPanel();
+    viewPeriodPanel();
   })
 
 // Define a search module
@@ -402,11 +413,14 @@ function rename(){
     const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
     let oldName = undefined;
     let $button = undefined;
+    let fromCourse = false;
+
     // 點擊重新命名圖標
     $('.display-data-container, #displayDataContainer').on('click', '.rename', function(event){
         event.stopPropagation();
         $button = $(this).parent();
-        oldName = $(this).parent().text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除
+        oldName = $(this).parent().text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除 
+        if($button.hasClass('learning-area-course')){ fromCourse = true;} // 判斷按鈕是在課名還是授課者被按的
 
         if ($button.attr('outside')){
             $('.prev-page-container').hide();
@@ -447,12 +461,14 @@ function rename(){
             type: 'post',
             data:{
                 'purpose': 'renameLearning',
+                'fromCourse': fromCourse,
                 'oldName': oldName,
                 'newName': newName,
             },
             dataType: 'JSON',
             success: function(res){
                 if(res.status){
+                    fromCourse = false;
                     alert(res.data);
                     $button.html('<i class="bi bi-pen rename" style="font-size:0.8rem;"></i> ' + newName);
                     $('#renameModal').modal('hide');
@@ -480,20 +496,35 @@ function prevPage(){
         $('#learningAreaModal').modal('hide');
         $('#showMoreModal').modal('show');
     });
+
+    $('#periodPanelPrevPageContainer').on('click', '#periodPanelPrevious', function(event){
+        event.preventDefault();
+        $('#periodPanelModal').modal('hide');
+        $('#learningAreaModal').modal('show');
+    });
     
 }
 
 function showLearningAreaData(){
     $('.display-data-container, #displayDataContainer').on('click', '.learning-area-course, .learning-area-lecturer', function(){
         let $button = $(this);
-        let filterText = $button.text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除
+        let courseFilterText = undefined;
+        let lecturerFilterText = undefined;
+        if ($button.hasClass('learning-area-course')){
+            courseFilterText = $button.text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除
+            $('#learningAreaModalTitle').text(courseFilterText);
+        }else{
+            lecturerFilterText = $button.text().replace(' ', '');
+            $('#learningAreaModalTitle').text(lecturerFilterText);
+        }
         $('#showMoreModal').modal('hide');
         $.ajax({
             url: '/note/',
             type: 'post',
             data:{
                 'purpose': 'showLearningAreaData',
-                'filterText': filterText,
+                'courseFilterText': courseFilterText,
+                'lecturerFilterText': lecturerFilterText,
             },
             dataType: 'JSON',
             success: function(res){
@@ -509,7 +540,7 @@ function showLearningAreaData(){
                         // video ID那格要製作下拉選單
                         let videoIdCell = $('<td>');
                         let dropdownDiv = $('<div>').attr({'class':'btn-group dropright'});
-                        let aVideoId = $('<a>').attr({'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown', 'aria-expanded':'false'}).text(dataList[2]);
+                        let aVideoId = $('<a>').attr({'href':'#', 'class':'dropdown-toggle video-id', 'data-toggle':'dropdown', 'aria-expanded':'false'}).text(dataList[2]);
                         let dropmenuDiv = $('<div>').attr({'class':'dropdown-menu'});
                         let aCopyLink = $('<a>').attr({'href':'#', 'class':'dropdown-item copy-link'}).text('複製影片連結');
                         let aToLearningArea = $('<a>').attr({'href':'#', 'class':'dropdown-item to-learning-area'}).text('前往學習區');
@@ -544,11 +575,21 @@ function showLearningAreaData(){
 }
 
 function copyLink(){
-    $('#learningAreaDataTableBody').on('click', '.copy-link', function(event) {
+    $('#learningAreaDataTableBody, #periodPanelModalTitle').on('click', '.copy-link', function(event) {
         event.preventDefault();
-        // Get the text of the clicked link
-        const videoId = $(this).parent().prev().text();
+        let clickedButtonId = $(event.target).closest('[id]').attr('id');
+        let videoId = undefined;
         let videoLink = undefined;
+
+        // Get the text of the clicked link
+        if (clickedButtonId==='learningAreaDataTableBody'){
+            videoId = $(this).parent().prev().text();
+        }else{
+            videoId = $(this).parent().prev().attr('video-id');
+        }
+        
+        
+        
         if (videoId.length === 11){ // yt的video id包含11個字元
             let ytPrefix = 'https://www.youtube.com/watch?v=';
             videoLink = ytPrefix + videoId;
@@ -567,13 +608,27 @@ function copyLink(){
 }
 
 function toLearningArea(){
-    $('#learningAreaDataTableBody').on('click', '.to-learning-area', function(event) {
+    $('#learningAreaDataTableBody, #periodPanelModalTitle').on('click', '.to-learning-area', function(event) {
         event.preventDefault();
-        // 獲取這一列的基本資訊
-        let lecturer = $(this).closest('.to-period-panel-modal').find('.lecturer').text();
-        let course = $(this).closest('.to-period-panel-modal').find('.course').text();
-        const videoId = $(this).parent().prev().text();
+        let clickedButtonId = $(event.target).closest('[id]').attr('id');
+
+        let lecturer = undefined;
+        let course = undefined;
+        let videoId = undefined;
         let videoLink = undefined;
+
+        // 獲取這部影片的基本資訊
+        if(clickedButtonId==='learningAreaDataTableBody'){
+            lecturer = $(this).closest('.to-period-panel-modal').find('.lecturer').text();
+            course = $(this).closest('.to-period-panel-modal').find('.course').text();
+            videoId = $(this).parent().prev().text();
+        }else{
+            lecturer = $(this).parent().prev().text().split(' - ')[0];
+            course = $(this).parent().prev().text().split(' - ')[1];
+            videoId = $(this).parent().prev().attr('video-id');
+        }
+        
+        // 由video id得到影片連結
         if (videoId.length === 11){ // yt的video id包含11個字元
             let ytPrefix = 'https://www.youtube.com/watch?v=';
             videoLink = ytPrefix + videoId;
@@ -601,13 +656,11 @@ function toLearningArea(){
                 },
                 dataType: "JSON",
                 success: function(res){
-                  if(res.status){ 
-                    console.log(res.url)
+                  if(res.status){
                     $("#phase", newTab.document).empty()
                     //填寫正確就在頁面中顯示
                     $("#courLectName", newTab.document).text(res.course+"-"+res.lecturer)
                     $("#filmUrl", newTab.document).attr('src', res.url)
-                    console.log(res.url)
                     
                     //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
                     localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
@@ -650,11 +703,78 @@ function toLearningArea(){
 
 function periodPanel(){
     $('#learningAreaDataTableBody').on('click', '.to-period-panel-modal', function(event){
-        if (!$(event.target).hasClass('dropdown-toggle') &&
-            !$(event.target).hasClass('copy-link') &&
-            !$(event.target).hasClass('to-learning-area')) {
-            $('#periodPanelModal').modal('show');
+        if ($(event.target).not('.dropdown-toggle, .copy-link, .to-learning-area').length) {
+            $('#learningAreaModal').modal('hide');
+
+            let lecturer = $(this).find('.lecturer').text();
+            let course = $(this).find('.course').text();
+            let videoId = $(this).find('.video-id').text();
+            let title = lecturer + ' - ' + course;
+            $('#dropdownTitle').text(title);
+            $('#dropdownTitle').attr('video-id', videoId);
+
+            
+            $.ajax({
+                url: '/note/',
+                type: 'post',
+                data: {
+                    'purpose': 'notePanelTags',
+                    'videoId': videoId,
+                },
+                dataType: 'JSON',
+                success: function(res){
+                    if(res.status){
+                        // 先把原本已有的刪除
+                        $('#periodPanelContainer').empty();
+
+                        // 開始建DOM標籤
+                        $.each(res.data, function(index, panelName){
+                            let divRow = $('<div>').attr('class', 'row');
+                            let divGrid = $('<div>').attr('class', 'col-sm-12 d-flex align-items-center');
+                            let notePanelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square', 'style':'margin-right:0.3rem;',});
+                            let a = $('<a>').attr({'href': '#', 'class':'period-panel', 'videoId':videoId,}).text(panelName);
+                            divGrid.append(notePanelIcon);
+                            divGrid.append(a);
+                            divRow.append(divGrid);
+                            $('#periodPanelContainer').append(divRow);
+                            $('#periodPanelModal').modal('show');
+                        });
+                    }else{
+                        alert(res.error);
+                    }
+            }
+            }); // end of ajax   
         }
+    });
+}
+
+function viewPeriodPanel(){
+    // 使用者點擊跳出筆記板內容, 但現在還沒有筆記板功能, 所以先去存放筆記板的相對應路徑來下載檔案(並且檔案是用.txt代替)
+    $('#periodPanelContainer').on('click', '.period-panel', function(event){
+        event.preventDefault();
+        let panelName = $(this).text();
+        let videoId = $(this).attr('videoId')
+        console.log(videoId)
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'showingNotePanel',
+                'panelName': panelName,
+                'videoId': videoId,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data), '_blank',);
+                    setTimeout(function() { // 為新開頁面設置title
+                        newTab.document.title = panelName;
+                    }, 100);
+                }else{
+                    alert(res.error)
+                }
+            }
+        }); // end of ajax
     });
 }
 

@@ -1,32 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Button Content</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <button id="copyButton">中文行嗎?</button>
+<tr class="to-period-panel-modal">
+	<th scope="row">1</th>
+	<td class="lecturer">人生導師</td>
+	<td class="course">跑跑卡丁車</td>
+	<td>
+		<div class="btn-group dropright">
+			<a href="#" class="dropdown-toggle video-id" data-toggle="dropdown" aria-expanded="false">BV15K42187vj</a>
+			<div class="dropdown-menu" style="">
+				<a href="#" class="dropdown-item copy-link">複製影片連結</a>
+				<a href="#" class="dropdown-item to-learning-area">前往學習區</a>
+			</div>
+		</div>
+	</td>
+</tr>
 
-    <script>
-        $(document).ready(function() {
-            $('#copyButton').click(function() {
-                var buttonContent = $(this).text();
 
-                // Create a temporary textarea element
-                var $temp = $('<textarea>');
-                $('body').append($temp);
-                $temp.val(buttonContent).select();
-                document.execCommand('copy');
-                $temp.remove();
-
-                // Alert the user
-                alert('Copied to clipboard: ' + buttonContent);
-            });
-        });
-    </script>
-</body>
-</html>
-
+<div class="btn-group dropright">
+	<a href='#' id='dropdownTitle' class='dropdown-toggle' data-toggle="dropdown" aria-expanded="false" style='color:black;'></a>
+	<div class="dropdown-menu" style="">
+		<a href="#" class="dropdown-item copy-link">複製影片連結</a>
+		<a href="#" class="dropdown-item to-learning-area">前往學習區</a>
+	</div>
+</div>
