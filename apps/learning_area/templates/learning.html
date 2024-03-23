@@ -334,12 +334,12 @@ active
               var end2 = parseInt($(b).attr("end"));
 
               if (end1 !== end2) {
-                  console.log('sort by end');
+                  //console.log('sort by end');
                   return end1 - end2; // Sort by end attribute
               } else {
                   var start1 = parseInt($(a).attr("start"));
                   var start2 = parseInt($(b).attr("start"));
-                  console.log('sort by start');
+                  //console.log('sort by start');
                   return start1 - start2; // Sort by start attribute if end attributes are equal
               }
           });
@@ -354,12 +354,12 @@ active
           var end2 = parseInt($(b).attr("end"));
 
           if (end1 !== end2) {
-              console.log('sort by end');
+              //console.log('sort by end');
               return end1 - end2; // Sort by end attribute
           } else {
               var start1 = parseInt($(a).attr("start"));
               var start2 = parseInt($(b).attr("start"));
-              console.log('sort by start');
+              //console.log('sort by start');
               return start1 - start2; // Sort by start attribute if end attributes are equal
           }
       });

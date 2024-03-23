@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
 
 {% endblock css %}
 
@@ -22,7 +22,7 @@ active
     <div id='wholeAreaContainer'>
         <div id="selfDefined" class="region-container">
             <div class='d-flex justify-content-center'>
-                <h5 class='header-style'>自由筆記區</h5>
+                <h5 class='header-style'>自定義區</h5>
                 <div class='search-container'>
                     <a href='#'><i id='selfDefinedSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
                     <input id='selfDefinedSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
@@ -34,7 +34,7 @@ active
         </div>
         <div id="exerciseAns" class="region-container">
             <div class='d-flex justify-content-center'>
-                <h5 class='header-style'>習題答案筆記區</h5>
+                <h5 class='header-style'>習題答案區</h5>
             </div>
             <div class='container display-data-container'>
                 <div id='subject'>
@@ -49,7 +49,7 @@ active
         </div>
         <div id="learningArea" class="region-container" style='height:330px;'>
             <div class='d-flex justify-content-center'>
-                <h5 class='header-style'>學習影片筆記區</h5>
+                <h5 class='header-style'>學習影片區</h5>
             </div>
             <div class='container display-data-container'>
                 <div id='course'>
@@ -203,7 +203,9 @@ active
             </div>
           </div>
           <div id='periodPanelContainer' class='container' style='margin-top:0.3rem;'>
-            
+            <ul id='periodPanelItems'>
+
+            </ul>
           </div>
         </div>
       </div>
@@ -220,6 +222,7 @@ active
   $(function(){
     searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#displayDataContainer button');
     searchModule.init('learningAreaSearchIcon', 'learningAreaSearchInput', '#learningAreaDataTableBody tr');
+    searchModule.init('periodPanelSearchIcon', 'periodPanelSearchInput', '#periodPanelItems li');
     searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
     showMore();
     loadBtns();
@@ -230,6 +233,7 @@ active
     toLearningArea();
     periodPanel();
     viewPeriodPanel();
+    panelTimeStructure();
   })
 
 // Define a search module
@@ -251,29 +255,18 @@ const searchModule = (function() {
     function filter(searchInputId, searchArea) {
         let searchText = $(`#${searchInputId}`).val().toLowerCase();
     
-        if(searchArea === '#displayFileContainer a'){
-        // for ansSearchInput
-          $(searchArea).each(function() {
-              let text = $(this).text().toLowerCase();
-      
-              if (text.includes(searchText)) {
-                  $(this).parent().parent().show();
-              } else {
-                  $(this).parent().parent().hide();
-              }
-          });
-        }else if(searchArea === '#allSubjectContainer h5'){
-            // for subjectSearchInput
+        if(searchArea === '#learningAreaDataTableBody tr'){
             $(searchArea).each(function() {
-                let text = $(this).text().toLowerCase();
+                let text = $(this).find('.lecturer, .course').text().toLowerCase();
+
                 if (text.includes(searchText)) {
-                    $(this).closest(".subject-container").show();
+                    $(this).show();
                 } else {
-                    $(this).closest(".subject-container").hide();
+                    $(this).hide();
                 }
-            });
+        });
         }else{
-            // for showMoreModal, learningArea 
+            // for showMoreModal, periodPanelModal 
             $(searchArea).each(function() {
                 let text = $(this).text().toLowerCase();
         
@@ -328,7 +321,7 @@ function showMore(){
                     if(id==='learningAreaCourseMore'){
                         // 製造學習影片區課名的按鈕
                         $.each(res.data, function(index, course){
-                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-course', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(' '+course);
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-course col-sm-3', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(' '+course);
                             let renameIcon = $('<i>').attr({'class':'bi bi-pen rename', 'style':'font-size:0.8rem;'});
                             button.prepend(renameIcon);
                             $('#displayDataContainer').append(button);
@@ -336,7 +329,7 @@ function showMore(){
                     }else if(id==='learningAreaLecturerMore'){
                         // 製造學習影片區授課者的按鈕
                         $.each(res.data, function(index, lecturer){
-                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-lecturer', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(' '+lecturer);
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary learning-area-lecturer col-sm-3', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(' '+lecturer);
                             let renameIcon = $('<i>').attr({'class':'bi bi-pen rename', 'style':'font-size:0.8rem;'});
                             button.prepend(renameIcon);    
                             $('#displayDataContainer').append(button);
@@ -420,8 +413,12 @@ function rename(){
         event.stopPropagation();
         $button = $(this).parent();
         oldName = $(this).parent().text().replace(' ', ''); //此時開頭還有空白鍵, 要把它去除 
-        if($button.hasClass('learning-area-course')){ fromCourse = true;} // 判斷按鈕是在課名還是授課者被按的
-
+        if($button.hasClass('learning-area-course')){// 判斷按鈕是在課名還是授課者被按的
+            fromCourse = true;
+            $('#renameModalTitle').text('重新命名-課名');
+        }else{
+            $('#renameModalTitle').text('重新命名-授課者');
+        }
         if ($button.attr('outside')){
             $('.prev-page-container').hide();
             $('#oldName').text(oldName);
@@ -725,32 +722,35 @@ function periodPanel(){
                 success: function(res){
                     if(res.status){
                         // 先把原本已有的刪除
-                        $('#periodPanelContainer').empty();
+                        $('#periodPanelItems').empty();
 
                         // 開始建DOM標籤
-                        $.each(res.data, function(index, panelName){
-                            let divRow = $('<div>').attr('class', 'row');
-                            let divGrid = $('<div>').attr('class', 'col-sm-12 d-flex align-items-center');
-                            let notePanelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square', 'style':'margin-right:0.3rem;',});
-                            let a = $('<a>').attr({'href': '#', 'class':'period-panel', 'videoId':videoId,}).text(panelName);
-                            divGrid.append(notePanelIcon);
-                            divGrid.append(a);
-                            divRow.append(divGrid);
-                            $('#periodPanelContainer').append(divRow);
+                        $.each(res.data, function(key, value){ 
+                            nameArray = key.split("-");
+                            // 創建li標籤, 裡頭包含icon, a和strong標籤
+                            let li = $('<li>').attr({'start':value.start, 'end':value.end})
+                            let a = $('<a>').attr({'href':'#', 'class':'period-panel', 'videoId':videoId}).text(nameArray[0]+'-'+nameArray[1]);
+                            let notePanelIcon = $('<i>').attr({'class': 'fa-solid fa-pen-to-square note-panel', 'style': 'margin-right:0.3rem;'})
+                            li.append(notePanelIcon);
+                            li.append(a);
+              
+                            // 把整個li標籤加進ul標籤
+                            $('#periodPanelItems').append(li);
+                          });
                             $('#periodPanelModal').modal('show');
-                        });
                     }else{
                         alert(res.error);
                     }
+                }
+            }); // end of ajax
             }
-            }); // end of ajax   
-        }
-    });
+        });    
 }
+
 
 function viewPeriodPanel(){
     // 使用者點擊跳出筆記板內容, 但現在還沒有筆記板功能, 所以先去存放筆記板的相對應路徑來下載檔案(並且檔案是用.txt代替)
-    $('#periodPanelContainer').on('click', '.period-panel', function(event){
+    $('#periodPanelItems').on('click', '.period-panel', function(event){
         event.preventDefault();
         let panelName = $(this).text();
         let videoId = $(this).attr('videoId')
@@ -778,6 +778,82 @@ function viewPeriodPanel(){
     });
 }
 
+function panelTimeStructure(){ //複製learning.html的timeStructure, 只有把phase -> periodPanelItems和 timeSort -> sortIcon
+    $('#sortIcon').click(function(event){
+      event.preventDefault();  
+      var $periodPanelItems = $("#periodPanelItems");
+      
+      // 大時段包含小時段
+      var $liItems = $periodPanelItems.children("li");
+      $liItems.each(function() {
+          var $currentItem = $(this);
+          var currentStart = parseInt($currentItem.attr("start"));
+          var currentEnd = parseInt($currentItem.attr("end"));
+  
+          $liItems.each(function() {
+              var $otherItem = $(this);
+              if ($currentItem.is($otherItem)) return; // Skip comparing with itself
+              var otherStart = parseInt($otherItem.attr("start"));
+              var otherEnd = parseInt($otherItem.attr("end"));
+  
+              if (otherStart >= currentStart && otherEnd <= currentEnd) {
+                  // The other item is completely contained within the current item
+                  var $subList = $currentItem.children("ul");
+                  if (!$subList.length) {
+                      $subList = $("<ul></ul>");
+                      $currentItem.append($subList);
+                  }
+                  $subList.append($otherItem);
+              }
+          });
+      });
+
+      // 排序
+      var $periodPanelItems = $("#periodPanelItems");
+
+      // Sort nested <li> elements within their own layer
+      $periodPanelItems.find('ul').each(function() {
+          var $subList = $(this);
+          var subLis = $subList.children('li').get();
+          subLis.sort(function(a, b) {
+              var end1 = parseInt($(a).attr("end"));
+              var end2 = parseInt($(b).attr("end"));
+
+              if (end1 !== end2) {
+                  //console.log('sort by end');
+                  return end1 - end2; // Sort by end attribute
+              } else {
+                  var start1 = parseInt($(a).attr("start"));
+                  var start2 = parseInt($(b).attr("start"));
+                  //console.log('sort by start');
+                  return start1 - start2; // Sort by start attribute if end attributes are equal
+              }
+          });
+          $.each(subLis, function(idx, itm) { $subList.append(itm); });
+      });
+
+      // Sort the first layer of <li> elements
+      var lis = $("#periodPanelItems > li");
+
+      lis.sort(function(a, b) {
+          var end1 = parseInt($(a).attr("end"));
+          var end2 = parseInt($(b).attr("end"));
+
+          if (end1 !== end2) {
+              //console.log('sort by end');
+              return end1 - end2; // Sort by end attribute
+          } else {
+              var start1 = parseInt($(a).attr("start"));
+              var start2 = parseInt($(b).attr("start"));
+              //console.log('sort by start');
+              return start1 - start2; // Sort by start attribute if end attributes are equal
+          }
+      });
+
+      // Reorder the <li> elements in #periodPanelItems
+      $("#periodPanelItems").empty().append(lis);
+  });
+}
 function loadSelfDefinedBtns(){
 
 }

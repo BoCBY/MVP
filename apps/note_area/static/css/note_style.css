@@ -138,3 +138,28 @@
     border-radius: 5px;
     white-space: nowrap;
 }
+
+/* 搜尋的hover效果 */
+#sortIcon {
+    position: relative;
+    cursor: pointer;
+}
+
+#sortIcon:hover::after {
+    content: "排序";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    right: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+ /* 縮小表格中每一列所佔的大小比例 */
+.table td,
+.table th {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}

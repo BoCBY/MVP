@@ -3,7 +3,7 @@ import random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from apps.learning_area.utils import process_time
 
 # 學習區的路徑
 COMPUTER_DESK = os.path.join('C:\\', 'Users', 'admin', 'Desktop')
@@ -96,7 +96,7 @@ def note(request):
 
         context = {
             'status': True,
-            'data': '重新命名3成功!',
+            'data': '重新命名成功!',
         }
         return JsonResponse(context)
     
@@ -135,9 +135,18 @@ def note(request):
                 video_notes_path = os.path.join(USER_COMPUTER_PATH, folder_name)
                 break
         panels_list = [panel_name.replace(';', ':') for panel_name in os.listdir(video_notes_path)]
+        
+        start_end_dict = {}
+        for panel in panels_list:
+                # start_end_dict的 key是檔案名, value是字典, 字典內容為起始跟終止的秒數, 如下所示.
+                time, description = panel.split('-')
+                start, end = time.split('~')
+                start = process_time.total_seconds(start)
+                end = process_time.total_seconds(end)
+                start_end_dict[time + '-' + description] = {'start':start, 'end': end}
         context = {
             'status': True,
-            'data': panels_list,
+            'data': start_end_dict,
         }
         return JsonResponse(context)
     
