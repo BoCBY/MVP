@@ -460,14 +460,16 @@ function ansQuestionNum(){
             let divRow = $('<div>').attr('class', 'row');
             let divGrid = $('<div>').attr('class', 'col-sm-12 d-flex align-items-center');
             let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
+            let saveToNoteIcon =$('<i>').attr({'class':'fa-solid fa-share mr-auto save-to-note','style':'margin-left:0.5rem;'});
             let likeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-up like-btn');
             let dislikeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-down dislike-btn');
             // a與span標籤中喜歡數與不喜歡數是儲存在資料本身的, 要到後台獲取然後填上去
             let spanLike = $('<span>').attr('class', 'like-count').text(likeDislikeData.like); // 對應a的data-like
             let spanDislike = $('<span>').attr('class', 'dislike-count').text(likeDislikeData.dislike); // 對應a的data-dislike
-            let a = $('<a>').attr({'href': '#', 'class': 'answer-file mr-auto', 'data-like': likeDislikeData.like, 'data-dislike': likeDislikeData.dislike,}).text(fileName);
+            let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'data-like': likeDislikeData.like, 'data-dislike': likeDislikeData.dislike,}).text(fileName);
             divGrid.append(notePanelIcon);
             divGrid.append(a);
+            divGrid.append(saveToNoteIcon);
             divGrid.append(likeIcon);
             divGrid.append(spanLike);
             divGrid.append(dislikeIcon);
@@ -538,13 +540,15 @@ function uploadFile(file) {
         let divRow = $('<div>').attr('class', 'row');
         let divGrid = $('<div>').attr('class', 'col-sm-12 d-flex align-items-center');
         let notePanelIcon = $('<i>').attr('class', 'fa-solid fa-pen-to-square');
+        let saveToNoteIcon =$('<i>').attr({'class':'fa-solid fa-share mr-auto save-to-note','style':'margin-left:0.5rem;'});
         let likeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-up like-btn');
         let dislikeIcon = $('<i>').attr('class', 'fa-regular fa-thumbs-down dislike-btn');
         let spanLike = $('<span>').attr('class', 'like-count').text(0);
         let spanDislike = $('<span>').attr('class', 'dislike-count').text(0);
-        let a = $('<a>').attr({'href': '#', 'class': 'answer-file mr-auto', 'data-like': '0', 'data-dislike': '0',}).text(res.file_name);
+        let a = $('<a>').attr({'href': '#', 'class': 'answer-file', 'data-like': '0', 'data-dislike': '0',}).text(res.file_name);
         divGrid.append(notePanelIcon);
         divGrid.append(a);
+        divGrid.append(saveToNoteIcon);
         divGrid.append(likeIcon);
         divGrid.append(spanLike);
         divGrid.append(dislikeIcon);
