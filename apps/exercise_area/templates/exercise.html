@@ -12,7 +12,7 @@ active
 
   {% block css %}
 
-  <link rel="stylesheet" href="{% static 'css/exercise_style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/exercise_style1.css' %}">
 
   {% endblock css %}
 
@@ -199,15 +199,35 @@ active
   </div>
 </div>
 
+<!-- save-to-note的modal -->
+<div class="modal fade" id="saveToNoteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><strong id='saveToNoteModalTitle'>儲存至筆記區</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        將<span id='saveToNoteText' style='color:blue;'></span>存到筆記區 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" style='padding: 0.25rem 0.5rem; font-size:0.8rem;' data-dismiss="modal">取消</button>
+        <button type="button" id='saveToNoteBtn' class="btn btn-success" style='padding: 0.25rem 0.5rem; font-size:0.8rem;'>確定</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
 
 {% block js %}
 <script>
   var MAIN = undefined;
-  var MAINTITLE = undefined;
-  var SUBJECT = undefined;
+  var MAINTITLE = undefined; // 按外面的按鈕的時候不會跟著變, 會出錯(但在subjectBtn函數中有定義其他變數來繞過錯誤, 所以沒有出事), 所以傳到後台的資料不能丟MAINTITLE
+  var SUBJECT = undefined; // 
   var DATE = undefined; // 跟著modal title日期的全域變數, regularQuestion函數的date局域變數與此無關
-  var NUMBER = undefined;
+  var NUMBER = undefined; // 題號
   var PERIOD = undefined; // regularQuestion函數的period局域變數與此無關
   
   $(function(){
@@ -225,6 +245,8 @@ active
     searchModule.init('ansSearchIcon', 'ansSearchInput', '#displayFileContainer a'); // 題號區的答案搜尋
     likeDislike();
     sort();
+    saveToNoteModal();
+    saveToNoteBtn();
   })
 
 function showMore(){
@@ -899,6 +921,42 @@ function sort(){
     $('#sortDropdown').hide();
   });
 }
-</script>
 
+
+function saveToNoteModal(){
+  $('#displayFileContainer').on('click', '.save-to-note', function(){
+    let panelName = '"' + $(this).parent().find('.answer-file').text() + '"';
+    $('#saveToNoteText').text(panelName);
+    $('#saveToNoteModal').modal('show');
+  });
+}
+
+function saveToNoteBtn(){
+  $('#saveToNoteModal').on('click', '#saveToNoteBtn', function(){
+    let panelName = $('#saveToNoteText').text().replace(/"/g,'');
+    $.ajax({
+      url: '/save_to_note/',
+      type: 'post',
+      data:{
+        'subject': SUBJECT,
+        'period': PERIOD,
+        'date': DATE,
+        'number': NUMBER,
+        'panelName': panelName,
+      },
+      dataType: 'JSON',
+      success: function(res){
+        if(res.status){
+          alert(res.data)
+          $('#saveToNoteModal').modal('hide');
+        }else{
+          alert(res.error)
+          $('#saveToNoteModal').modal('hide');
+        }
+      }
+    }); // end of ajax
+  })
+}
+
+</script>
 {% endblock js %}

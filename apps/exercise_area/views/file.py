@@ -1,8 +1,8 @@
 import os
 import random
+import shutil
 from datetime import datetime
 from django.http import JsonResponse
-from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, HttpResponse
 
@@ -75,3 +75,36 @@ def upload_file(request):
             'error': '上傳過程中出現錯誤'
         }
     return JsonResponse(context)
+
+@csrf_exempt
+def save_to_note(request):
+    # 找到用戶想儲存的筆記板路徑
+    subject = request.POST.get('subject')
+    period = request.POST.get('period')
+    date = request.POST.get('date')
+    number = request.POST.get('number')
+    panel_name = request.POST.get('panelName')
+    panel_path = os.path.join(COMPUTER_EXERCISE_PATH, subject, period, date, 'answer', number, panel_name)
+    
+    if os.path.exists(panel_path):
+        # 要移至的筆記區-習題答案區路徑與儲存的筆記板板名(ID+期數+題號, 用[]分隔)
+        to_user_info = os.path.join(COMPUTER_DESK, 'structure', 'Server', 'cust', 'user_info')
+        individual_exercise_answer_area = os.path.join('email#1', 'note', 'exercise_answer') # email#1替換成個別用戶註冊的信箱, 就是個別用戶的專屬路徑了
+        saved_panel_subject_path = os.path.join(to_user_info, individual_exercise_answer_area, subject)
+        saved_panel_name = panel_name.split('-')[0] + '[]' + date + '[]' + number + '.txt' # 這個副檔名未來也要改成筆記板所屬檔案類型的副檔名
+        saved_panel_path = os.path.join(saved_panel_subject_path, saved_panel_name)
+        os.makedirs(saved_panel_subject_path, exist_ok=True)
+        shutil.copy(panel_path, saved_panel_path)
+        
+        context = {
+            'status': True,
+            'data': '筆記板已儲存至筆記區'
+        }
+        return JsonResponse(context)
+    
+    context = {
+        'status': False,
+        'error': '儲存失敗: 選擇的筆記板不存在!'
+    }
+    return JsonResponse(context)
+    

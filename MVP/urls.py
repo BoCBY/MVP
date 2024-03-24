@@ -40,6 +40,7 @@ urlpatterns = [
     path('serve_pdf/', file.serve_pdf),
     path('upload_file/', file.upload_file),
     path('download_answer_panel/', file.download_answer_panel),
+    path('save_to_note/', file.save_to_note),
     path('like_dislike/', like_dislike.like_dislike),
     path('view_panel/', note_panel.view_panel),
       
