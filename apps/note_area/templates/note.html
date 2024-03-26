@@ -40,9 +40,7 @@ active
                 <div id='subject'>
                     <p style='margin-bottom:0.2rem; margin-top:1rem;'><strong>科目</strong></p>
                     <div id='subjectBtnContainer'>
-                        <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
-                        <button id="" subject='' type="button" class="btn btn-outline-secondary" style='padding: 0.1rem 0.2rem;'>線性代數</button>
-                        <button id="exerciseAnsMore" type="button" class="btn btn-outline-dark show-more" style='padding: 0.1rem 0.2rem;'><i class="fa-solid fa-ellipsis"></i></button>
+                        
                     </div>
                 </div>
             </div>
@@ -166,6 +164,35 @@ active
       </div>
     </div>
 </div>
+<!-- 習題答案區的modal -->
+<div class="modal fade" id="exerciseAnswerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="exerciseAnswerModalLabel"><strong id='exerciseAnswerModalTitle'></strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div id='exerciseAnswerTopContainer' class='container' style='margin-bottom:0.2rem;'>
+                <div class='d-flex align-items-center'>
+                    <div id='exerciseAnswerPrevPageContainer' class='mr-auto'>
+                        <a href='#' id='exerciseAnswerPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+                    </div>
+                    <div class='search-container'>
+                        <a href='#'><i id='exerciseAnswerSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                        <input id='exerciseAnswerSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                    </div>
+                </div>
+            </div>
+            <div id='exerciseAnswerPanelContainer' class='container align-items-center'>
+
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
 <!-- 各影片時段的筆記板modal -->
 <div class="modal fade" id="periodPanelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -223,16 +250,19 @@ active
     searchModule.init('showMoreSearchIcon', 'showMoreSearchInput', '#displayDataContainer button');
     searchModule.init('learningAreaSearchIcon', 'learningAreaSearchInput', '#learningAreaDataTableBody tr');
     searchModule.init('periodPanelSearchIcon', 'periodPanelSearchInput', '#periodPanelItems li');
+    searchModule.init('exerciseAnswerSearchIcon', 'exerciseAnswerSearchInput', '#exerciseAnswerPanelContainer .row');
     searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
     showMore();
     loadBtns();
     rename();
     prevPage();
     showLearningAreaData();
+    showExerciseAreaData();
     copyLink();
     toLearningArea();
     periodPanel();
     viewPeriodPanel();
+    viewAnswerPanel();
     panelTimeStructure();
   })
 
@@ -336,14 +366,14 @@ function showMore(){
                             })
                     }else{
                         // 製造習題答案區的科目按鈕
-
+                        $.each(res.data, function(index, subject){
+                            let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary exercise-answer col-sm-3', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;'}).text(subject);    
+                            $('#displayDataContainer').append(button);
+                            })
                     }
-
-                    //<button type="button" class="btn btn-outline-secondary learning-area-course" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>微積分</button>
-                    //<button type="button" class="btn btn-outline-secondary learning-area-lecturer" style='padding: 0.1rem 0.2rem; margin-left:1.5rem;'>朱樺</button>
                     $('#showMoreModal').modal('show');
                 }else{
-
+                    alert(res.error);
                 }
             }
         }) // end of ajax
@@ -362,6 +392,7 @@ function loadBtns(){
             if (res.status){
                 $('#courseBtnContainer').empty();
                 $('#lecturerBtnContainer').empty();
+                $('#subjectBtnContainer').empty();
                 
                 //製造學習影片區課名的按鈕
                 $.each(res.data.course_list, function(index, course){
@@ -394,12 +425,22 @@ function loadBtns(){
                 $('#lecturerBtnContainer').append(lecturerMoreBtn);
 
                 // 製造習題答案區的按鈕
-
+                $.each(res.data.exercise_list, function(index, subject){
+                    let button = $('<button>').attr({'type':'button', 'class':'btn btn-outline-secondary exercise-answer', 'style':'padding: 0.1rem 0.2rem; margin:0.2rem;', 'outside': true}).text(subject)
+                    if (index === 0) {
+                        button.css('margin-left', '1.5rem');
+                    }
+                    $('#subjectBtnContainer').append(button)
+                });
+                let subjectMoreBtn = $('<button>').attr({'id':'exerciseAnsMore', 'type':'button', 'class':'btn btn-outline-dark show-more', 'style':'padding: 0.1rem 0.2rem;'});
+                let subjectMoreIcon = $('<i>').attr({'class':'fa-solid fa-ellipsis'});
+                subjectMoreBtn.append(subjectMoreIcon);
+                $('#subjectBtnContainer').append(subjectMoreBtn);
             }else{
-
+                alert(res.error);
             }
         }
-    }) // end of ajax
+    }); // end of ajax
 }
 
 function rename(){
@@ -498,8 +539,13 @@ function prevPage(){
         event.preventDefault();
         $('#periodPanelModal').modal('hide');
         $('#learningAreaModal').modal('show');
+
     });
-    
+    $('#exerciseAnswerPrevPageContainer').on('click', '#exerciseAnswerPrevious', function(event){
+        event.preventDefault();
+        $('#exerciseAnswerModal').modal('hide');
+        $('#showMoreModal').modal('show');
+    });
 }
 
 function showLearningAreaData(){
@@ -569,6 +615,53 @@ function showLearningAreaData(){
         }); // end of ajax
         
     });
+}
+
+function showExerciseAreaData(){
+    $('.display-data-container, #displayDataContainer').on('click', '.exercise-answer', function(){
+        let $button = $(this);
+        let chineseSubject = $button.text();
+        let modalTitle = '習題答案' + ' - ' + chineseSubject;
+        $('#exerciseAnswerModalTitle').text(modalTitle);
+        $('#showMoreModal').modal('hide');
+
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'showExerciseAreaData',
+                'chineseSubject': chineseSubject,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#exerciseAnswerPanelContainer').empty();
+
+                    $.each(res.data.panel_list, function(index, panelName){
+                        let divRow = $('<div>').attr({'class':'row'});
+                        let divGrid = $('<div>').attr({'class':'col-sm-12 d-flex align-items-center'});
+                        let panelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square note-panel', 'style':'margin-right:0.2rem;'});
+                        let a = $('<a>').attr({'href':'#', 'class':'answer-panel', 'subject':res.data.subject}).text(panelName.replace(/\[\]/g, '-'));
+                        divGrid.append(panelIcon);
+                        divGrid.append(a);
+                        divRow.append(divGrid);
+                        $('#exerciseAnswerPanelContainer').append(divRow);
+                    });
+
+                    if ($button.attr('outside')){
+                        //不要顯示上一頁圖標
+                        $('#exerciseAnswerPrevious').hide();
+                        $('#exerciseAnswerModal').modal('show');
+                    }else{
+                        $('#exerciseAnswerPrevious').show();
+                        $('#exerciseAnswerModal').modal('show');
+                    }
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    })
 }
 
 function copyLink(){
@@ -747,14 +840,12 @@ function periodPanel(){
         });    
 }
 
-
 function viewPeriodPanel(){
     // 使用者點擊跳出筆記板內容, 但現在還沒有筆記板功能, 所以先去存放筆記板的相對應路徑來下載檔案(並且檔案是用.txt代替)
     $('#periodPanelItems').on('click', '.period-panel', function(event){
         event.preventDefault();
         let panelName = $(this).text();
         let videoId = $(this).attr('videoId')
-        console.log(videoId)
         $.ajax({
             url: '/note/',
             type: 'post',
@@ -766,12 +857,49 @@ function viewPeriodPanel(){
             dataType: 'JSON',
             success: function(res){
                 if(res.status){
-                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data), '_blank',);
-                    setTimeout(function() { // 為新開頁面設置title
-                        newTab.document.title = panelName;
-                    }, 100);
+                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data) + '&panelName=' + encodeURIComponent(panelName), '_blank',);
+                    setInterval(function() { // 設置newTab的title, 重新整理以後也會正確
+                        if (newTab.closed) {
+                            clearInterval();
+                        } else {
+                            newTab.document.title = panelName;
+                        }
+                    }, 1000);
                 }else{
                     alert(res.error)
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function viewAnswerPanel(){
+    // 使用者點擊跳出筆記板內容, 但現在還沒有筆記板功能, 所以先去存放筆記板的相對應路徑來下載檔案(並且檔案是用.txt代替)
+    $('#exerciseAnswerPanelContainer').on('click', '.answer-panel', function(event){
+        event.preventDefault();
+        let panelName = $(this).text();
+        let subject = $(this).attr('subject')
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'showingAnswerPanel',
+                'panelName': panelName,
+                'subject': subject,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data) + '&panelName=' + encodeURIComponent(panelName), '_blank',);
+                    setInterval(function() { // 設置newTab的title, 重新整理以後也會正確
+                        if (newTab.closed) {
+                            clearInterval();
+                        } else {
+                            newTab.document.title = panelName;
+                        }
+                    }, 1000);
+                }else{
+                    alert(res.error);
                 }
             }
         }); // end of ajax

@@ -429,10 +429,14 @@ function regularAnswer(){
       },
       success: function(res){
         if (res.status){
-          let newTab = window.open('/download_answer_panel/?path=' + encodeURIComponent(res.file_path), '_blank');
-          setTimeout(function() {// 為新開頁面設置title
-            newTab.document.title = fileName;
-        }, 100);
+          let newTab = window.open('/download_answer_panel/?path=' + encodeURIComponent(res.file_path) + '&fileName=' + encodeURIComponent(fileName), '_blank',);
+                    setInterval(function() { // 設置newTab的title, 重新整理以後也會正確, 但效能應該不怎麼樣
+                        if (newTab.closed) {
+                            clearInterval();
+                        } else {
+                            newTab.document.title = fileName;
+                        }
+                    }, 1000);
         }else{
           alert(res.error)
         }
