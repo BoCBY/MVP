@@ -142,7 +142,7 @@ active
             </button>
           </div>
           <div class="modal-body">
-            確定刪除此份筆記板？ 一旦刪除，此則筆記板內容將無法恢復。
+            確定刪除<span id='deleteText' style='color:blue;'></span>筆記板？ 一旦刪除，此則筆記板內容將無法恢復。
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">取消</button>
@@ -403,6 +403,10 @@ active
   
   function deletePanelShow(){
     $('#phase').on('click', 'li .delete-panel', function(){
+        let time = $(this).closest('li').find('strong').text();
+        let description = $(this).parent().text();
+        let deleteItem = '"' + time + ' ' + description + '"';
+        $('#deleteText').text(deleteItem);
         $('#deletePanelModal').modal('show');
         let start = $(this).closest('li').attr('start');
         let end = $(this).closest('li').attr('end');

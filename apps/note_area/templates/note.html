@@ -12,26 +12,18 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
 
 {% endblock css %}
 
 {% block content %}
 <div class='area-container'>
-    <a href='#'><button id="toAllNotes" type="button" class="btn btn-info" style='margin-top:0.5rem;'>所有筆記板</button></a>
+    <div id='btnContainer' style='margin-top:1rem;'>
+        <a href='#'><button id="selfDefined" type="button" class="btn btn-info">自定義筆記</button></a>
+        <a href='#'><button id="playlist" type="button" class="btn btn-info">播放清單</button></a>
+        <a href='#'><button id="allNotes" type="button" class="btn btn-info">所有筆記板</button></a>
+    </div>
     <div id='wholeAreaContainer'>
-        <div id="selfDefined" class="region-container">
-            <div class='d-flex justify-content-center'>
-                <h5 class='header-style'>自定義區</h5>
-                <div class='search-container'>
-                    <a href='#'><i id='selfDefinedSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-                    <input id='selfDefinedSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
-                </div>
-            </div>
-            <div class='container display-data-container'>
-
-            </div>
-        </div>
         <div id="exerciseAns" class="region-container">
             <div class='d-flex justify-content-center'>
                 <h5 class='header-style'>習題答案區</h5>
@@ -238,7 +230,115 @@ active
       </div>
     </div>
 </div>
-  
+<!-- 自定義的modal -->
+<div class="modal fade" id="selfDefinedModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="selfDefinedModalLabel"><strong id='selfDefinedModalTitle'>自定義區筆記</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div id='selfDefinedTopContainer' class='container' style='margin-bottom:0.2rem;'>
+                <div class='d-flex align-items-center'>
+                    <span class='mr-auto'><strong style='font-size:0.9rem;'>位址</strong></span>
+                    <div class='search-container'>
+                        <a href='#'><i id='selfDefinedSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                        <input id='selfDefinedSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                    </div>
+                </div>
+                <div id='path' style='margin-left:1rem;'>
+                    <a href='#' class='self-defined-path'></a>
+                    <!--
+                    <a href='#' class='self-defined-path'> > 1</a>
+                    <a href='#' class='self-defined-path'> > 2</a>
+                    <a href='#' class='self-defined-path'> > 3</a> 
+                    -->
+                </div>
+            </div>
+            <div id='selfDefinedDataContainer' class='container' style='margin-top:0.5rem;'>
+                <div id='selfDefinedFolderContainer'>
+                    <div class='self-defined-folder-header'>
+                        <span id='selfDefinedFolderHeader' class='self-defined-header'><strong style='font-size:1.2rem;'>資料夾</strong></span>
+                        <a href='#' id='newFolder' class='add-things' style='margin-left:0.3rem; color:black;'><i class="bi bi-folder-plus"></i></a>
+                    </div>
+                    <div id='selfDefinedFolderData'>
+                        
+                            <div class='col-sm-8 d-flex' style='margin-left:2rem;'>
+                                <i class="bi bi-folder" style='margin-right: 0.3rem;'></i>
+                                <a href='#' class='self-defined-folder mr-auto'>我是一個資料夾</a>
+                                <a href='#'>
+                                    <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
+                                    <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
+                                </a>
+                            </div>
+                            <div class='col-sm-8 d-flex' style='margin-left:2rem;'>
+                                <i class="bi bi-folder" style='margin-right: 0.3rem;'></i>
+                                <a href='#' class='self-defined-folder mr-auto'>我是地二個資料夾</a>
+                                <a href='#'>
+                                    <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
+                                    <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
+                                </a>
+                            </div>
+
+                    </div>
+                </div>
+                <div id='selfDefinedPanelContainer' style='margin-top:0.5rem;'>
+                    <div class='self-defined-panel-header'>
+                        <span id='selfDefinedPanelHeader' class='self-defined-header'><strong style='font-size:1.2rem;'>筆記板</strong></span>
+                        <a href='#' id='newPanel' class='add-things' style='margin-left:0.3rem; color:black;'><i class="fa-regular fa-pen-to-square"></i></a>
+                    </div>
+                    <div class='selfDefinedPanelData'>
+
+                        <div class='col-sm-8 d-flex align-items-center' style='margin-left:2rem;'>
+                            <i class="fa-solid fa-pen-to-square" style='margin-right: 0.3rem;'></i>
+                            <a href='#' class='self-defined-panel mr-auto'>我是一個筆記板</a>
+                            <a href='#'>
+                                <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
+                                <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
+                            </a>
+                        </div>
+                        <div class='col-sm-8 d-flex align-items-center' style='margin-left:2rem;'>
+                            <i class="fa-solid fa-pen-to-square" style='margin-right: 0.3rem;'></i>
+                            <a href='#' class='self-defined-panel mr-auto'>我是第二個筆記板</a>
+                            <a href='#'>
+                                <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
+                                <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- 新增東西的modal -->
+<div class="modal fade" id="addThingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="addThingsModalLabel"><strong id='addThingsModalTitle'></strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="input-group add-things-container" style='margin-top:0.3rem;'>
+                <input type="text" id="addThingsInput" style="width:180px;" placeholder='重新命名'>
+                <div class='input-group-append'>
+                    <button type="button" id="addThingsSubmit" class="btn btn-primary" style='padding: 0.1rem 0.2rem;'>確定</button>
+                </div>
+                <span id='addThingsError' style='color:red; font-size:0.7rem;'></span>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
 
 {% endblock content %}
 
@@ -264,6 +364,9 @@ active
     viewPeriodPanel();
     viewAnswerPanel();
     panelTimeStructure();
+    showSelfDefinedModal();
+    addThingsModal();
+    addThings();
   })
 
 // Define a search module
@@ -982,13 +1085,111 @@ function panelTimeStructure(){ //複製learning.html的timeStructure, 只有把p
       $("#periodPanelItems").empty().append(lis);
   });
 }
-function loadSelfDefinedBtns(){
 
+function showSelfDefinedModal(){
+    $('#selfDefined').click(function(){
+        // 還要生成標籤
+        $('#selfDefinedModal').modal('show');
+    })
 }
 
-function selfDefinedShowMore(){
-
+function addThingsModal(){
+    $('.add-things').click(function(){
+        let folder = $(this).attr('id').includes('Folder');
+        if (folder){
+            $('#addThingsModalTitle').text('新建資料夾');
+            $('#addThingsInput').attr('placeholder', '輸入資料夾名稱');
+        }else{
+            $('#addThingsModalTitle').text('新建筆記板');
+            $('#addThingsInput').attr('placeholder', '輸入筆記板名稱');
+        }
+        $('#addThingsModal').modal('show');
+    })
 }
+
+function addThings(){
+    let folder = undefined;
+    let path = '';
+    $(".self-defined-path").each(function() {
+        // Concatenate the text of each <a> tag
+        path += $(this).text();
+    });
+
+
+    // 點擊新增圖標
+    $('.add-things').click(function(){
+        folder = $(this).attr('id').includes('Folder');
+        if (folder){
+            $('#addThingsModalTitle').text('新建資料夾');
+            $('#addThingsInput').attr('placeholder', '輸入資料夾名稱');
+        }else{
+            $('#addThingsModalTitle').text('新建筆記板');
+            $('#addThingsInput').attr('placeholder', '輸入筆記板名稱');
+        }
+        $('#addThingsModal').modal('show');
+    });
+
+    // 點擊確定按鈕
+    $('#addThingsSubmit').click(function(){
+        const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+        let name = $('#addThingsInput').val();
+        if (name.trim().length ===0) {
+            $('#addThingsError').text('不可為空');
+            $('#addThingsInput').val('');
+            return;
+        }
+        
+        for (let i = 0; i < invalidCharacters.length; i++) {
+            if (name.includes(invalidCharacters[i])) {
+                $('#addThingsError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
+                return; // Stop the loop after the first invalid character is found
+            }
+        }
+
+        if (folder){ //看看有沒有重複名稱的資料夾
+            $('.self-defined-folder').each(function() {
+                folderlName = $(this).text();
+                if (name===panelName){
+                    alert('已有相同名稱的資料夾');
+                    return;
+                }
+            });
+            
+        }else{ //看看有沒有重複名稱的筆記板
+            name = name + '.txt'; // 新增筆記板要加副檔名, 一樣先用.txt展示
+            $('.self-defined-panel').each(function() {
+                panelName = $(this).text();
+                if (name===panelName){
+                    alert('已有相同名稱的筆記板');
+                    return;
+                }
+            });
+        }
+
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'addThings',
+                'name': name,
+                'path': path, // path傳到後台以後要.split(' > ')
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    if(folder){
+                        // 造folder的標籤
+                    }else{
+                        // 造panel的標籤
+                    }
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
 </script>
 
 {% endblock js %}
