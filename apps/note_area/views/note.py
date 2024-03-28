@@ -1,5 +1,6 @@
 import os
 import random
+import shutil
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -20,6 +21,10 @@ LEARNING_NOTEBOOK_PATH = os.path.join(NOTEBOOK_USER_INFO_PATH, LEARNING)
 # 習題區的路徑
 INDIVIDUAL_EXERCISE_ANSWER_AREA = os.path.join('email#1', 'note', 'exercise_answer') # email#1替換成個別用戶註冊的信箱, 就是個別用戶的專屬路徑了
 EXERCISE_ANSWER_AREA_PATH = os.path.join(COMPUTER_USER_INFO_PATH, INDIVIDUAL_EXERCISE_ANSWER_AREA)
+
+# 自定義區的路徑
+SELF_DEFINED_PATH = os.path.join('email#1', 'note', 'self_defined')
+SELF_DEFINED_AREA_PATH = os.path.join(COMPUTER_USER_INFO_PATH, SELF_DEFINED_PATH)
 
 # 科目英文名轉中文名的映射
 ENG_TO_CH = {
@@ -102,7 +107,7 @@ def note(request):
                     new_folder_name = folder_name.replace(old_name, new_name, 1)
                     new_path = os.path.join(LEARNING_COMPUTER_PATH, new_folder_name)
                     os.rename(old_path, new_path)
-
+                    # 因為要把整排含有舊有名字的檔案全部重新命名, 所以整個for迴圈要跑完
             context = {
                 'status': True,
                 'data': '重新命名成功!',
@@ -115,12 +120,63 @@ def note(request):
                 new_folder_name = folder_name.replace(old_name, new_name, 1)
                 new_path = os.path.join(LEARNING_COMPUTER_PATH, new_folder_name)
                 os.rename(old_path, new_path)
-
+                # 因為要把整排含有舊有名字的檔案全部重新命名, 所以整個for迴圈要跑完
         context = {
             'status': True,
             'data': '重新命名成功!',
         }
         return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'renameSelfDefined':
+        old_name = request.POST.get('oldName', '')
+        new_name = request.POST.get('newName', '')
+        path_list = request.POST.get('path', '').split(' > ')
+        exact_path = os.path.join(SELF_DEFINED_AREA_PATH, *path_list)
+        full_items_list = os.listdir(exact_path)
+        for item_name in full_items_list:
+            if old_name == item_name:
+                old_path = os.path.join(exact_path, item_name)
+                new_path = os.path.join(exact_path, new_name)
+                os.rename(old_path, new_path)
+                # 因為只會有一個檔案要重名, 所以可以在這裡return
+                context = {
+                    'status': True,
+                    'data': '重新命名成功!',
+                }
+                return JsonResponse(context)
+        context = {
+            'status': False,
+            'error': '重新命名失敗: 找不到此檔案'
+        }
+        
+    if request.POST['purpose'] == 'deleteSelfDefined':
+        is_folder = request.POST.get('isFolder', '')
+        is_folder = True if is_folder == 'true' else False
+        name = request.POST.get('name', '')
+        path_list = request.POST.get('path', '').split(' > ')
+        exact_path = os.path.join(SELF_DEFINED_AREA_PATH, *path_list, name)
+        if os.path.exists(exact_path):
+            if is_folder:
+                shutil.rmtree(exact_path)
+                context = {
+                    'status': True,
+                    'data': f'成功刪除"{name}" 資料夾'
+                }
+                return JsonResponse(context)
+            
+            os.remove(exact_path)
+            context = {
+                'status': True,
+                'data': f'成功刪除"{name}" 筆記板'
+            }
+            return JsonResponse(context)
+        
+        context = {
+                'status': False,
+                'error': f'刪除失敗: 找不到"{name}"'
+            }
+        return JsonResponse(context)
+            
     
     if request.POST['purpose'] == 'showLearningAreaData':
         course_filter_text = request.POST.get('courseFilterText', '')
@@ -222,4 +278,32 @@ def note(request):
             'status': False,
             'error': '筆記板路徑不存在'
         }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'showSelfDefinedModal':
+        folder_list = [name for name in os.listdir(SELF_DEFINED_AREA_PATH) if not name.endswith('.txt')]
+        panel_list = [name for name in os.listdir(SELF_DEFINED_AREA_PATH) if name.endswith('.txt')]
+        context = {
+            'status': True,
+            'data': {
+                'folder_list': folder_list,
+                'panel_list': panel_list,
+            }
+        }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'addSelfDefined':
+        is_folder = request.POST.get('isFolder', '')
+        is_folder = True if is_folder == 'true' else False
+        name = request.POST.get('name', '')
+        path_list = request.POST.get('path', '').split(' > ')
+        exact_path = os.path.join(SELF_DEFINED_AREA_PATH, *path_list, name)
+        if is_folder:
+            os.makedirs(exact_path)
+            context = {'status': True}
+            return JsonResponse(context)
+        
+        with open(exact_path, 'w'):
+            pass
+        context = {'status': True}
         return JsonResponse(context)

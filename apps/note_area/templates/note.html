@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
 
 {% endblock css %}
 
@@ -59,8 +59,8 @@ active
     </div>
 </div>
 
-<!-- 重新命名的輸入框modal -->
-<div class="modal fade" id="renameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- 學習影片區重新命名的輸入框modal -->  <!-- 不知道為啥renameModal竟然會出現在showMoreModal的後面(明明是比較晚出現的), 所以直接給他加一個z-index:1051, bootstrap原本的預設好像都是1050 -->
+<div class="modal fade" id="renameModal" style='z-index:1051;' tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -70,14 +70,11 @@ active
           </button>
         </div>
         <div class="modal-body">
-            <div class='prev-page-container'>
-                <a href='#' id='renamePrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
-            </div>
             <div id='oldNameContainer'><strong>現在名稱: <span id='oldName'></span></strong></div>
             <div class="input-group rename-container" style='margin-top:0.3rem;'>
-                <input type="text" id="renameInput" style="width:150px;" placeholder='重新命名'>
+                <input type="text" id="renameInput" style="width:180px;" placeholder='重新命名'>
                 <div class='input-group-append'>
-                    <button type="button" id="renameSubmit" class="btn btn-primary" style='padding: 0.1rem 0.2rem;'>確定</button>
+                    <button type="button" id="renameSubmit" class="btn btn-success" style='padding: 0.1rem 0.2rem;'>確定</button>
                 </div>
                 <span id='renameError' style='color:red; font-size:0.7rem;'></span>
             </div>
@@ -86,6 +83,29 @@ active
     </div>
   </div>
 
+<!-- 自定義區重新命名的輸入框modal -->  <!-- 不知道為啥selfDefinedRenameModal竟然會出現在selfDefinedModal的後面(明明是比較晚出現的), 所以直接給他加一個z-index:1051, bootstrap原本的預設好像都是1050 -->
+<div class="modal fade" id="selfDefinedRenameModal" style='z-index:1051;' tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="selfDefinedRenameModalLabel"><strong id='selfDefinedRenameModalTitle'>重新命名</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div id='selfDefinedOldNameContainer'><strong>現在名稱: <span id='selfDefinedOldName'></span></strong></div>
+            <div class="input-group rename-container" style='margin-top:0.3rem;'>
+                <input type="text" id="selfDefinedRenameInput" style="width:180px;" placeholder='重新命名'>
+                <div class='input-group-append'>
+                    <button type="button" id="selfDefinedRenameSubmit" class="btn btn-success" style='padding: 0.1rem 0.2rem;'>確定</button>
+                </div>
+                <span id='selfDefinedRenameError' style='color:red; font-size:0.7rem;'></span>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
 <!-- 學習影片筆記區與習題答案筆記區的show-more modal -->
 <div class="modal fade" id="showMoreModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -266,23 +286,16 @@ active
                     </div>
                     <div id='selfDefinedFolderData'>
                         
+                            <!--範例結構
                             <div class='col-sm-8 d-flex' style='margin-left:2rem;'>
                                 <i class="bi bi-folder" style='margin-right: 0.3rem;'></i>
                                 <a href='#' class='self-defined-folder mr-auto'>我是一個資料夾</a>
                                 <a href='#'>
-                                    <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
-                                    <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
+                                    <i class="bi bi-pen self-defined-folder-rename" style="margin-right:0.3rem; font-size:0.8rem;"></i>
+                                    <i class="fa-solid fa-trash-can self-defined-folder-delete" style="font-size:0.8rem;"></i>
                                 </a>
                             </div>
-                            <div class='col-sm-8 d-flex' style='margin-left:2rem;'>
-                                <i class="bi bi-folder" style='margin-right: 0.3rem;'></i>
-                                <a href='#' class='self-defined-folder mr-auto'>我是地二個資料夾</a>
-                                <a href='#'>
-                                    <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
-                                    <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
-                                </a>
-                            </div>
-
+                            -->
                     </div>
                 </div>
                 <div id='selfDefinedPanelContainer' style='margin-top:0.5rem;'>
@@ -290,25 +303,17 @@ active
                         <span id='selfDefinedPanelHeader' class='self-defined-header'><strong style='font-size:1.2rem;'>筆記板</strong></span>
                         <a href='#' id='newPanel' class='add-things' style='margin-left:0.3rem; color:black;'><i class="fa-regular fa-pen-to-square"></i></a>
                     </div>
-                    <div class='selfDefinedPanelData'>
-
+                    <div id='selfDefinedPanelData'>
+                        <!-- 範例結構
                         <div class='col-sm-8 d-flex align-items-center' style='margin-left:2rem;'>
                             <i class="fa-solid fa-pen-to-square" style='margin-right: 0.3rem;'></i>
-                            <a href='#' class='self-defined-panel mr-auto'>我是一個筆記板</a>
+                            <a href='#' class='self-defined-panel mr-auto'>我是一個筆記板.txt</a>
                             <a href='#'>
-                                <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
-                                <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
+                                <i class="bi bi-pen self-defined-panel-rename" style="margin-right:0.3rem; font-size:0.8rem;"></i>
+                                <i class="fa-solid fa-trash-can self-defined-panel-delete" style="font-size:0.8rem;"></i>
                             </a>
                         </div>
-                        <div class='col-sm-8 d-flex align-items-center' style='margin-left:2rem;'>
-                            <i class="fa-solid fa-pen-to-square" style='margin-right: 0.3rem;'></i>
-                            <a href='#' class='self-defined-panel mr-auto'>我是第二個筆記板</a>
-                            <a href='#'>
-                                <i class="bi bi-pen self-defined-rename" style="font-size:0.8rem;"></i>
-                                <i class="fa-solid fa-trash-can self-defined-delete" style="font-size:0.8rem;"></i>
-                            </a>
-                        </div>
-
+                        -->
                     </div>
                 </div>
             </div>
@@ -338,7 +343,25 @@ active
       </div>
     </div>
 </div>
-
+<!-- 自定義刪除的modal -->
+<div class="modal fade" id="selfDefinedDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><strong id='selfDefinedDeleteModalTitle'>刪除</strong></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          確定刪除<span id='selfDefinedDeleteText' style='color:blue;'></span><span id='selfDefinedDeleteDangerText' style='color:red;'></span>一旦刪除將無法恢復。
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">取消</button>
+          <button id='selfDefinedDeleteConfirm' type="button" class="btn btn-sm btn-danger">刪除</button>
+        </div>
+      </div>
+  </div>
 
 {% endblock content %}
 
@@ -354,7 +377,10 @@ active
     searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
     showMore();
     loadBtns();
-    rename();
+    learningAreaRename();
+    selfDefinedRename();
+    selfDefinedDelete();
+    selfDefinedAdd();
     prevPage();
     showLearningAreaData();
     showExerciseAreaData();
@@ -365,8 +391,7 @@ active
     viewAnswerPanel();
     panelTimeStructure();
     showSelfDefinedModal();
-    addThingsModal();
-    addThings();
+    selfDefinedCount();
   })
 
 // Define a search module
@@ -546,7 +571,7 @@ function loadBtns(){
     }); // end of ajax
 }
 
-function rename(){
+function learningAreaRename(){
     const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
     let oldName = undefined;
     let $button = undefined;
@@ -563,21 +588,10 @@ function rename(){
         }else{
             $('#renameModalTitle').text('重新命名-授課者');
         }
-        if ($button.attr('outside')){
-            $('.prev-page-container').hide();
-            $('#oldName').text(oldName);
-            $('#renameError').empty();
-            $('#renameInput').val('');
-            $('#showMoreModal').modal('hide');
-            $('#renameModal').modal('show');
-        }else{
-            $('.prev-page-container').show();
-            $('#oldName').text(oldName);
-            $('#renameError').empty();
-            $('#renameInput').val('');
-            $('#showMoreModal').modal('hide');
-            $('#renameModal').modal('show');
-        }
+        $('#oldName').text(oldName);
+        $('#renameError').empty();
+        $('#renameInput').val('');
+        $('#renameModal').modal('show');
     });
         
     // 點擊確定按鈕
@@ -614,9 +628,6 @@ function rename(){
                     $button.html('<i class="bi bi-pen rename" style="font-size:0.8rem;"></i> ' + newName);
                     $('#renameModal').modal('hide');
                     $('#renameInput').val('');
-                    if (!$button.attr('outside')){
-                        $('#showMoreModal').modal('show');
-                    }
                 }else{
                     alert(res.error);
                 }
@@ -625,13 +636,294 @@ function rename(){
         })
 }
 
-function prevPage(){
-    $('.prev-page-container').on('click', '#renamePrevious', function(event){
-        event.preventDefault();
-        $('#renameModal').modal('hide');
-        $('#showMoreModal').modal('show');
+function selfDefinedRename(){
+    const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+    let $aName = undefined;
+    let oldName = undefined;
+    let isFolder = undefined;
+
+    let path = '';
+    $(".self-defined-path").each(function() {
+        // Concatenate the text of each <a> tag
+        path += $(this).text();
     });
-    
+
+    // 點擊重新命名圖標
+    $('#selfDefinedDataContainer').on('click', '.self-defined-folder-rename, .self-defined-panel-rename', function(){
+        $this = $(this);
+        $aName = $this.parent().prev();
+        isFolder = $this.hasClass('self-defined-folder-rename');
+        if (isFolder){
+            oldName = $aName.text();
+            $('#selfDefinedRenameModalTitle').text('重新命名-資料夾');
+        }else{
+            oldName = $aName.text().replace('.txt', '');
+            $('#selfDefinedRenameModalTitle').text('重新命名-筆記板');
+        }
+        $('#selfDefinedOldName').text(oldName);
+        $('#selfDefinedRenameError').empty();
+        $('#selfDefinedRenameInput').val('');
+        $('#selfDefinedRenameModal').modal('show');   
+    });
+
+    // 點擊確定按鈕
+    $('#selfDefinedRenameSubmit').click(function () {
+        $('#selfDefinedRenameError').empty();
+        let duplicateFound = false;
+
+        let newName = $('#selfDefinedRenameInput').val();
+        if (newName.trim().length ===0) {
+            $('#selfDefinedRenameError').text('輸入不可為空');
+            $('#selfDefinedRenameInput').val('');
+            return;
+        }
+        
+        for (let i = 0; i < invalidCharacters.length; i++) {
+            if (newName.includes(invalidCharacters[i])) {
+                $('#selfDefinedRenameError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
+                return; // Stop the loop after the first invalid character is found
+            }
+        }
+
+        if (isFolder){ //看看有沒有重複名稱的資料夾
+            $('.self-defined-folder').each(function() {
+                let folderName = $(this).text();
+                if (newName===folderName){
+                    $('')
+                    $('#selfDefinedRenameError').text('已有相同名稱的資料夾');
+                    duplicateFound = true;
+                    return false;
+                }
+            });
+            
+        }else{ //看看有沒有重複名稱的筆記板
+            $('.self-defined-panel').each(function() {
+                let panelName = $(this).text().replace('.txt', '');
+                if (newName===panelName){
+                    $('#selfDefinedRenameError').text('已有相同名稱的筆記板');
+                    duplicateFound = true;
+                    return false;
+                }
+            });
+        }
+
+        if (duplicateFound) { //有重名的筆記板或資料夾就退出function
+            return; 
+        }
+        
+        // 筆記板的話名稱要加上副檔名
+        if(!isFolder){ // 以後的.txt都要改成筆記板的副檔名
+            newName=newName+'.txt';
+            oldName=oldName+'.txt';
+        }
+
+        // 去後台修改資料夾名稱
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'renameSelfDefined',
+                'path': path,
+                'oldName': oldName,
+                'newName': newName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    alert(res.data);
+                    $aName.text(newName);
+                    $('#selfDefinedRenameModal').modal('hide');
+                    $('#selfDefinedRenameInput').val('');
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function selfDefinedDelete(){
+    let $this = undefined;
+    let $aName = undefined;
+    let name = undefined;
+    let isFolder = false;
+
+    let path = '';
+    $(".self-defined-path").each(function() {
+        // Concatenate the text of each <a> tag
+        path += $(this).text();
+    });
+
+    // 點擊刪除圖標
+    $('#selfDefinedDataContainer').on('click', '.self-defined-folder-delete, .self-defined-panel-delete', function(){
+        $this = $(this);
+        isFolder = $this.hasClass('self-defined-folder-delete');
+        $aName = $this.parent().prev();
+        name = $aName.text();
+        if (isFolder){
+            let message1 = '"'+name+'"' + ' 資料夾？ ';
+            let message2 = '資料夾裡的所有項目也將一併刪除！'
+            $('#selfDefinedDeleteText').text(message1);
+            $('#selfDefinedDeleteDangerText').text(message2);
+        }else{
+            $('#selfDefinedDeleteDangerText').empty();
+            $('#selfDefinedDeleteText').text('"'+name+'"'+' 筆記板？');
+        }
+        $('#selfDefinedDeleteModal').modal('show');
+    });
+
+    // 點擊確定按鈕
+    $('#selfDefinedDeleteModal').on('click', '#selfDefinedDeleteConfirm', function(){
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data: {
+                'purpose': 'deleteSelfDefined',
+                'path': path,
+                'name': name,
+                'isFolder': isFolder,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    alert(res.data);
+                    $this.closest('.col-sm-8').remove();
+                    $('#selfDefinedDeleteModal').modal('hide');
+                    selfDefinedCount();
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function selfDefinedAdd(){
+    let path = '';
+    let isFolder = false;
+
+    $(".self-defined-path").each(function() {
+        // Concatenate the text of each <a> tag
+        path += $(this).text();
+    });
+
+
+    // 點擊新增圖標
+    $('.add-things').click(function(){
+        $('#addThingsInput').val('');
+        $('#addThingsError').empty();
+
+        isFolder = $(this).attr('id').includes('Folder');
+        if (isFolder){
+            $('#addThingsModalTitle').text('新建資料夾');
+            $('#addThingsInput').attr('placeholder', '輸入資料夾名稱');
+        }else{
+            $('#addThingsModalTitle').text('新建筆記板');
+            $('#addThingsInput').attr('placeholder', '輸入筆記板名稱');
+        }
+        $('#addThingsModal').modal('show');
+    });
+
+    // 點擊確定按鈕
+    $('#addThingsSubmit').click(function(){
+        const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+        let duplicateFound = false;
+        let name = $('#addThingsInput').val();
+        $('#addThingsError').empty();
+
+        if (name.trim().length ===0) {
+            $('#addThingsError').text('不可為空');
+            $('#addThingsInput').val('');
+            return;
+        }
+        
+        for (let i = 0; i < invalidCharacters.length; i++) {
+            if (name.includes(invalidCharacters[i])) {
+                $('#addThingsError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
+                return; // Stop the loop after the first invalid character is found
+            }
+        }
+
+        if (isFolder){ //看看有沒有重複名稱的資料夾
+            $('.self-defined-folder').each(function() {
+                let folderName = $(this).text();
+                if (name===folderName){
+                    $('')
+                    $('#addThingsError').text('已有相同名稱的資料夾');
+                    duplicateFound = true;
+                    return false;
+                }
+            });
+            
+        }else{ //看看有沒有重複名稱的筆記板
+            name = name + '.txt'; // 新增筆記板要加副檔名, 一樣先用.txt展示
+            $('.self-defined-panel').each(function() {
+                let panelName = $(this).text();
+                if (name===panelName){
+                    $('#addThingsError').text('已有相同名稱的筆記板');
+                    duplicateFound = true;
+                    return false;
+                }
+            });
+        }
+
+        if (duplicateFound) { //有重名的筆記板或資料夾就退出function
+            return; 
+        }
+
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'addSelfDefined',
+                'isFolder': isFolder,
+                'name': name,
+                'path': path, // path傳到後台以後要.split(' > ')
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    if(isFolder){
+                        // 造folder的標籤
+                        let folderIcon = $('<i>').attr({'class':'bi bi-folder', 'style':'margin-right: 0.3rem;'});
+                        let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-folder-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-folder-delete', 'style':'font-size:0.8rem;'});
+                        let aName = $('<a>').attr({'href':'#', 'class':'self-defined-folder mr-auto',}).text(name);
+                        let aEdit = $('<a>').attr({'href':'#'});
+                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex', 'style':'margin-left:2rem;'});
+                        aEdit.append(renameIcon);
+                        aEdit.append(deleteIcon);
+                        divContainer.append(folderIcon);
+                        divContainer.append(aName);
+                        divContainer.append(aEdit);
+                        $('#selfDefinedFolderData').append(divContainer);
+                    }else{
+                        // 造panel的標籤
+                        let panelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square', 'style':'margin-right: 0.3rem;'});
+                        let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-panel-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-panel-delete', 'style':'font-size:0.8rem;'});
+                        let aName = $('<a>').attr({'href':'#', 'class':'self-defined-panel mr-auto',}).text(name);
+                        let aEdit = $('<a>').attr({'href':'#'});
+                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex align-items-center', 'style':'margin-left:2rem;'});
+                        aEdit.append(renameIcon);
+                        aEdit.append(deleteIcon);
+                        divContainer.append(panelIcon);
+                        divContainer.append(aName);
+                        divContainer.append(aEdit);
+                        $('#selfDefinedPanelData').append(divContainer);
+                    }
+                    $('#addThingsInput').val('');
+                    $('#addThingsModal').modal('hide');
+                    selfDefinedCount();
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function prevPage(){
     $('#learningAreaTopContainer').on('click', '#learningAreaPrevious', function(event){
         event.preventDefault();
         $('#learningAreaModal').modal('hide');
@@ -1088,106 +1380,66 @@ function panelTimeStructure(){ //複製learning.html的timeStructure, 只有把p
 
 function showSelfDefinedModal(){
     $('#selfDefined').click(function(){
-        // 還要生成標籤
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data: {'purpose': 'showSelfDefinedModal'},
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#selfDefinedFolderData').empty();
+                    $('#selfDefinedPanelData').empty();
+                    
+                    $.each(res.data.folder_list, function(index, folderName){
+                        let folderIcon = $('<i>').attr({'class':'bi bi-folder', 'style':'margin-right: 0.3rem;'});
+                        let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-folder-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-folder-delete', 'style':'font-size:0.8rem;'});
+                        let aName = $('<a>').attr({'href':'#', 'class':'self-defined-folder mr-auto',}).text(folderName);
+                        let aEdit = $('<a>').attr({'href':'#'});
+                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex', 'style':'margin-left:2rem;'});
+                        aEdit.append(renameIcon);
+                        aEdit.append(deleteIcon);
+                        divContainer.append(folderIcon);
+                        divContainer.append(aName);
+                        divContainer.append(aEdit);
+                        $('#selfDefinedFolderData').append(divContainer);
+                    });
+                    $.each(res.data.panel_list, function(index, panelName){
+                        let panelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square', 'style':'margin-right: 0.3rem;'});
+                        let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-panel-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-panel-delete', 'style':'font-size:0.8rem;'});
+                        let aName = $('<a>').attr({'href':'#', 'class':'self-defined-panel mr-auto',}).text(panelName);
+                        let aEdit = $('<a>').attr({'href':'#'});
+                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex align-items-center', 'style':'margin-left:2rem;'});
+                        aEdit.append(renameIcon);
+                        aEdit.append(deleteIcon);
+                        divContainer.append(panelIcon);
+                        divContainer.append(aName);
+                        divContainer.append(aEdit);
+                        $('#selfDefinedPanelData').append(divContainer);
+                    });
+                    selfDefinedCount();
+                }else{
+                    alert(res.error)
+                }
+            }
+        })
         $('#selfDefinedModal').modal('show');
     })
 }
 
-function addThingsModal(){
-    $('.add-things').click(function(){
-        let folder = $(this).attr('id').includes('Folder');
-        if (folder){
-            $('#addThingsModalTitle').text('新建資料夾');
-            $('#addThingsInput').attr('placeholder', '輸入資料夾名稱');
-        }else{
-            $('#addThingsModalTitle').text('新建筆記板');
-            $('#addThingsInput').attr('placeholder', '輸入筆記板名稱');
-        }
-        $('#addThingsModal').modal('show');
-    })
-}
+function selfDefinedCount(){
+    
+    $('#folderCount').remove();
+    let folderCount = $('#selfDefinedFolderData .col-sm-8').length.toString();
+    let divFolderCount = $('<div>').attr({'id':'folderCount'}).text('共'+folderCount+'項');
+    $('#selfDefinedFolderData').prepend(divFolderCount);
+    
+    $('#panelCount').remove();
+    let panelCount = $('#selfDefinedPanelData .col-sm-8').length.toString();
+    let divPanelCount = $('<div>').attr({'id':'panelCount'}).text('共'+panelCount+'項');
+    $('#selfDefinedPanelData').prepend(divPanelCount);
 
-function addThings(){
-    let folder = undefined;
-    let path = '';
-    $(".self-defined-path").each(function() {
-        // Concatenate the text of each <a> tag
-        path += $(this).text();
-    });
-
-
-    // 點擊新增圖標
-    $('.add-things').click(function(){
-        folder = $(this).attr('id').includes('Folder');
-        if (folder){
-            $('#addThingsModalTitle').text('新建資料夾');
-            $('#addThingsInput').attr('placeholder', '輸入資料夾名稱');
-        }else{
-            $('#addThingsModalTitle').text('新建筆記板');
-            $('#addThingsInput').attr('placeholder', '輸入筆記板名稱');
-        }
-        $('#addThingsModal').modal('show');
-    });
-
-    // 點擊確定按鈕
-    $('#addThingsSubmit').click(function(){
-        const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
-        let name = $('#addThingsInput').val();
-        if (name.trim().length ===0) {
-            $('#addThingsError').text('不可為空');
-            $('#addThingsInput').val('');
-            return;
-        }
-        
-        for (let i = 0; i < invalidCharacters.length; i++) {
-            if (name.includes(invalidCharacters[i])) {
-                $('#addThingsError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
-                return; // Stop the loop after the first invalid character is found
-            }
-        }
-
-        if (folder){ //看看有沒有重複名稱的資料夾
-            $('.self-defined-folder').each(function() {
-                folderlName = $(this).text();
-                if (name===panelName){
-                    alert('已有相同名稱的資料夾');
-                    return;
-                }
-            });
-            
-        }else{ //看看有沒有重複名稱的筆記板
-            name = name + '.txt'; // 新增筆記板要加副檔名, 一樣先用.txt展示
-            $('.self-defined-panel').each(function() {
-                panelName = $(this).text();
-                if (name===panelName){
-                    alert('已有相同名稱的筆記板');
-                    return;
-                }
-            });
-        }
-
-        $.ajax({
-            url: '/note/',
-            type: 'post',
-            data:{
-                'purpose': 'addThings',
-                'name': name,
-                'path': path, // path傳到後台以後要.split(' > ')
-            },
-            dataType: 'JSON',
-            success: function(res){
-                if(res.status){
-                    if(folder){
-                        // 造folder的標籤
-                    }else{
-                        // 造panel的標籤
-                    }
-                }else{
-                    alert(res.error);
-                }
-            }
-        }); // end of ajax
-    });
 }
 
 </script>
