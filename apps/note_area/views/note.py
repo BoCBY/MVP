@@ -281,8 +281,11 @@ def note(request):
         return JsonResponse(context)
     
     if request.POST['purpose'] == 'showSelfDefinedModal':
-        folder_list = [name for name in os.listdir(SELF_DEFINED_AREA_PATH) if not name.endswith('.txt')]
-        panel_list = [name for name in os.listdir(SELF_DEFINED_AREA_PATH) if name.endswith('.txt')]
+        path_list = request.POST.get('path', '').split(' > ')
+        folder_name = request.POST.get('folderName', '')
+        exact_path = os.path.join(SELF_DEFINED_AREA_PATH, *path_list, folder_name)
+        folder_list = [name for name in os.listdir(exact_path) if not name.endswith('.txt')]
+        panel_list = [name for name in os.listdir(exact_path) if name.endswith('.txt')]
         context = {
             'status': True,
             'data': {

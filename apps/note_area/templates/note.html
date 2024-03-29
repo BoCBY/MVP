@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
 
 {% endblock css %}
 
@@ -263,11 +263,8 @@ active
         <div class="modal-body">
             <div id='selfDefinedTopContainer' class='container' style='margin-bottom:0.2rem;'>
                 <div class='d-flex align-items-center'>
-                    <span class='mr-auto'><strong style='font-size:0.9rem;'>位址</strong></span>
-                    <div class='search-container'>
-                        <a href='#'><i id='selfDefinedSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-                        <input id='selfDefinedSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
-                    </div>
+                    <span><strong style='font-size:0.9rem;'>位址</strong></span>
+                    <a href='#' id='selfDefinedPathHead' style='margin-left:1rem;'>首頁</a>
                 </div>
                 <div id='path' style='margin-left:1rem;'>
                     <a href='#' class='self-defined-path'></a>
@@ -283,6 +280,10 @@ active
                     <div class='self-defined-folder-header'>
                         <span id='selfDefinedFolderHeader' class='self-defined-header'><strong style='font-size:1.2rem;'>資料夾</strong></span>
                         <a href='#' id='newFolder' class='add-things' style='margin-left:0.3rem; color:black;'><i class="bi bi-folder-plus"></i></a>
+                        <div class='search-container'>
+                            <a href='#'><i id='selfDefinedFolderSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                            <input id='selfDefinedFolderSearchInput' class='search-input' type='text' placeholder='搜尋資料夾' style='display:none;'>
+                        </div>
                     </div>
                     <div id='selfDefinedFolderData'>
                         
@@ -302,6 +303,10 @@ active
                     <div class='self-defined-panel-header'>
                         <span id='selfDefinedPanelHeader' class='self-defined-header'><strong style='font-size:1.2rem;'>筆記板</strong></span>
                         <a href='#' id='newPanel' class='add-things' style='margin-left:0.3rem; color:black;'><i class="fa-regular fa-pen-to-square"></i></a>
+                        <div class='search-container'>
+                            <a href='#'><i id='selfDefinedPanelSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                            <input id='selfDefinedPanelSearchInput' class='search-input' type='text' placeholder='搜尋筆記板' style='display:none;'>
+                        </div>
                     </div>
                     <div id='selfDefinedPanelData'>
                         <!-- 範例結構
@@ -374,7 +379,9 @@ active
     searchModule.init('learningAreaSearchIcon', 'learningAreaSearchInput', '#learningAreaDataTableBody tr');
     searchModule.init('periodPanelSearchIcon', 'periodPanelSearchInput', '#periodPanelItems li');
     searchModule.init('exerciseAnswerSearchIcon', 'exerciseAnswerSearchInput', '#exerciseAnswerPanelContainer .row');
-    searchModule.init('selfDefinedSearchIcon', 'selfDefinedSearchInput', '#allSubjectContainer h5');
+    searchModule.init('selfDefinedFolderSearchIcon', 'selfDefinedFolderSearchInput', '#selfDefinedFolderData .col-sm-8');
+    searchModule.init('selfDefinedPanelSearchIcon', 'selfDefinedPanelSearchInput', '#selfDefinedPanelData .col-sm-8');
+    
     showMore();
     loadBtns();
     learningAreaRename();
@@ -392,6 +399,8 @@ active
     panelTimeStructure();
     showSelfDefinedModal();
     selfDefinedCount();
+    selfDefinedFolder();
+    selfDefinedPath();
   })
 
 // Define a search module
@@ -412,7 +421,13 @@ const searchModule = (function() {
     
     function filter(searchInputId, searchArea) {
         let searchText = $(`#${searchInputId}`).val().toLowerCase();
-    
+        let visibleFolderCount = 0;
+        let visiblePanelCount = 0;
+        let visibleFolderItemsCount = 0;
+        let visiblePanelItemsCount = 0;
+        let folderItemsUnderMainDiv = 5; // 用在#selfDefinedFolderData .col-sm-8跟#selfDefinedPanelData .col-sm-8  -> 因為mother div hide不起來, 所以就hide它底下所有的elements, 因為要屬有幾列, 所以要除掉這個數字
+        let panelItemsUnderMainDiv = 5; // 與上面同理
+
         if(searchArea === '#learningAreaDataTableBody tr'){
             $(searchArea).each(function() {
                 let text = $(this).find('.lecturer, .course').text().toLowerCase();
@@ -422,7 +437,44 @@ const searchModule = (function() {
                 } else {
                     $(this).hide();
                 }
-        });
+            });
+
+        }else if(searchArea === '#selfDefinedFolderData .col-sm-8'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.self-defined-folder').text().toLowerCase();
+
+                if (text.includes(searchText)) {
+                    $(this).find('*').show();
+                    
+                } else {
+                    $(this).find('*').hide();
+                }
+                let visibleFolderItem = $(this).find('*').filter(':visible').length;
+                visibleFolderItemsCount += visibleFolderItem;
+                visibleFolderCount = visibleFolderItemsCount / folderItemsUnderMainDiv;   
+            });
+            $('#folderCount').remove();
+            let divFolderCount = $('<div>').attr({'id':'folderCount', 'style':'font-size:0.7rem;'}).text('共'+visibleFolderCount+'項');
+            $('#selfDefinedFolderData').prepend(divFolderCount);
+
+        }else if(searchArea === '#selfDefinedPanelData .col-sm-8'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.self-defined-panel').text().toLowerCase();
+
+                if (text.includes(searchText)) {
+                    $(this).find('*').show();
+                    
+                } else {
+                    $(this).find('*').hide();
+                }
+                let visiblePanelItem = $(this).find('*').filter(':visible').length;
+                visiblePanelItemsCount += visiblePanelItem;
+                visiblePanelCount = visiblePanelItemsCount / panelItemsUnderMainDiv;   
+            });
+            $('#panelCount').remove();
+            let divPanelCount = $('<div>').attr({'id':'panelCount', 'style':'font-size:0.7rem;'}).text('共'+visiblePanelCount+'項');
+            $('#selfDefinedPanelData').prepend(divPanelCount);
+
         }else{
             // for showMoreModal, periodPanelModal 
             $(searchArea).each(function() {
@@ -642,12 +694,8 @@ function selfDefinedRename(){
     let oldName = undefined;
     let isFolder = undefined;
 
-    let path = '';
-    $(".self-defined-path").each(function() {
-        // Concatenate the text of each <a> tag
-        path += $(this).text();
-    });
-
+    
+    
     // 點擊重新命名圖標
     $('#selfDefinedDataContainer').on('click', '.self-defined-folder-rename, .self-defined-panel-rename', function(){
         $this = $(this);
@@ -668,6 +716,7 @@ function selfDefinedRename(){
 
     // 點擊確定按鈕
     $('#selfDefinedRenameSubmit').click(function () {
+        let path = selfDefinedGetPath();
         $('#selfDefinedRenameError').empty();
         let duplicateFound = false;
 
@@ -748,12 +797,6 @@ function selfDefinedDelete(){
     let name = undefined;
     let isFolder = false;
 
-    let path = '';
-    $(".self-defined-path").each(function() {
-        // Concatenate the text of each <a> tag
-        path += $(this).text();
-    });
-
     // 點擊刪除圖標
     $('#selfDefinedDataContainer').on('click', '.self-defined-folder-delete, .self-defined-panel-delete', function(){
         $this = $(this);
@@ -774,6 +817,7 @@ function selfDefinedDelete(){
 
     // 點擊確定按鈕
     $('#selfDefinedDeleteModal').on('click', '#selfDefinedDeleteConfirm', function(){
+        let path = selfDefinedGetPath();
         $.ajax({
             url: '/note/',
             type: 'post',
@@ -796,17 +840,10 @@ function selfDefinedDelete(){
             }
         }); // end of ajax
     });
-}
+}  
 
 function selfDefinedAdd(){
-    let path = '';
     let isFolder = false;
-
-    $(".self-defined-path").each(function() {
-        // Concatenate the text of each <a> tag
-        path += $(this).text();
-    });
-
 
     // 點擊新增圖標
     $('.add-things').click(function(){
@@ -826,6 +863,7 @@ function selfDefinedAdd(){
 
     // 點擊確定按鈕
     $('#addThingsSubmit').click(function(){
+        let path = selfDefinedGetPath();
         const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
         let duplicateFound = false;
         let name = $('#addThingsInput').val();
@@ -1379,68 +1417,126 @@ function panelTimeStructure(){ //複製learning.html的timeStructure, 只有把p
 }
 
 function showSelfDefinedModal(){
-    $('#selfDefined').click(function(){
-        $.ajax({
-            url: '/note/',
-            type: 'post',
-            data: {'purpose': 'showSelfDefinedModal'},
-            dataType: 'JSON',
-            success: function(res){
-                if(res.status){
-                    $('#selfDefinedFolderData').empty();
-                    $('#selfDefinedPanelData').empty();
-                    
-                    $.each(res.data.folder_list, function(index, folderName){
-                        let folderIcon = $('<i>').attr({'class':'bi bi-folder', 'style':'margin-right: 0.3rem;'});
-                        let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-folder-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
-                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-folder-delete', 'style':'font-size:0.8rem;'});
-                        let aName = $('<a>').attr({'href':'#', 'class':'self-defined-folder mr-auto',}).text(folderName);
-                        let aEdit = $('<a>').attr({'href':'#'});
-                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex', 'style':'margin-left:2rem;'});
-                        aEdit.append(renameIcon);
-                        aEdit.append(deleteIcon);
-                        divContainer.append(folderIcon);
-                        divContainer.append(aName);
-                        divContainer.append(aEdit);
-                        $('#selfDefinedFolderData').append(divContainer);
-                    });
-                    $.each(res.data.panel_list, function(index, panelName){
-                        let panelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square', 'style':'margin-right: 0.3rem;'});
-                        let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-panel-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
-                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-panel-delete', 'style':'font-size:0.8rem;'});
-                        let aName = $('<a>').attr({'href':'#', 'class':'self-defined-panel mr-auto',}).text(panelName);
-                        let aEdit = $('<a>').attr({'href':'#'});
-                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex align-items-center', 'style':'margin-left:2rem;'});
-                        aEdit.append(renameIcon);
-                        aEdit.append(deleteIcon);
-                        divContainer.append(panelIcon);
-                        divContainer.append(aName);
-                        divContainer.append(aEdit);
-                        $('#selfDefinedPanelData').append(divContainer);
-                    });
-                    selfDefinedCount();
-                }else{
-                    alert(res.error)
-                }
-            }
-        })
+    $('#selfDefined, #selfDefinedPathHead').click(function(){
+        $('#path').empty();
+        let path = undefined;
+        let folderName = undefined;
+        renderSelfDefinedModal(path, folderName);
         $('#selfDefinedModal').modal('show');
-    })
+    });
+}
+
+function renderSelfDefinedModal(path, folderName){
+    $.ajax({
+        url: '/note/',
+        type: 'post',
+        data: {
+            'purpose': 'showSelfDefinedModal',
+            'path': path,
+            'folderName': folderName,
+        },
+        dataType: 'JSON',
+        success: function(res){
+            if(res.status){
+                $('#selfDefinedFolderData').empty();
+                $('#selfDefinedPanelData').empty();
+                
+                $.each(res.data.folder_list, function(index, folderName){
+                    let folderIcon = $('<i>').attr({'class':'bi bi-folder', 'style':'margin-right: 0.3rem;'});
+                    let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-folder-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                    let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-folder-delete', 'style':'font-size:0.8rem;'});
+                    let aName = $('<a>').attr({'href':'#', 'class':'self-defined-folder mr-auto',}).text(folderName);
+                    let aEdit = $('<a>').attr({'href':'#'});
+                    let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex', 'style':'margin-left:2rem;'});
+                    aEdit.append(renameIcon);
+                    aEdit.append(deleteIcon);
+                    divContainer.append(folderIcon);
+                    divContainer.append(aName);
+                    divContainer.append(aEdit);
+                    $('#selfDefinedFolderData').append(divContainer);
+                });
+                $.each(res.data.panel_list, function(index, panelName){
+                    let panelIcon = $('<i>').attr({'class':'fa-solid fa-pen-to-square', 'style':'margin-right: 0.3rem;'});
+                    let renameIcon = $('<i>').attr({'class':'bi bi-pen self-defined-panel-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                    let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can self-defined-panel-delete', 'style':'font-size:0.8rem;'});
+                    let aName = $('<a>').attr({'href':'#', 'class':'self-defined-panel mr-auto',}).text(panelName);
+                    let aEdit = $('<a>').attr({'href':'#'});
+                    let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex align-items-center', 'style':'margin-left:2rem;'});
+                    aEdit.append(renameIcon);
+                    aEdit.append(deleteIcon);
+                    divContainer.append(panelIcon);
+                    divContainer.append(aName);
+                    divContainer.append(aEdit);
+                    $('#selfDefinedPanelData').append(divContainer);
+                });
+                selfDefinedCount();
+            }else{
+                alert(res.error)
+            }
+        }
+    }); // end of ajax
+}
+
+function selfDefinedGetPath(){
+    let path = '';
+    $(".self-defined-path").each(function() {
+        // Concatenate the text of each <a> tag
+        path += $(this).text();
+    });
+    return path;
 }
 
 function selfDefinedCount(){
-    
+
     $('#folderCount').remove();
     let folderCount = $('#selfDefinedFolderData .col-sm-8').length.toString();
-    let divFolderCount = $('<div>').attr({'id':'folderCount'}).text('共'+folderCount+'項');
+    let divFolderCount = $('<div>').attr({'id':'folderCount', 'style':'font-size:0.7rem;'}).text('共'+folderCount+'項');
     $('#selfDefinedFolderData').prepend(divFolderCount);
     
     $('#panelCount').remove();
     let panelCount = $('#selfDefinedPanelData .col-sm-8').length.toString();
-    let divPanelCount = $('<div>').attr({'id':'panelCount'}).text('共'+panelCount+'項');
+    let divPanelCount = $('<div>').attr({'id':'panelCount', 'style':'font-size:0.7rem;'}).text('共'+panelCount+'項');
     $('#selfDefinedPanelData').prepend(divPanelCount);
 
 }
+
+function selfDefinedFolder(){
+    $('#selfDefinedFolderContainer').on('click', '.self-defined-folder', function(event){
+        event.preventDefault();
+
+        $('#selfDefinedFolderData').empty();
+        $('#selfDefinedPanelData').empty();
+
+        let path = selfDefinedGetPath();
+        let folderName = $(this).text();
+        renderSelfDefinedModal(path, folderName); 
+        
+        let aPath = $('<a>').attr({'href':'#', 'class':'self-defined-path',}).text(' > ' + folderName);
+        $('#path').append(aPath);
+    });
+}
+
+function selfDefinedPath(){
+    $('#path').on('click','.self-defined-path', function(event){
+        event.preventDefault();
+        $('#selfDefinedFolderData').empty();
+        $('#selfDefinedPanelData').empty();
+
+        let index = $(this).index();
+        let texts = [];
+        $(this).prevAll().addBack().each(function() { // Iterate over the previous siblings, including the clicked <a> tag
+            texts.push($(this).text());
+        });
+        //texts.reverse(); // Reverse the array to get the texts in the correct order // seems like it is correct without this
+        $(this).nextAll().remove();
+
+        let path = texts.join("")
+        let folderName = undefined;
+        renderSelfDefinedModal(path, folderName);
+
+    });
+}
+
 
 </script>
 

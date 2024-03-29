@@ -167,7 +167,7 @@
     content: "新建資料夾";
     position: absolute;
     top: -20px; /* Adjust this value to position the text */
-    left: calc(100% + 3px);
+    right: calc(100% + 3px);
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 5px;
@@ -184,7 +184,7 @@
     content: "新建筆記板";
     position: absolute;
     top: -20px; /* Adjust this value to position the text */
-    left: calc(100% + 3px);
+    right: calc(100% + 3px);
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 5px;
