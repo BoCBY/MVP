@@ -47,3 +47,20 @@
     white-space: nowrap;
 }
 
+/* 播放清單的hover效果 */
+.playlist {
+    position: relative;
+    cursor: pointer;
+}
+
+.playlist:hover::after {
+    content: "播放清單";
+    position: absolute;
+    top: -20px; /* Adjust this value to position the text */
+    left: calc(100% + 3px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}

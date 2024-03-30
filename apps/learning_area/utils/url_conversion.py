@@ -7,6 +7,10 @@ def yt_conversion(yt_url):
         # 如果是從播放清單找影片過來的就需要再做這個處理
         index_of_mark = embed_yt_url.find("&")
         embed_yt_url = embed_yt_url[:index_of_mark]
+        
+    if yt_url.startswith('https://youtu.be/'):
+        video_id = yt_url[17:]
+        embed_yt_url = 'https://www.youtube.com/embed/' + video_id
     return embed_yt_url
     
 def bili_conversion(bili_url):

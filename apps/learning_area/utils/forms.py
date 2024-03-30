@@ -15,18 +15,25 @@ class FilmModelForm(BootstrapModelForm):
         
     def clean_url(self):
         txt_url = self.cleaned_data.get('url')
-        yt_prefix = 'https://www.youtube.com/'
-        bili_prefix = 'https://www.bilibili.com/'
-        yt_bili_prefix = (yt_prefix, bili_prefix)
-        if not txt_url.startswith(yt_bili_prefix):
+        yt_prefix_list = ['https://www.youtube.com/', 'https://youtu.be/', ]
+        bili_prefix_list = ['https://www.bilibili.com/', ]
+        yt_bili_prefix_list = [item for item in yt_prefix_list] + [item for item in bili_prefix_list]
+        from_yt_or_bili = False
+        for yt_bili_prefix in yt_bili_prefix_list:
+            if txt_url.startswith(yt_bili_prefix):
+                from_yt_or_bili = True
+                break
+        
+        if not from_yt_or_bili:
             # 填寫的網址並非yt或b站的影片
             raise ValidationError('目前只接收來自YouTube或bilibili的片源')
+                
+        for yt_prefix in yt_prefix_list:
+            if txt_url.startswith(yt_prefix):
+                # yt影片的url處理
+                return url_conversion.yt_conversion(txt_url)
         
-        if txt_url.startswith(yt_prefix):
-            # yt影片的url處理
-            return url_conversion.yt_conversion(txt_url)
-        
-        if txt_url.startswith(bili_prefix):
+        if txt_url.startswith(bili_prefix_list[0]):
             # bilibili影片的url處理
             # txt_url = txt_url.replace('')
             return url_conversion.bili_conversion(txt_url)

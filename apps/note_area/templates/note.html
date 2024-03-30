@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style1.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
 
 {% endblock css %}
 
@@ -81,7 +81,7 @@ active
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 <!-- 自定義區重新命名的輸入框modal -->  <!-- 不知道為啥selfDefinedRenameModal竟然會出現在selfDefinedModal的後面(明明是比較晚出現的), 所以直接給他加一個z-index:1051, bootstrap原本的預設好像都是1050 -->
 <div class="modal fade" id="selfDefinedRenameModal" style='z-index:1051;' tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -152,7 +152,7 @@ active
                         <input id='learningAreaSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
                     </div>
                 </div>
-                <div class='total-row' style='font-size:1rem;'><strong id='totalRow'></strong></div>
+                <div class='total-row' style='font-size:0.8rem;'><strong id='totalRow'></strong></div>
             </div>
           <table class="table table-hover">
             <thead>
@@ -400,6 +400,7 @@ active
     showSelfDefinedModal();
     selfDefinedCount();
     selfDefinedFolder();
+    selfDefinedPanel();
     selfDefinedPath();
   })
 
@@ -438,6 +439,10 @@ const searchModule = (function() {
                     $(this).hide();
                 }
             });
+            let visibleRowCount = $(searchArea).filter(':visible').length;
+            $('#totalRow').remove();
+            let strongTotalRow = $('<strong>').attr({'id':'totalRow',}).text('共'+visibleRowCount+'項');
+            $('.total-row').append(strongTotalRow);
 
         }else if(searchArea === '#selfDefinedFolderData .col-sm-8'){
             $(searchArea).each(function() {
@@ -1477,7 +1482,7 @@ function renderSelfDefinedModal(path, folderName){
     }); // end of ajax
 }
 
-function selfDefinedGetPath(){
+function selfDefinedGetPath(){ //return的path名稱會長這樣: " > 資料夾1 > 資料夾2 > 資料夾3" -> 因此在後台要path.split(' > ')
     let path = '';
     $(".self-defined-path").each(function() {
         // Concatenate the text of each <a> tag
@@ -1504,15 +1509,52 @@ function selfDefinedFolder(){
     $('#selfDefinedFolderContainer').on('click', '.self-defined-folder', function(event){
         event.preventDefault();
 
+        // 先清空現有的這層資料夾的資料
         $('#selfDefinedFolderData').empty();
         $('#selfDefinedPanelData').empty();
 
+        // 顯示點擊的該層資料夾的內容
         let path = selfDefinedGetPath();
         let folderName = $(this).text();
         renderSelfDefinedModal(path, folderName); 
         
+        // 把位址造出來
         let aPath = $('<a>').attr({'href':'#', 'class':'self-defined-path',}).text(' > ' + folderName);
         $('#path').append(aPath);
+    });
+}
+
+function selfDefinedPanel(){
+    $('#selfDefinedPanelContainer').on('click', '.self-defined-panel', function(event){
+        let panelName = $(this).text();
+        let path = selfDefinedGetPath();
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'selfDefinedPanel',
+                'path': path,
+                'panelName': panelName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    let newWindow = window.open('/view_panel/?path=' + encodeURIComponent(res.data), panelName, 'width=900,height=400');
+                    setTimeout(function(){
+                        newWindow.document.title = panelName;
+                    }, 1000);
+                    /*setInterval(function() { // 設置newWindow的title, 重新整理以後也會正確
+                        if (newWindow.closed) {
+                            clearInterval();
+                        } else {
+                            newWindow.document.title = panelName;
+                        }
+                    }, 1000);*/
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
     });
 }
 

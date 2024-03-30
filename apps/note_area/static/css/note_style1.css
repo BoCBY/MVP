@@ -265,6 +265,18 @@
 /* 縮小表格中每一列所佔的大小比例 */
 .table td,
   .table th {
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+
+/* 調整下拉選單的顯示大小 */
+.dropdown-menu {
+    /*font-size: 12px; /* Set the desired font size 
+    padding: 0.25rem; /* Set the desired padding */
+    min-width: 7rem; /* Set a minimum width for the dropdown menu */
+}
+
+.dropdown-menu .dropdown-item {
+    font-size: 0.7rem; /* Set the desired font size */
+    padding: 0.3rem 0.5rem; /* Set the desired padding */
 }

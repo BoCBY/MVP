@@ -265,7 +265,8 @@ def note(request):
     
     if request.POST['purpose'] == 'showingAnswerPanel':
         subject = request.POST.get('subject', '')
-        panel_name = request.POST.get('panelName', '').replace('-', '[]')
+        name = request.POST.get('panelName', '')
+        panel_name = name.replace('-', '[]')
         panel_file_path = os.path.join(EXERCISE_ANSWER_AREA_PATH, subject, panel_name)
         if os.path.exists(panel_file_path):
             context = {
@@ -276,7 +277,24 @@ def note(request):
         
         context = {
             'status': False,
-            'error': '筆記板路徑不存在'
+            'error': f'"{name}"筆記板不存在'
+        }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'selfDefinedPanel':
+        path_list = request.POST.get('path', '').split(' > ')
+        panel_name = request.POST.get('panelName', '')
+        exact_path = os.path.join(SELF_DEFINED_AREA_PATH, *path_list, panel_name)
+        if os.path.exists(exact_path):
+            context = {
+                'status': True,
+                'data':exact_path,
+            }
+            return JsonResponse(context)
+        
+        context = {
+            'status': False,
+            'error': f'"{panel_name}"筆記板不存在'
         }
         return JsonResponse(context)
     
