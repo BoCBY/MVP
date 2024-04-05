@@ -19,6 +19,12 @@ active
 
 {% block content %}
   
+<div id='videoInfoContainer' style='display:none;'>
+  <div id='videoTitle'></div>
+  <div id='videoDuration'></div>
+  <div id ='videoId'></div>
+</div>
+
 <div class='d-flex' style='margin-top:0.5rem;'>
   <!-- 課名-講者名超連結 -->
   <div style='width:37.9rem; margin-left:0.1rem;'>
@@ -34,10 +40,10 @@ active
 <div class='d-flex align-items-center'> 
   <!-- 學習影片 -->
   <div style='margin-left:0.1rem; margin-top:0.2rem;'> 
-    <iframe id='filmUrl' width="1020" height="600" src="#"  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    <iframe id='filmUrl' width="1020" height="600" src="#" enablejsapi='1' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
   </div>
   <!-- 筆記板和播放清單圖標 -->
-  <div class='align-self-start flex-column'> 
+  <div id='sideIconsContainer' class='align-self-start flex-column'> 
     <i class="fa-solid fa-pen-to-square note-panel" style='font-size:1.0rem; margin-left:0.2rem;'></i> <!-- 之後要做點擊跳出筆記板的功能 -->
     <i id='playlistIcon' class="fa-solid fa-list playlist" style='font-size:1.0rem; margin-left:0.2rem;'></i>
   </div>
@@ -151,7 +157,7 @@ active
   </div>
 </div>
 <!-- 播放清單選項的modal -->
-<div class="modal fade" id="playlistOptionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="playlistOptionModal" tabindex="-1" aria-labelledby="playlistOptionModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -162,36 +168,64 @@ active
       </div>
       <div class="modal-body">
         <ul id='optionContainer' >
-          <li><a href='#' id='addToPlaylist'>儲存</a></li>
+          <li><a href='#' id='savePlaylist'>儲存</a></li>
           <li><a href='#' id='checkPlaylist'>查看</a></li>
         </ul>
     </div>
   </div>
 </div>
 <!-- 儲存影片至播放清單的modal -->
-<div class="modal fade" id="addToPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="savePlaylistModal" tabindex="-1" aria-labelledby="savePlaylistModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 class="modal-title" id="addToPlaylistModalLabel"><strong id='addToPlaylistModalTitle'>儲存此影片至</strong></h6>
+        <h6 class="modal-title" id="savePlaylistModalLabel"><strong id='savePlaylistModalTitle'>儲存此影片至</strong></h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div id='addToPlaylistListsContainer' class='container'>
-          <div class='row'>	
-            <div class="col-sm-6 d-flex align-items-center" style="margin-left:2rem;">
-              <i class="fa-solid fa-list" style="margin-right: 0.3rem;"></i>
-              <a href="#" class="playlist">我是播放清單</a>		
-            </div>
-            <div class="col-sm-6 d-flex align-items-center" style="margin-left:2rem;">
-              <i class="fa-solid fa-list" style="margin-right: 0.3rem;"></i>
-              <a href="#" class="playlist">我是播放清單2</a>		
-            </div>
+        <div class='search-container container d-flex' style='justify-content: flex-end; margin-top:0.3rem;'>
+          <a href='#'><i id='playlistSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+          <input id='playlistSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+        </div>
+        <div id='savePlaylistListsContainer' class='container' style='line-height:1.7; margin-top:0.3rem;'>
+          
+        </div>
+      </div>
+      <div class="modal-footer" style='justify-content: flex-start;'>
+        <div id='newPlaylistOptionContainer' class='container'>
+          <div class="d-flex align-items-center">
+            <i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i>
+            <a href="#" id='newPlaylist'>加入至新的播放清單</a>		
           </div>
         </div>
-    </div>
+        <div id='newPlaylistInputContainer' class="input-group" style='display:none;'>
+          <input type="text" id="newPlaylistInput" style="width:180px;" placeholder='新的播放清單名稱'>
+          <div class='input-group-append'>
+              <button type="button" id="newPlaylistSubmit" class="btn btn-primary" style='padding: 0.1rem 0.2rem;'>確定</button>
+              <button type="button" id="newPlaylistCancel" class="btn btn-secondary" style='padding: 0.1rem 0.2rem;'>取消</button>
+          </div>
+          <span id='newPlaylistError' style='color:red; font-size:0.7rem;'></span>
+      </div>
+      </div>
+  </div>
+</div>
+<!-- 查看影片所屬的播放清單的modal -->
+<div class="modal fade" id="checkPlaylistModal" tabindex="-1" aria-labelledby="checkPlaylistModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="checkPlaylistModalLabel"><strong id='checkPlaylistModalTitle'>此影片所在的播放清單</strong></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id='checkPlaylistListsContainer' class='container' style='line-height:1.7; margin-top:0.3rem;'>
+          
+        </div>
+      </div>
   </div>
 </div>
   
@@ -203,6 +237,7 @@ active
     var DELETE_ITEM = undefined; // 刪除筆記板時會用到
 
     $(function(){
+      
       filmInfoBtn();
       filmInfoSave();
       timeDescSave();
@@ -211,7 +246,8 @@ active
       deletePanelShow();
       deletePanel();
       playlist();
-      addToPlaylist();
+      searchModule.init('playlistSearchIcon', 'playlistSearchInput', '#savePlaylistListsContainer .playlist-name');
+      
     })
 
 function filmInfoBtn(){ 
@@ -227,6 +263,7 @@ function filmInfoSave(){
   $('#filmInfoSave').click(function(){
     // 先把之前輸入錯誤的錯誤訊息清掉
     $('.film-error-msg').empty();
+    $("#filmInfoModal").modal("hide");
 
     // 用ajax請求把使用者輸入的訊息傳到後台
     $.ajax({
@@ -236,6 +273,13 @@ function filmInfoSave(){
         dataType: "JSON",
         success: function(res){
           if(res.status){ 
+            let videoTitle = res.title;
+            let videoDuration = res.duration;
+            let videoId = res.video_id;
+            $('#videoTitle').text(videoTitle);
+            $('#videoDuration').text(videoDuration);
+            $('#videoId').text(videoId);
+
             $("#phase").empty()
             //填寫正確就在頁面中顯示
             $("#courLectName").text(res.course+"-"+res.lecturer)
@@ -243,7 +287,10 @@ function filmInfoSave(){
             
             //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
             localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
-            localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer) // 課名-講者名
+            localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer); // 課名-講者名
+            localStorage.setItem('lastWatchedVideoTitle', videoTitle); // 影片原始名稱
+            localStorage.setItem('lastWatchedVideoDuration', videoDuration); // 影片片長
+            localStorage.setItem('lastWatchedVideoId', videoId); // 影片id
             localStorage.setItem('lastWatchedVideoNotes', JSON.stringify(res.start_end_dict)); // 影片的筆記
             
             // 把url影片對應的資料夾裡面的每一份筆記檔案展示在段落重點區  
@@ -266,7 +313,7 @@ function filmInfoSave(){
               // 把整個li標籤加進ul標籤
               $('#phase').append(li);
             });
-            $("#filmInfoModal").modal("hide");
+            
 
             }else{ 
               // 填寫錯誤就產生錯誤訊息
@@ -285,9 +332,11 @@ function timeDescSave(){
   
   // 獲取當前頁面學習影片的網址
   var filmUrl = $('#filmUrl').attr('src');
+  let videoDuration = parseInt($('#videoDuration').text())
   var timeDesc = $("#timeDesc").serializeArray();
-
+  timeDesc.push({name: 'videoDuration', value: videoDuration});
   timeDesc.push({name:'filmUrl', value:filmUrl});
+
   // 用ajax請求把使用者輸入的訊息傳到後台
   $.ajax({
       url: "/learning/",
@@ -328,6 +377,8 @@ function timeDescSave(){
 
           }else if(res.status==='duplicate'){ // 輸入的時段已經存在
             alert(res.message);
+          }else if(res.status==='tooLong'){
+            $('#id_end').next().text(res.error);
           }else{
             $.each(res.errors, function(name,errorList){
               $('#id_' + name).next().text(errorList[0]);
@@ -496,18 +547,257 @@ function deletePanel(){
 }
 
 function playlist(){
-  $('#playlistIcon').click(function(){
+  playlistOption();
+  savePlaylist();
+  addToNewPlaylist();
+  addToPlaylist();
+  checkPlaylist();
+}
+
+function playlistOption(){
+  $('#sideIconsContainer').on('click', '#playlistIcon', function(){
     $('#playlistOptionModal').modal('show');
   });
 }
 
-function addToPlaylist(){
-  $('#addToPlaylist').click(function(event){
-    //event.preventDefault();
+function savePlaylist(){
+  $('#optionContainer').on ('click', '#savePlaylist', function(event){
+    event.preventDefault();
+    $('#savePlaylistListsContainer').empty();
     //$('#playlistOptionModal').modal('hide');
-    $('#addToPlaylistModal').modal('show');
+
+    $.ajax({
+      url: '/learning/',
+      type: 'post',
+      data:{
+        'purpose': 'savePlaylist',
+      },
+      dataType: 'JSON',
+      success: function(res){
+        if(res.status){
+          $.each(res.data, function(index, playlistName){
+            let divRow = $('<div>').attr({'class':'row',});
+            let divGrid = $('<div>').attr({'class':'col-sm-10 d-flex align-items-center',});
+            let playlistIcon = $('<i>').attr({'class':'fa-solid fa-list', 'style':'margin-right:0.3rem;', });
+            let aPlaylist = $('<a>').attr({'href':'#', 'class':'playlist-name'}).text(playlistName);
+            divGrid.append(playlistIcon);
+            divGrid.append(aPlaylist);
+            divRow.append(divGrid);
+            $('#savePlaylistListsContainer').append(divRow);
+          });
+
+        }else{
+          alert(res.error);
+        }
+      }
+    }); // end of ajax
+    $('#savePlaylistModal').modal('show');
   });
 }
+
+function addToNewPlaylist(){
+  // 點擊加入新的播放清單
+  $('.modal-footer').on('click', '#newPlaylist', function(){
+    $('#newPlaylistOptionContainer').hide();
+    $('#newPlaylistInputContainer').show();
+  });
+
+  // 點擊取消
+  $('.modal-footer').on('click', '#newPlaylistCancel', function(){
+    $('#newPlaylistInputContainer').hide();
+    $('#newPlaylistInput').val('');
+    $('#newPlaylistError').empty();
+    $('#newPlaylistOptionContainer').show();
+  });
+
+  // 點擊確定
+  $('.modal-footer').on('click', '#newPlaylistSubmit', function(){
+    const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+    let videoId = $('#videoId').text();
+    let videoTitle = $('#videoTitle').text();
+    let duplicateFound = false;
+    let name = $('#newPlaylistInput').val();
+    $('#newPlaylistError').empty();
+
+    if (name.trim().length ===0) {
+        $('#newPlaylistError').text('不可為空');
+        $('#newPlaylistInput').val('');
+        return;
+    }
+    
+    for (let i = 0; i < invalidCharacters.length; i++) {
+        if (name.includes(invalidCharacters[i])) {
+            $('#newPlaylistError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
+            return; // Stop the loop after the first invalid character is found
+        }
+    }
+    
+    $('.playlist-name').each(function() {
+        let playlistName = $(this).text();
+        if (name===playlistName){
+            $('#newPlaylistError').text('已有相同名稱的播放清單');
+            duplicateFound = true;
+            return false;
+        }
+    });
+
+    if (duplicateFound) { //有重名的筆記板或資料夾就退出function
+        return; 
+    }
+
+    $.ajax({
+        url: '/learning/',
+        type: 'post',
+        data:{
+            'purpose': 'addToNewPlaylist',
+            'name': name,
+            'videoTitle': videoTitle,
+            'videoId': videoId,
+        },
+        dataType: 'JSON',
+        success: function(res){
+            if(res.status){
+              // 造playlist的標籤
+              let divRow = $('<div>').attr({'class':'row',});
+              let divGrid = $('<div>').attr({'class':'col-sm-10 d-flex align-items-center',});
+              let playlistIcon = $('<i>').attr({'class':'fa-solid fa-list', 'style':'margin-right:0.3rem;', });
+              let aPlaylist = $('<a>').attr({'href':'#', 'class':'playlist-name'}).text(name);
+              divGrid.append(playlistIcon);
+              divGrid.append(aPlaylist);
+              divRow.append(divGrid);
+              $('#savePlaylistListsContainer').append(divRow);
+              
+              alert('已添加至'+'"'+name+'"'+'播放清單');
+              $('#newPlaylistInput').val('');
+              $('#newPlaylistInputContainer').hide();
+              $('#newPlaylistOptionContainer').show();
+            }else{
+                alert(res.error);
+            }
+        }
+    }); // end of ajax
+  });
+}
+
+function addToPlaylist(){
+  $('#savePlaylistListsContainer').on('click', '.playlist-name', function(event){
+    event.preventDefault();
+    let playlistName = $(this).text();
+    let videoId = $('#videoId').text();
+    let videoTitle = $('#videoTitle').text();
+    
+    $.ajax({
+      url: '/learning/',
+      type: 'post',
+      data: {
+        'purpose': 'addToPlaylist',
+        'playlistName': playlistName,
+        'videoId': videoId,
+        'videoTitle': videoTitle,
+      },
+      dataType: 'JSON',
+      success: function(res){
+        if(res.status){
+          alert('已添加至'+'"'+playlistName+'"'+'播放清單')
+        }else{
+          alert(res.error);
+        }
+      }
+    }); // end of ajax
+  });
+}
+
+function checkPlaylist(){
+  $('#optionContainer').on('click', '#checkPlaylist', function(){
+    $('#checkPlaylistListsContainer').empty();
+    let videoId = $('#videoId').text();
+    //$('#playlistOptionModal').modal('hide');
+    $.ajax({
+      url: '/learning/',
+      type: 'post',
+      data:{
+        'purpose': 'checkPlaylist',
+        'videoId': videoId,
+      },
+      dataType: 'JSON',
+      success: function(res){
+        if(res.status){
+          $.each(res.data, function(index, playlistName){
+            let divRow = $('<div>').attr({'class':'row',});
+            let divGrid = $('<div>').attr({'class':'col-sm-10 d-flex align-items-center',});
+            let playlistIcon = $('<i>').attr({'class':'fa-solid fa-list', 'style':'margin-right:0.3rem;', });
+            let aPlaylist = $('<a>').attr({'href':'#', 'class':'playlist-name'}).text(playlistName);
+            divGrid.append(playlistIcon);
+            divGrid.append(aPlaylist);
+            divRow.append(divGrid);
+            $('#checkPlaylistListsContainer').append(divRow);
+
+            $('#checkPlaylistModal').modal('show');
+          });
+        }else{
+          alert(res.error);
+        }
+      }
+    }); // end of ajax
+    
+    
+  });
+}
+
+const searchModule = (function() {
+  // Private functions
+  function toggleSearchInput(searchInputId) {
+      $(`#${searchInputId}`).toggle();
+      if ($(`#${searchInputId}`).is(":visible")) {
+          $(`#${searchInputId}`).focus(); // Focus on the input field when it becomes visible
+      }
+  
+      $(document).on('click', function(event) {
+          if (!$(event.target).closest('.search-container').length && !$(event.target).is('.search-container')) {
+              $(`#${searchInputId}`).hide();
+          }
+      });
+  }
+  
+  function filter(searchInputId, searchArea) {
+      let searchText = $(`#${searchInputId}`).val().toLowerCase();
+
+      if(searchArea === '#savePlaylistListsContainer .playlist-name'){
+          $(searchArea).each(function() {
+              let text = $(this).text().toLowerCase();
+
+              if (text.includes(searchText)) {
+                  $(this).closest('.row').show();
+              } else {
+                  $(this).closest('.row').hide();
+              }
+          });
+          let visibleRowCount = $(searchArea).filter(':visible').length;
+          $('#totalRow').remove();
+          let strongTotalRow = $('<strong>').attr({'id':'totalRow',}).text('共'+visibleRowCount+'項');
+          $('.total-row').append(strongTotalRow);
+
+      }
+  }
+  
+
+  // Public function
+  function init(searchIconId, searchInputId, searchArea) {
+      $(`#${searchIconId}`).click(function(event) {
+          event.preventDefault();
+          toggleSearchInput(searchInputId);
+      });
+      $(`#${searchInputId}`).on('input', function() {
+          filter(searchInputId, searchArea);
+      });
+  }
+
+  // Expose public functions
+  return {
+      init: init
+  };
+})();
+
 window.onload = function(){
   // 先把段落重點區清空
   let phase = document.getElementById('phase');
@@ -518,6 +808,12 @@ window.onload = function(){
   let lastWatchedVideo = localStorage.getItem('lastWatchedVideoUrl');
   let lastWatchedVideoName = localStorage.getItem('lastWatchedVideoName');
   let lastWatchedVideoNotes = JSON.parse(localStorage.getItem('lastWatchedVideoNotes'));
+  let videoTitle =  localStorage.getItem('lastWatchedVideoTitle');
+  let videoDuration = localStorage.getItem('lastWatchedVideoDuration');
+  let videoId = localStorage.getItem('lastWatchedVideoId');
+  $('#videoTitle').text(videoTitle);
+  $('#videoDuration').text(videoDuration);
+  $('#videoId').text(videoId);
 
   if (lastWatchedVideo) {
       let iframe = document.getElementById('filmUrl');

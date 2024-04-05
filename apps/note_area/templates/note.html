@@ -509,7 +509,7 @@ const searchModule = (function() {
     return {
         init: init
     };
-  })();
+})();
 
 function showMore(){
     $('.display-data-container').on('click', '.show-more', function(){
@@ -891,7 +891,6 @@ function selfDefinedAdd(){
             $('.self-defined-folder').each(function() {
                 let folderName = $(this).text();
                 if (name===folderName){
-                    $('')
                     $('#addThingsError').text('已有相同名稱的資料夾');
                     duplicateFound = true;
                     return false;
@@ -1172,61 +1171,71 @@ function toLearningArea(){
         // 自learning.html中的filmInfoSave函數中拿過來的 --> 只有那些selector會用到learning.html中DOM的id或class時, 才需要加上newTab.document(下一行有例子), 其餘完全不用動!
         // 舉例: $("#phase").empty() -> $("#phase", newTab.document).empty()
         $(newTab).on('load', function(){
-            $.ajax({
-                url: "/learning/",
-                type: "post",
-                data: {
-                    'purpose':'newTab',
-                    'url': videoLink,
-                    'lecturer': lecturer,
-                    'course': course,
-                    'videoId': videoId,
-                },
-                dataType: "JSON",
-                success: function(res){
-                  if(res.status){
-                    $("#phase", newTab.document).empty()
-                    //填寫正確就在頁面中顯示
-                    $("#courLectName", newTab.document).text(res.course+"-"+res.lecturer)
-                    $("#filmUrl", newTab.document).attr('src', res.url)
-                    
-                    //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
-                    localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
-                    localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer) // 課名-講者名
-                    localStorage.setItem('lastWatchedVideoNotes', JSON.stringify(res.start_end_dict)); // 影片的筆記
-                    
-                    // 把url影片對應的資料夾裡面的每一份筆記檔案展示在段落重點區  
-                    $.each(res.start_end_dict, function(key, value){ 
-                      nameArray = key.split("-");
-                      // 創建li標籤, 裡頭包含icon, a和strong標籤
-                      let li = $('<li>').attr({'start':value.start, 'end':value.end})
-                      let a = $('<a>').attr('href', '#');
-                      let strong = $('<strong>').attr('class','film-second').text(nameArray[0]);
-                      let notePanelIcon = $('<i>').attr({'class': 'fa-solid fa-pen-to-square note-panel', 'style': 'margin-right:0.3rem;'})
-                      // 創建p標籤, 並且把它加進上面已經創好的li標籤裡
-                      let p = $('<p>').attr({'style': 'position:relative;',}).text(nameArray[1]);
-                      let deletePanelIcon = $('<i>').attr({'class': 'fa-solid fa-trash-can delete-panel', 'style': 'position: absolute; bottom: 0; right: 0;'});
-                      a.append(strong);
-                      p.append(deletePanelIcon);
-                      li.append(notePanelIcon);
-                      li.append(a);
-                      li.append(p);
-        
-                      // 把整個li標籤加進ul標籤
-                      $('#phase', newTab.document).append(li);
-                    });
-                    $("#filmInfoModal", newTab.document).modal("hide");
-        
-                    }else{ 
-                      // 填寫錯誤就產生錯誤訊息
-                      $.each(res.errors, function(name,errorList){
-                        $('#id_' + name, newTab.document).next().text(errorList[0]);
-                    })
-                  }
-                }
-            })
-          });
-    });
+                console.log('123')
+                $.ajax({
+                    url: "/learning/",
+                    type: "post",
+                    data: {
+                        'purpose':'newTab',
+                        'url': videoLink,
+                        'lecturer': lecturer,
+                        'course': course,
+                        'videoId': videoId,
+                    },
+                    dataType: "JSON",
+                    success: function(res){
+                    if(res.status){
+                        let videoTitle = res.title;
+                        let videoDuration = res.duration;
+                        $('#videoTitle', newTab.document).text(videoTitle);
+                        $('#videoDuration', newTab.document).text(videoDuration);
+                        $('#videoId', newTab.document).text(videoId);
+
+                        $("#phase", newTab.document).empty()
+                        //填寫正確就在頁面中顯示
+                        $("#courLectName", newTab.document).text(res.course+"-"+res.lecturer)
+                        $("#filmUrl", newTab.document).attr('src', res.url)
+                        
+                        //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
+                        localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
+                        localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer); // 課名-講者名
+                        localStorage.setItem('lastWatchedVideoTitle', videoTitle); // 影片原始名稱
+                        localStorage.setItem('lastWatchedVideoDuration', videoDuration); // 影片片長
+                        localStorage.setItem('lastWatchedVideoId', videoId); // 影片id
+                        localStorage.setItem('lastWatchedVideoNotes', JSON.stringify(res.start_end_dict)); // 影片的筆記
+                        
+                        // 把url影片對應的資料夾裡面的每一份筆記檔案展示在段落重點區  
+                        $.each(res.start_end_dict, function(key, value){ 
+                        nameArray = key.split("-");
+                        // 創建li標籤, 裡頭包含icon, a和strong標籤
+                        let li = $('<li>').attr({'start':value.start, 'end':value.end})
+                        let a = $('<a>').attr('href', '#');
+                        let strong = $('<strong>').attr('class','film-second').text(nameArray[0]);
+                        let notePanelIcon = $('<i>').attr({'class': 'fa-solid fa-pen-to-square note-panel', 'style': 'margin-right:0.3rem;'})
+                        // 創建p標籤, 並且把它加進上面已經創好的li標籤裡
+                        let p = $('<p>').attr({'style': 'position:relative;',}).text(nameArray[1]);
+                        let deletePanelIcon = $('<i>').attr({'class': 'fa-solid fa-trash-can delete-panel', 'style': 'position: absolute; bottom: 0; right: 0;'});
+                        a.append(strong);
+                        p.append(deletePanelIcon);
+                        li.append(notePanelIcon);
+                        li.append(a);
+                        li.append(p);
+            
+                        // 把整個li標籤加進ul標籤
+                        $('#phase', newTab.document).append(li);
+                        });
+                        $("#filmInfoModal", newTab.document).modal("hide");
+                        console.log('123')
+                        }else{ 
+                        // 填寫錯誤就產生錯誤訊息
+                        $.each(res.errors, function(name,errorList){
+                            $('#id_' + name, newTab.document).next().text(errorList[0]);
+                        })
+                    }
+                    }
+                }); // end of ajax
+            });
+        });
 }
 
 function periodPanel(){

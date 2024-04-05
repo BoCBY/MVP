@@ -2,9 +2,22 @@ import os
 from django.http import JsonResponse
 from apps.learning_area import models
 from django.views.decorators.csrf import csrf_exempt
-from apps.learning_area.utils import url_conversion, forms, path, process_time
+from apps.learning_area.utils import url_conversion, forms, path, process_time, yt_video_info, bili_video_info
 from django.shortcuts import render, redirect, HttpResponse
 
+COMPUTER_DESK = os.path.join('C:\\', 'Users', 'admin', 'Desktop')
+NOTEBOOK_DESK = os.path.join('C:\\', 'Users', 'jerry', 'OneDrive', '桌面')
+USER_INFO = os.path.join('structure', 'Server', 'cust', 'user_info')
+# PATH = os.path.join('C:\\', 'Users', 'admin', 'Desktop', 'structure', 'Server', 'cust', 'user_info') # 所有的用戶到這邊的路徑都一樣
+COMPUTER_USER_INFO_PATH = os.path.join(COMPUTER_DESK, USER_INFO)
+NOTEBOOK_USER_INFO_PATH = os.path.join(NOTEBOOK_DESK, USER_INFO)
+
+LEARNING = os.path.join('email#1', 'learning') # 根據用戶所註冊的email來修改email#1, 也就是email#1要是動態的
+LEARNING_COMPUTER_PATH = os.path.join(COMPUTER_USER_INFO_PATH, LEARNING) # 到達此用戶學習區用來放置各個影片的筆記空間 -> 一個url對應一個資料夾
+LEARNING_NOTEBOOK_PATH = os.path.join(NOTEBOOK_USER_INFO_PATH, LEARNING)
+
+PLAYLIST = os.path.join('email#1', 'playlist')
+PLAYLIST_PATH = os.path.join(COMPUTER_USER_INFO_PATH, PLAYLIST)
 @csrf_exempt
 def learning(request): 
     if request.method == 'GET':
@@ -25,9 +38,13 @@ def learning(request):
             url = request.POST.get('url', '')
             video_id = request.POST.get('videoId')
             if len(video_id) == 11: #YT影片
+                title, duration = yt_video_info.title_and_duration(url)
                 url = url_conversion.yt_conversion(url)
+                
             elif len(video_id) == 12: #BILI影片
+                title, duration = bili_video_info.title_and_duration(url)
                 url = url_conversion.bili_conversion(url)
+                
             
             # 創建或查看此url影片的資料夾
             folder_path = path.create_folder(lecturer, course, video_id)
@@ -46,7 +63,9 @@ def learning(request):
                     'lecturer': lecturer,
                     'course': course,
                     'url': url,
-                    'start_end_dict': start_end_dict
+                    'start_end_dict': start_end_dict,
+                    'title': title,
+                    'duration': duration,
                     }
             return JsonResponse(context)
             
@@ -56,6 +75,14 @@ def learning(request):
             lecturer = form.cleaned_data.get('lecturer')
             course = form.cleaned_data.get('course')
             url = form.cleaned_data.get('url')
+            
+            # 獲取影片名稱與影片時長
+            original_url = request.POST.get('url', '')
+            if 'bili' in original_url:
+                title, duration = bili_video_info.title_and_duration(original_url)
+            else:
+                title, duration = yt_video_info.title_and_duration(original_url)
+            
             
             # 創建或查看此url影片的資料夾
             video_id = url_conversion.extract_video_id(url)
@@ -75,7 +102,10 @@ def learning(request):
                     'lecturer': lecturer,
                     'course': course,
                     'url': url,
-                    'start_end_dict': start_end_dict
+                    'start_end_dict': start_end_dict,
+                    'title': title,
+                    'duration': duration,
+                    'video_id': video_id,
                     }
             
             
@@ -97,7 +127,11 @@ def learning(request):
             end = form.cleaned_data.get('end')
             description = form.cleaned_data.get('description')
             start_time = process_time.total_seconds(start)
-            end_time = process_time.total_seconds(end)         
+            end_time = process_time.total_seconds(end)
+            video_duration = int(request.POST.get('videoDuration', ''))
+            if end_time > video_duration:
+                context = {'status': 'tooLong', 'error':'終止時間超過片長'}
+                return JsonResponse(context)        
             
             # 進入當前頁面中url影片的資料夾
             film_url = request.POST.get('filmUrl')
@@ -173,3 +207,75 @@ def learning(request):
             'error': '檔案不存在或已刪除',
         }
         return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'savePlaylist':
+        playlist_list = os.listdir(PLAYLIST_PATH)
+        context = {
+            'status': True,
+            'data': playlist_list
+        }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'addToNewPlaylist':
+        invalid_to_valid = {
+            '?': '？',
+            '>': '＞',
+            '<': '＜',
+            '/': '／',
+            '\\': '＼',
+            '|': '｜',
+            '"': '＂',
+            '*': '＊',
+            ':': '：',
+        }
+        playlist_name = request.POST.get('name', '')
+        video_id = request.POST.get('videoId', '')
+        video_title = request.POST.get('videoTitle', '')
+        video_title_cleaned = ''.join(invalid_to_valid.get(char, char) for char in video_title)
+        new_playlist_path = os.path.join(PLAYLIST_PATH, playlist_name)
+        os.makedirs(new_playlist_path)
+        # 要在這個資料夾裡儲存檔案
+        exact_name = video_title_cleaned + '[]' + video_id + '.txt'
+        exact_path = os.path.join(new_playlist_path, exact_name)
+        with open(exact_path, 'w'):
+            pass 
+        context = {'status': True}
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'addToPlaylist':
+        invalid_to_valid = {
+            '?': '？',
+            '>': '＞',
+            '<': '＜',
+            '/': '／',
+            '\\': '＼',
+            '|': '｜',
+            '"': '＂',
+            '*': '＊',
+            ':': '：',
+        }
+        playlist_name = request.POST.get('playlistName', '')
+        video_id = request.POST.get('videoId', '')
+        video_title = request.POST.get('videoTitle', '')
+        video_title_cleaned = ''.join(invalid_to_valid.get(char, char) for char in video_title)
+        exact_name = video_title_cleaned + '[]' + video_id + '.txt'
+        exact_path = os.path.join(PLAYLIST_PATH, playlist_name, exact_name)
+        with open(exact_path, 'w'):
+            pass 
+        context = {'status': True}
+        return JsonResponse(context)
+        
+    if request.POST['purpose'] == 'checkPlaylist':
+        video_id = request.POST.get('videoId', '')
+        dirs_containing_video = []
+        
+        for root, dirs, files in os.walk(PLAYLIST_PATH):
+            if any(video_id in file for file in files):
+                dirs_containing_video.append(os.path.basename(root))
+                
+        context = {
+            'status': True,
+            'data': dirs_containing_video,
+        }
+        return JsonResponse(context)
+        
