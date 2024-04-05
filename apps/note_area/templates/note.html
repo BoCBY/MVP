@@ -1115,7 +1115,7 @@ function copyLink(){
             videoId = $(this).parent().prev().attr('video-id');
         }
         
-        
+        console.log(videoId)
         
         if (videoId.length === 11){ // yt的video id包含11個字元
             let ytPrefix = 'https://www.youtube.com/watch?v=';
@@ -1123,6 +1123,9 @@ function copyLink(){
         }else if (videoId.length === 12){ // bilibili的video id包含12個字元
             let biliPrefix = 'https://www.bilibili.com/video/';
             videoLink = biliPrefix + videoId;
+        }else{ // bilibili的播放清單: video id(12個字元)+&p=
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId.replace('&', '?');
         }
         
         // Create a temporary textarea element
@@ -1162,6 +1165,9 @@ function toLearningArea(){
         }else if (videoId.length === 12){ // bilibili的video id包含12個字元
             let biliPrefix = 'https://www.bilibili.com/video/';
             videoLink = biliPrefix + videoId;
+        }else{ // bilibili的播放清單: video id(12個字元)+&p=
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId.replace('&', '?');
         }
 
         // 開一個新分頁(在同一個視窗中)給學習區
@@ -1171,7 +1177,6 @@ function toLearningArea(){
         // 自learning.html中的filmInfoSave函數中拿過來的 --> 只有那些selector會用到learning.html中DOM的id或class時, 才需要加上newTab.document(下一行有例子), 其餘完全不用動!
         // 舉例: $("#phase").empty() -> $("#phase", newTab.document).empty()
         $(newTab).on('load', function(){
-                console.log('123')
                 $.ajax({
                     url: "/learning/",
                     type: "post",
@@ -1225,7 +1230,6 @@ function toLearningArea(){
                         $('#phase', newTab.document).append(li);
                         });
                         $("#filmInfoModal", newTab.document).modal("hide");
-                        console.log('123')
                         }else{ 
                         // 填寫錯誤就產生錯誤訊息
                         $.each(res.errors, function(name,errorList){

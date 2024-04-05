@@ -48,9 +48,9 @@ def title_and_duration(url):
         print("發生錯誤：", e)
         return None, None
 
-# 測試
-#url = 'https://www.bilibili.com/video/BV1BC411h7xH?p=5&vd_source=3dd15bae5592d893117773fb400ee427'
-#title, duration = title_and_duration(url)
-#if title and duration:
-#   print(f"影片標題：{title}")
-#  print(f"影片片長：{duration}")
+#測試
+'''url = 'https://www.bilibili.com/video/BV1BC411h7xH?p=5&vd_source=3dd15bae5592d893117773fb400ee427'
+title, duration = title_and_duration(url)
+if title and duration:
+   print(f"影片標題：{title}")
+   print(f"影片片長：{duration}")'''

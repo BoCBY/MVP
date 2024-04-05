@@ -36,12 +36,12 @@ def learning(request):
             lecturer = request.POST.get('lecturer', '')
             course = request.POST.get('course', '')
             url = request.POST.get('url', '')
-            video_id = request.POST.get('videoId')
+            video_id = request.POST.get('videoId') # yt影片的video id是11碼, bilibili是12碼, 如果又來自播放清單的影片的話, 那就是video id(12個字元)+?p=(集數)
             if len(video_id) == 11: #YT影片
                 title, duration = yt_video_info.title_and_duration(url)
                 url = url_conversion.yt_conversion(url)
                 
-            elif len(video_id) == 12: #BILI影片
+            else: #BILI影片, 
                 title, duration = bili_video_info.title_and_duration(url)
                 url = url_conversion.bili_conversion(url)
                 

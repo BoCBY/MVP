@@ -7,7 +7,6 @@ def get_seconds_from_duration(duration):
     minutes = 0
     seconds = 0
 
-    print(duration)
     if 'H' in duration:
         hours = int(duration.split('H')[0][2:])
         duration = duration.split('H')[1]
@@ -45,8 +44,7 @@ def title_and_duration(url):
         'duration_seconds': duration_seconds
     }'''
 
-#url = "https://www.youtube.com/watch?v=T9i7o0RTCYY"
-#video_info = title_and_duration(url)
-#print(video_info['title'])
-#print(video_info['duration'])
-#print(video_info['duration_seconds'])
+'''url = "https://www.youtube.com/watch?v=T9i7o0RTCYY"
+title, duration_seconds = title_and_duration(url)
+print(title)
+print(duration_seconds)'''

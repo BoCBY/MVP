@@ -12,7 +12,25 @@ class FilmModelForm(BootstrapModelForm):
     class Meta:
         model = models.FilmInfo
         fields = '__all__'
-        
+    
+    def clean_course(self):
+        txt_course = self.cleaned_data.get('course')
+        invalid_characters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
+        for char in txt_course:
+            if char in invalid_characters:
+                raise ValidationError(f'內容不可包含字元:"{char}"')
+
+        return txt_course
+    
+    def clean_lecturer(self):
+        txt_lecturer = self.cleaned_data.get('lecturer')
+        invalid_characters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
+        for char in txt_lecturer:
+            if char in invalid_characters:
+                raise ValidationError(f'內容不可包含字元:"{char}"')
+
+        return txt_lecturer
+    
     def clean_url(self):
         txt_url = self.cleaned_data.get('url')
         yt_prefix_list = ['https://www.youtube.com/', 'https://youtu.be/', ]

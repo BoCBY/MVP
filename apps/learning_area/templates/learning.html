@@ -171,6 +171,7 @@ active
           <li><a href='#' id='savePlaylist'>儲存</a></li>
           <li><a href='#' id='checkPlaylist'>查看</a></li>
         </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -207,8 +208,9 @@ active
               <button type="button" id="newPlaylistCancel" class="btn btn-secondary" style='padding: 0.1rem 0.2rem;'>取消</button>
           </div>
           <span id='newPlaylistError' style='color:red; font-size:0.7rem;'></span>
+        </div>
       </div>
-      </div>
+    </div>
   </div>
 </div>
 <!-- 查看影片所屬的播放清單的modal -->
@@ -226,6 +228,7 @@ active
           
         </div>
       </div>
+    </div>
   </div>
 </div>
   
@@ -263,7 +266,6 @@ function filmInfoSave(){
   $('#filmInfoSave').click(function(){
     // 先把之前輸入錯誤的錯誤訊息清掉
     $('.film-error-msg').empty();
-    $("#filmInfoModal").modal("hide");
 
     // 用ajax請求把使用者輸入的訊息傳到後台
     $.ajax({
@@ -313,7 +315,7 @@ function filmInfoSave(){
               // 把整個li標籤加進ul標籤
               $('#phase').append(li);
             });
-            
+            $("#filmInfoModal").modal("hide");
 
             }else{ 
               // 填寫錯誤就產生錯誤訊息
@@ -708,10 +710,12 @@ function addToPlaylist(){
 }
 
 function checkPlaylist(){
-  $('#optionContainer').on('click', '#checkPlaylist', function(){
+  $('#optionContainer').on('click', '#checkPlaylist', function(event){
+    event.preventDefault();
     $('#checkPlaylistListsContainer').empty();
     let videoId = $('#videoId').text();
     //$('#playlistOptionModal').modal('hide');
+    $('#checkPlaylistModal').modal('show');
     $.ajax({
       url: '/learning/',
       type: 'post',
@@ -731,9 +735,8 @@ function checkPlaylist(){
             divGrid.append(aPlaylist);
             divRow.append(divGrid);
             $('#checkPlaylistListsContainer').append(divRow);
-
-            $('#checkPlaylistModal').modal('show');
           });
+          
         }else{
           alert(res.error);
         }
@@ -814,7 +817,6 @@ window.onload = function(){
   $('#videoTitle').text(videoTitle);
   $('#videoDuration').text(videoDuration);
   $('#videoId').text(videoId);
-
   if (lastWatchedVideo) {
       let iframe = document.getElementById('filmUrl');
       iframe.src = lastWatchedVideo;
