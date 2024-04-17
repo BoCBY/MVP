@@ -22,7 +22,7 @@ from apps.homepage.views import homepage
 from apps.learning_area.views import learning
 from apps.note_area.views import note, note_panel
 from apps.exercise_area.views import exercise, file, like_dislike
-from apps.stats_area.views import stats
+from apps.all_notes_area.views import all_notes
 
 
 urlpatterns = [
@@ -36,12 +36,11 @@ urlpatterns = [
     path('learning/', learning.learning),
     path('note/', note.note),
     path('exercise/', exercise.exercise),
-    path('stats/', stats.stats),
     path('serve_pdf/', file.serve_pdf),
     path('upload_file/', file.upload_file),
     path('download_answer_panel/', file.download_answer_panel),
     path('save_to_note/', file.save_to_note),
     path('like_dislike/', like_dislike.like_dislike),
     path('view_panel/', note_panel.view_panel),
-      
+    path('all_notes/', all_notes.all_notes),
 ]

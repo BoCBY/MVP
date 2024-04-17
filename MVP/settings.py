@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'apps.homepage.apps.HomepageConfig',
     'apps.learning_area.apps.LearningAreaConfig',
     'apps.note_area.apps.NoteAreaConfig',
-    'apps.stats_area.apps.StatsAreaConfig',
+    'apps.all_notes_area.apps.AllNotesAreaConfig',
     
 ]
 

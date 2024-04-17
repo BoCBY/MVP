@@ -1,0 +1,33 @@
+.display-data-row {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.display-data-box {
+    
+    height: 200px; /* Adjust height as needed */
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background-color: #f9f9f9; 
+    transition: background-color 0.3s; 
+}
+
+.display-data-box:hover {
+    background-color: #eaeaea; /* Change background color on hover */
+    cursor: pointer; /* Change cursor style to pointer */
+}
+
+.description {
+    font-size: 1.1rem; /* Increase font size slightly for better readability */
+    color: #333; /* Darker text color for better contrast */
+    line-height: 1.4; /* Increase line height for better spacing */
+}
+
+.period {
+    font-size: 0.8rem;
+    color: #666;
+}

@@ -636,7 +636,7 @@ function addToNewPlaylist(){
     
     $('.playlist-name').each(function() {
         let playlistName = $(this).text();
-        if (name===playlistName){
+        if (name.toLowerCase()===playlistName.toLowerCase()){
             $('#newPlaylistError').text('已有相同名稱的播放清單');
             duplicateFound = true;
             return false;

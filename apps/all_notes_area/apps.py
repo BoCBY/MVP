@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class StatsAreaConfig(AppConfig):
+class AllNotesAreaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.stats_area'
+    name = 'apps.all_notes_area'

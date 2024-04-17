@@ -1,0 +1,174 @@
+{% extends "navbar.html" %}
+{% load static %}
+
+{% block all_notes_active %}
+active
+{% endblock all_notes_active %}
+
+{% block all_notes_active_span %}
+<span class="sr-only">(current)</span>
+{% endblock all_notes_active_span %}
+<!-- 上面這些完善導航條的外觀顯示 -->
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/all_notes_style.css' %}">
+
+{% endblock css %}
+
+
+{% block content %}
+
+<div class='container'>
+    <div class="dropdown d-flex justify-content-end" style='margin-top:1rem;'>
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+          選擇區域
+        </button>
+        <div class="dropdown-menu">
+          <a id='selectLearningArea' class="dropdown-item" href="#">學習影片區</a>
+          <a id='selectExerciseAnswer' class="dropdown-item" href="#">習題答案區</a>
+          <a id='selectSelfDefined' class="dropdown-item" href="#">自定義筆記區</a>
+        </div>
+    </div>
+    <div id='learningArea'>
+        <div class='each-video' lecturer='' course=''>
+            <div class="btn-group dropdown">
+                <a href='#' class='dropdown-toggle video-id' data-toggle="dropdown" aria-expanded="false" style='color:black;'><strong style='font-size:2rem;'>影片id</strong></a>
+                <div class="dropdown-menu" style="">
+                    <a href="#" class="dropdown-item copy-link">複製影片連結</a>
+                    <a href="#" class="dropdown-item to-learning-area">前往學習區</a>
+                </div>
+            </div>  
+            <div class='row'>
+                <div class='each-note-panel col-sm-3'>
+                    <div class='display-data-box' style='margin-right:1rem;'>                       
+                        <span class='description'>剖析一般項的係數數學結構3333</span>                       
+                    </div>
+                    <p class='period'>00:13:30~00:16:10</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                       
+                        <span class='description'>套入物理觀念解c.的泰勒展式, 最終化簡成矩陣形式.</span>                      
+                    </div>
+                    <p class='period'>00:13:30~00:16:10</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                       
+                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                        
+                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                
+                        <span class='description'>I want to test how many words it can contain.</span>                       
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>
+                        <span class='description'>二階項</span> 
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>
+                        <span class='description'>如果二維泰勒展式表達式為對(也確實是對的), 則求其係數的方法.</span>
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+            </div>
+        </div>
+        <div class='each-video' lecturer='' course=''>
+            <div class="btn-group dropdown">
+                <a href='#' class='dropdown-toggle video-id' data-toggle="dropdown" aria-expanded="false" style='color:black;'><strong style='font-size:2rem;'>影片id</strong></a>
+                <div class="dropdown-menu" style="">
+                    <a href="#" class="dropdown-item copy-link">複製影片連結</a>
+                    <a href="#" class="dropdown-item to-learning-area">前往學習區</a>
+                </div>
+            </div>  
+            <div class='row'>
+                <div class='each-note-panel col-sm-3'>
+                    <div class='display-data-box' style='margin-right:1rem;'>                       
+                        <span class='description'>剖析一般項的係數數學結構3333</span>                       
+                    </div>
+                    <p class='period'>00:13:30~00:16:10</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                       
+                        <span class='description'>套入物理觀念解c.的泰勒展式, 最終化簡成矩陣形式.</span>                      
+                    </div>
+                    <p class='period'>00:13:30~00:16:10</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                       
+                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                        
+                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>                
+                        <span class='description'>I want to test how many words it can contain.</span>                       
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>
+                        <span class='description'>二階項</span> 
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+                <div class='col-sm-3'>
+                    <div class='display-data-box'  style='margin-right:1rem;'>
+                        <span class='description'>如果二維泰勒展式表達式為對(也確實是對的), 則求其係數的方法.</span>
+                    </div>
+                    <p class='period'>00:42:20~00:44:30</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+
+<script>
+    $(function(){
+      selectLearningArea();
+    })
+
+function selectLearningArea(){
+    $('#selectLearningArea').click(function(event){
+        event.preventDefault();
+        $.ajax({
+            url: '/all_notes/',
+            type: 'post',
+            data: {'purpose': 'selectLearningArea',},
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    // 從後台拿到資料了 -> 要建標籤
+                }else{
+ 
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+</script>
+
+
+{% endblock js %}

@@ -26,6 +26,10 @@ EXERCISE_ANSWER_AREA_PATH = os.path.join(COMPUTER_USER_INFO_PATH, INDIVIDUAL_EXE
 SELF_DEFINED_PATH = os.path.join('email#1', 'note', 'self_defined')
 SELF_DEFINED_AREA_PATH = os.path.join(COMPUTER_USER_INFO_PATH, SELF_DEFINED_PATH)
 
+# 播放清單的路徑
+PLAYLIST_PATH = os.path.join('email#1', 'playlist')
+PLAYLIST_AREA_PATH = os.path.join(COMPUTER_USER_INFO_PATH, PLAYLIST_PATH)
+
 # 科目英文名轉中文名的映射
 ENG_TO_CH = {
     'calculus': '微積分',
@@ -148,6 +152,28 @@ def note(request):
             'status': False,
             'error': '重新命名失敗: 找不到此檔案'
         }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'playlistRename':
+        old_name = request.POST.get('oldName', '')
+        new_name = request.POST.get('newName', '')
+        playlist_list = os.listdir(PLAYLIST_AREA_PATH)
+        for playlist_name in playlist_list:
+            if old_name == playlist_name:
+                old_path = os.path.join(PLAYLIST_AREA_PATH, old_name)
+                new_path = os.path.join(PLAYLIST_AREA_PATH, new_name)
+                os.rename(old_path, new_path)
+                # 因為只會有一個檔案要重名, 所以可以在這裡return
+                context = {
+                    'status': True,
+                    'data': '重新命名成功!',
+                }
+                return JsonResponse(context)
+        context = {
+            'status': False,
+            'error': '重新命名失敗: 找不到此檔案'
+        }
+        return JsonResponse(context)
         
     if request.POST['purpose'] == 'deleteSelfDefined':
         is_folder = request.POST.get('isFolder', '')
@@ -176,7 +202,45 @@ def note(request):
                 'error': f'刪除失敗: 找不到"{name}"'
             }
         return JsonResponse(context)
-            
+      
+    if request.POST['purpose'] == 'playlistDelete':
+        name = request.POST.get('name', '')
+        exact_path = os.path.join(PLAYLIST_AREA_PATH, name)
+        if os.path.exists(exact_path):
+            shutil.rmtree(exact_path)
+            context = {
+                'status': True,
+                'data': f'成功刪除"{name}" 資料夾'
+            }
+            return JsonResponse(context)
+        
+        context = {
+                'status': False,
+                'error': f'刪除失敗: 找不到"{name}"'
+            }
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'playlistVideoDelete':
+        playlist_title = request.POST.get('playlistTitle', '')
+        video_title = request.POST.get('videoTitle', '')
+        playlist_path = os.path.join(PLAYLIST_AREA_PATH, playlist_title)
+        video_list = os.listdir(playlist_path)
+        for video_name in video_list:
+            if video_title in video_name:
+                video_path = os.path.join(playlist_path, video_name)
+                if os.path.exists(video_path):
+                    os.remove(video_path)
+                    context = {
+                        'status': True,
+                        'data': f'成功自{playlist_title}移除"{video_title}"'
+                    }
+                    return JsonResponse(context)
+        
+        context = {
+                'status': False,
+                'error': f'刪除失敗: "{video_title}"不存在'
+            }
+        return JsonResponse(context)
     
     if request.POST['purpose'] == 'showLearningAreaData':
         course_filter_text = request.POST.get('courseFilterText', '')
@@ -327,4 +391,24 @@ def note(request):
         with open(exact_path, 'w'):
             pass
         context = {'status': True}
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'showPlaylistModal':
+        playlist_list = os.listdir(PLAYLIST_AREA_PATH)
+        context = {'status': True, 'data': playlist_list}
+        return JsonResponse(context)
+    
+    if request.POST['purpose'] == 'showPlaylistVideoModal':
+        playlist_name = request.POST.get('playlistName', '')
+        exact_path = os.path.join(PLAYLIST_AREA_PATH, playlist_name)
+        video_info_dict = {}
+        if os.path.exists(exact_path):
+            video_list = os.listdir(exact_path)
+            for item in video_list:
+                video_title, video_id = os.path.splitext(item)[0].split('[]')
+                video_info_dict[video_id] = video_title
+            context = {'status': True, 'data': video_info_dict}
+            return JsonResponse(context)
+        
+        context = {'status': False, 'error': f'"{playlist_name}"不存在'}
         return JsonResponse(context)

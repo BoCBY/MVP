@@ -12,7 +12,7 @@ active
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/note_style.css' %}">
+<link rel="stylesheet" href="{% static 'css/note_style2.css' %}">
 
 {% endblock css %}
 
@@ -21,7 +21,6 @@ active
     <div id='btnContainer' style='margin-top:1rem;'>
         <a href='#'><button id="selfDefined" type="button" class="btn btn-info">自定義筆記</button></a>
         <a href='#'><button id="playlist" type="button" class="btn btn-info">播放清單</button></a>
-        <a href='#'><button id="allNotes" type="button" class="btn btn-info">所有筆記板</button></a>
     </div>
     <div id='wholeAreaContainer'>
         <div id="exerciseAns" class="region-container">
@@ -101,6 +100,29 @@ active
                     <button type="button" id="selfDefinedRenameSubmit" class="btn btn-success" style='padding: 0.1rem 0.2rem;'>確定</button>
                 </div>
                 <span id='selfDefinedRenameError' style='color:red; font-size:0.7rem;'></span>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- 播放清單的重新命名modal -->
+<div class="modal fade" id="playlistRenameModal" style='z-index:1051;' tabindex="-1" aria-labelledby="playlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="playlistRenameModalLabel"><strong id='playlistRenameModalTitle'>重新命名</strong></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div id='playlistOldNameContainer'><strong>現在名稱: <span id='playlistOldName'></span></strong></div>
+            <div class="input-group rename-container" style='margin-top:0.3rem;'>
+                <input type="text" id="playlistRenameInput" style="width:180px;" placeholder='重新命名'>
+                <div class='input-group-append'>
+                    <button type="button" id="playlistRenameSubmit" class="btn btn-success" style='padding: 0.1rem 0.2rem;'>確定</button>
+                </div>
+                <span id='playlistRenameError' style='color:red; font-size:0.7rem;'></span>
             </div>
         </div>
       </div>
@@ -264,7 +286,7 @@ active
             <div id='selfDefinedTopContainer' class='container' style='margin-bottom:0.2rem;'>
                 <div class='d-flex align-items-center'>
                     <span><strong style='font-size:0.9rem;'>位址</strong></span>
-                    <a href='#' id='selfDefinedPathHead' style='margin-left:1rem;'>首頁</a>
+                    <a href='#' id='selfDefinedPathHead' style='margin-left:1rem;' class='mr-auto'>首頁</a>
                 </div>
                 <div id='path' style='margin-left:1rem;'>
                     <a href='#' class='self-defined-path'></a>
@@ -326,6 +348,59 @@ active
       </div>
     </div>
 </div>
+<!-- 播放清單的modal -->
+<div class="modal fade" id="playlistModal" tabindex="-1" aria-labelledby="playlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="playlistModalLabel"><strong id='playlistModalTitle'>播放清單</strong></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id='playlistTopContainer' class='container' style='margin-bottom:0.2rem;'>
+                    <div class='search-container d-flex justify-content-end'>
+                        <a href='#'><i id='playlistSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                        <input id='playlistSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                    </div>
+                </div>    
+                <div id='playlistListsContainer' class='container' style='margin-top:0.5rem;'>     
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 播放清單的影片列表modal -->
+<div class="modal fade" id="playlistVideoModal" tabindex="-1" aria-labelledby="playlistVideoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="playlistVideoModalLabel"><strong id='playlistVideoModalTitle'>播放清單</strong></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id='playlistTopContainer' class='container' style='margin-bottom:0.2rem;'>
+                    <div class='d-flex align-items-center'>
+                        <div id='playlistVideoPrevPageContainer' class='mr-auto'>
+                            <a href='#' id='playlistVideoPrevious' class='previous'><i class="fa-solid fa-arrow-left"></i></a>
+                        </div>
+                        <div class='search-container'>
+                            <a href='#'><i id='playlistVideoSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                            <input id='playlistVideoSearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+                        </div>
+                    </div>
+                </div>    
+                <div id='playlistVideoContainer' class='container' style='margin-top:0.5rem;'>     
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 新增東西的modal -->
 <div class="modal fade" id="addThingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -349,24 +424,65 @@ active
     </div>
 </div>
 <!-- 自定義刪除的modal -->
-<div class="modal fade" id="selfDefinedDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="selfDefinedDeleteModal" tabindex="-1" aria-labelledby="selfDefinedModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><strong id='selfDefinedDeleteModalTitle'>刪除</strong></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selfDefinedModalLabel"><strong id='selfDefinedDeleteModalTitle'>刪除</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                確定刪除<span id='selfDefinedDeleteText' style='color:blue;'></span><span id='selfDefinedDeleteDangerText' style='color:red;'></span>一旦刪除將無法恢復。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">取消</button>
+                <button id='selfDefinedDeleteConfirm' type="button" class="btn btn-sm btn-danger">刪除</button>
+            </div>
         </div>
-        <div class="modal-body">
-          確定刪除<span id='selfDefinedDeleteText' style='color:blue;'></span><span id='selfDefinedDeleteDangerText' style='color:red;'></span>一旦刪除將無法恢復。
+    </div>
+</div>
+<!-- 播放清單刪除的modal -->
+<div class="modal fade" id="playlistDeleteModal" tabindex="-1" aria-labelledby="playlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playlistModalLabel"><strong id='playlistDeleteModalTitle'>刪除</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                確定刪除<span id='playlistDeleteText' style='color:blue;'></span><span id='playlistDeleteDangerText' style='color:red;'></span>一旦刪除將無法恢復。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">取消</button>
+                <button id='playlistDeleteConfirm' type="button" class="btn btn-sm btn-danger">刪除</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">取消</button>
-          <button id='selfDefinedDeleteConfirm' type="button" class="btn btn-sm btn-danger">刪除</button>
+    </div>
+</div>
+<!-- 播放清單的影片刪除的modal -->
+<div class="modal fade" id="playlistVideoDeleteModal" tabindex="-1" aria-labelledby="playlistVideoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playlistVideoModalLabel"><strong id='playlistVideoDeleteModalTitle'>自播放清單中移除</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                確定要將<span id='playlistVideoDeleteTitle' style='color:blue;'></span>自<span id='playlistTitle' style='color:blue;'></span>中刪除？一旦刪除將無法恢復。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">取消</button>
+                <button id='playlistVideoDeleteConfirm' type="button" class="btn btn-sm btn-danger">刪除</button>
+            </div>
         </div>
-      </div>
-  </div>
+    </div>
+</div>
 
 {% endblock content %}
 
@@ -381,13 +497,12 @@ active
     searchModule.init('exerciseAnswerSearchIcon', 'exerciseAnswerSearchInput', '#exerciseAnswerPanelContainer .row');
     searchModule.init('selfDefinedFolderSearchIcon', 'selfDefinedFolderSearchInput', '#selfDefinedFolderData .col-sm-8');
     searchModule.init('selfDefinedPanelSearchIcon', 'selfDefinedPanelSearchInput', '#selfDefinedPanelData .col-sm-8');
+    searchModule.init('playlistSearchIcon', 'playlistSearchInput', '#playlistListsContainer .row');
+    searchModule.init('playlistVideoSearchIcon', 'playlistVideoSearchInput', '#playlistVideoContainer .row');
     
     showMore();
     loadBtns();
     learningAreaRename();
-    selfDefinedRename();
-    selfDefinedDelete();
-    selfDefinedAdd();
     prevPage();
     showLearningAreaData();
     showExerciseAreaData();
@@ -397,11 +512,8 @@ active
     viewPeriodPanel();
     viewAnswerPanel();
     panelTimeStructure();
-    showSelfDefinedModal();
-    selfDefinedCount();
-    selfDefinedFolder();
-    selfDefinedPanel();
-    selfDefinedPath();
+    selfDefined();
+    playlist();
   })
 
 // Define a search module
@@ -431,7 +543,7 @@ const searchModule = (function() {
 
         if(searchArea === '#learningAreaDataTableBody tr'){
             $(searchArea).each(function() {
-                let text = $(this).find('.lecturer, .course').text().toLowerCase();
+                let text = $(this).text().toLowerCase();
 
                 if (text.includes(searchText)) {
                     $(this).show();
@@ -480,6 +592,27 @@ const searchModule = (function() {
             let divPanelCount = $('<div>').attr({'id':'panelCount', 'style':'font-size:0.7rem;'}).text('共'+visiblePanelCount+'項');
             $('#selfDefinedPanelData').prepend(divPanelCount);
 
+        }else if(searchArea === '#playlistListsContainer .row'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.playlist-name').text().toLowerCase();
+        
+                if (text.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }else if(searchArea === '#playlistVideoContainer .row'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.video').text().toLowerCase();
+        
+                if (text.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        
         }else{
             // for showMoreModal, periodPanelModal 
             $(searchArea).each(function() {
@@ -490,8 +623,8 @@ const searchModule = (function() {
                 } else {
                     $(this).hide();
                 }
-        });
-    }
+            });
+        }
     }
   
     // Public function
@@ -742,8 +875,7 @@ function selfDefinedRename(){
         if (isFolder){ //看看有沒有重複名稱的資料夾
             $('.self-defined-folder').each(function() {
                 let folderName = $(this).text();
-                if (newName===folderName){
-                    $('')
+                if (newName.toLowerCase()===folderName.toLowerCase()){
                     $('#selfDefinedRenameError').text('已有相同名稱的資料夾');
                     duplicateFound = true;
                     return false;
@@ -753,7 +885,7 @@ function selfDefinedRename(){
         }else{ //看看有沒有重複名稱的筆記板
             $('.self-defined-panel').each(function() {
                 let panelName = $(this).text().replace('.txt', '');
-                if (newName===panelName){
+                if (newName.toLowerCase()===panelName.toLowerCase()){
                     $('#selfDefinedRenameError').text('已有相同名稱的筆記板');
                     duplicateFound = true;
                     return false;
@@ -890,7 +1022,7 @@ function selfDefinedAdd(){
         if (isFolder){ //看看有沒有重複名稱的資料夾
             $('.self-defined-folder').each(function() {
                 let folderName = $(this).text();
-                if (name===folderName){
+                if (name.toLowerCase()===folderName.toLowerCase()){
                     $('#addThingsError').text('已有相同名稱的資料夾');
                     duplicateFound = true;
                     return false;
@@ -901,7 +1033,7 @@ function selfDefinedAdd(){
             name = name + '.txt'; // 新增筆記板要加副檔名, 一樣先用.txt展示
             $('.self-defined-panel').each(function() {
                 let panelName = $(this).text();
-                if (name===panelName){
+                if (name.toLowerCase()===panelName.toLowerCase()){
                     $('#addThingsError').text('已有相同名稱的筆記板');
                     duplicateFound = true;
                     return false;
@@ -982,6 +1114,11 @@ function prevPage(){
         event.preventDefault();
         $('#exerciseAnswerModal').modal('hide');
         $('#showMoreModal').modal('show');
+    });
+    $('#playlistVideoPrevPageContainer').on('click', '#playlistVideoPrevious', function(event){
+        event.preventDefault();
+        $('#playlistVideoModal').modal('hide');
+        $('#playlistModal').modal('show');
     });
 }
 
@@ -1114,8 +1251,6 @@ function copyLink(){
         }else{
             videoId = $(this).parent().prev().attr('video-id');
         }
-        
-        console.log(videoId)
         
         if (videoId.length === 11){ // yt的video id包含11個字元
             let ytPrefix = 'https://www.youtube.com/watch?v=';
@@ -1592,6 +1727,386 @@ function selfDefinedPath(){
     });
 }
 
+function selfDefined(){
+    showSelfDefinedModal();
+    selfDefinedCount();
+    selfDefinedFolder();
+    selfDefinedPanel();
+    selfDefinedPath();
+    selfDefinedRename();
+    selfDefinedDelete();
+    selfDefinedAdd();
+}
+
+function playlist(){
+    showPlaylistModal();
+    playlistRename();
+    playlistDelete();
+    showPlaylistVideoModal();
+    playlistVideoDelete();
+    playlistVideoCopyLink();
+    playlistVideoToLearningArea();
+}
+
+function showPlaylistModal(){
+    $('#playlist').click(function(){
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data: {'purpose': 'showPlaylistModal',},
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#playlistListsContainer').empty();
+                    $.each(res.data, function(index, playlistName){
+                        let playlistIcon = $('<i>').attr({'class':'fa-solid fa-list', 'style':'margin-right: 0.3rem;'});
+                        let renameIcon = $('<i>').attr({'class':'bi bi-pen playlist-rename', 'style':'margin-right:0.3rem; font-size:0.8rem;'});
+                        let deleteIcon = $('<i>').attr({'class':'fa-solid fa-trash-can playlist-delete', 'style':'font-size:0.8rem;'});
+                        let aName = $('<a>').attr({'href':'#', 'class':'playlist-name mr-auto',}).text(playlistName);
+                        let aEdit = $('<a>').attr({'href':'#'});
+                        let divContainer = $('<div>').attr({'class':'col-sm-8 d-flex align-items-center', 'style':'margin-left:2rem;'});
+                        let divRow = $('<div>').attr({'class':'row',});
+                        aEdit.append(renameIcon);
+                        aEdit.append(deleteIcon);
+                        divContainer.append(playlistIcon);
+                        divContainer.append(aName);
+                        divContainer.append(aEdit);
+                        divRow.append(divContainer);
+                        $('#playlistListsContainer').append(divRow);
+                    });
+                    $('#playlistModal').modal('show');
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function playlistRename(){
+    const invalidCharacters = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+    let $aName = undefined;
+    let oldName = undefined;
+    let isFolder = undefined;
+
+    
+    
+    // 點擊重新命名圖標
+    $('#playlistListsContainer').on('click', '.playlist-rename', function(event){
+        event.preventDefault();
+        $this = $(this);
+        $aName = $this.parent().prev();
+        oldName = $aName.text();
+        $('#playlistOldName').text(oldName);
+        $('#playlistRenameError').empty();
+        $('#playlistRenameInput').val('');
+        $('#playlistRenameModal').modal('show');   
+    });
+
+    // 點擊確定按鈕
+    $('#playlistRenameSubmit').click(function () {
+        $('#playlistRenameError').empty();
+        let duplicateFound = false;
+
+        let newName = $('#playlistRenameInput').val();
+        if (newName.trim().length ===0) {
+            $('#playlistRenameError').text('輸入不可為空');
+            $('#playlistRenameInput').val('');
+            return;
+        }
+        
+        for (let i = 0; i < invalidCharacters.length; i++) {
+            if (newName.includes(invalidCharacters[i])) {
+                $('#playlistRenameError').text('名稱不可包含此字元: ' + invalidCharacters[i]);
+                return; // Stop the loop after the first invalid character is found
+            }
+        }
+
+        $('.playlist-name').each(function() { //看看有沒有重複名稱的資料夾
+            let playlistName = $(this).text();
+            if (newName.toLowerCase()===playlistName.toLowerCase()){
+                $('#playlistRenameError').text('已有相同名稱的資料夾');
+                duplicateFound = true;
+                return false;
+            }
+        });
+            
+        
+
+        if (duplicateFound) { //有重名的筆記板或資料夾就退出function
+            return; 
+        }
+
+        // 去後台修改資料夾名稱
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data:{
+                'purpose': 'playlistRename',
+                'oldName': oldName,
+                'newName': newName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    alert(res.data);
+                    $aName.text(newName);
+                    $('#playlistRenameModal').modal('hide');
+                    $('#playlistRenameInput').val('');
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function playlistDelete(){
+    let $this = undefined;
+    let $aName = undefined;
+    let name = undefined;
+
+    // 點擊刪除圖標
+    $('#playlistListsContainer').on('click', '.playlist-delete', function(event){
+        event.preventDefault();
+        $this = $(this);
+        $aName = $this.parent().prev();
+        name = $aName.text();
+        let message1 = '"'+name+'"' + ' 播放清單？ ';
+        let message2 = '播放清單裡的所有項目也將一併刪除！'
+        $('#playlistDeleteText').text(message1);
+        $('#playlistDeleteDangerText').text(message2);
+        $('#playlistDeleteModal').modal('show');
+    });
+
+    // 點擊確定按鈕
+    $('#playlistDeleteModal').on('click', '#playlistDeleteConfirm', function(){
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data: {
+                'purpose': 'playlistDelete',
+                'name': name,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    alert(res.data);
+                    $this.closest('.row').remove();
+                    $('#playlistDeleteModal').modal('hide');
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function showPlaylistVideoModal(){
+    $('#playlistListsContainer').on('click', '.playlist-name', function(event){
+        event.preventDefault();
+        let playlistName = $(this).text();
+        $('#playlistVideoModalTitle').text(playlistName);
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data: {
+                'purpose': 'showPlaylistVideoModal',
+                'playlistName': playlistName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#playlistModal').modal('hide');
+                    $('#playlistVideoContainer').empty();
+                    $.each(res.data, function(videoId, videoTitle){
+                        let divRow = $('<div>').attr({'class':'row',});
+                        let divGrid = $('<div>').attr({'class':'col-sm-8 d-flex align-items-center', 'style':'margin-left:2rem;',});
+                        let divDropRight = $('<div>').attr({'class':'btn-group dropright',});
+                        let divMenu = $('<div>').attr({'class':'dropdown-menu',});
+                        let videoIcon = $('<i>').attr({'class':'fa-solid fa-play', 'style':'margin-right: 0.3rem;',});
+                        let aVideo = $('<a>').attr({'href':'#', 'class':'dropdown-toggle video', 'video-id':videoId, 'data-toggle':'dropdown', 'aria-expanded':'false'}).text(videoTitle);
+                        let aCopyLink = $('<a>').attr({'href':'#', 'class':'dropdown-item copy-link'}).text('複製影片連結');
+                        let aToLearningArea = $('<a>').attr({'href':'#', 'class':'dropdown-item to-learning-area'}).text('前往學習區');
+                        let aDelete = $('<a>').attr({'href':'#', 'class':'dropdown-item video-delete'}).text('自播放清單中移除');
+                        divMenu.append(aCopyLink);
+                        divMenu.append(aToLearningArea);
+                        divMenu.append(aDelete);
+                        divDropRight.append(aVideo);
+                        divDropRight.append(divMenu);
+                        divGrid.append(videoIcon);
+                        divGrid.append(divDropRight);
+                        divRow.append(divGrid);
+                        $('#playlistVideoContainer').append(divRow)
+                    });
+                    $('#playlistVideoModal').modal('show');
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+        
+    });
+}
+
+function playlistVideoDelete(){
+    let $this = undefined;
+    let videoTitle = undefined;
+    let playlistTitle = undefined;
+
+    // 點擊刪除
+    $('#playlistVideoContainer').on('click', '.video-delete', function(event){
+        event.preventDefault();
+        $this = $(this);
+        videoTitle = $(this).parent().prev().text();
+        playlistTitle = $('#playlistVideoModalTitle').text();
+        $('#playlistVideoDeleteTitle').text(videoTitle);
+        $('#playlistTitle').text(playlistTitle);
+        $('#playlistVideoDeleteModal').modal('show');
+    });
+
+    // 點擊確定按鈕
+    $('#playlistVideoDeleteConfirm').click(function(){
+        $.ajax({
+            url: '/note/',
+            type: 'post',
+            data: {
+                'purpose': 'playlistVideoDelete',
+                'playlistTitle': playlistTitle,
+                'videoTitle': videoTitle,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    alert(res.data);
+                    $this.closest('.row').remove();
+                    $('#playlistVideoDeleteModal').modal('hide');
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function playlistVideoCopyLink(){
+    $('#playlistVideoContainer').on('click', '.copy-link', function(event) {
+        event.preventDefault();
+        let videoId = $(this).parent().prev().attr('video-id');
+        let videoLink = undefined;
+        
+        if (videoId.length === 11){ // yt的video id包含11個字元
+            let ytPrefix = 'https://www.youtube.com/watch?v=';
+            videoLink = ytPrefix + videoId;
+        }else if (videoId.length === 12){ // bilibili的video id包含12個字元
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId;
+        }else{ // bilibili的播放清單: video id(12個字元)+&p=
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId.replace('&', '?');
+        }
+        
+        // Create a temporary textarea element
+        let $temp = $('<textarea>');
+        $(this).closest('.modal').append($temp);
+        $temp.val(videoLink).select();
+        document.execCommand('copy');
+        $temp.remove();
+      });
+}
+
+function playlistVideoToLearningArea(){
+    $('#playlistVideoContainer').on('click', '.to-learning-area', function(event) {
+        event.preventDefault();
+
+        let lecturer = undefined;
+        let course = undefined;
+        let videoId = $(this).parent().prev().attr('video-id');
+        let videoLink = undefined;
+        
+        // 由video id得到影片連結
+        if (videoId.length === 11){ // yt的video id包含11個字元
+            let ytPrefix = 'https://www.youtube.com/watch?v=';
+            videoLink = ytPrefix + videoId;
+        }else if (videoId.length === 12){ // bilibili的video id包含12個字元
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId;
+        }else{ // bilibili的播放清單: video id(12個字元)+&p=
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId.replace('&', '?');
+        }
+
+        // 開一個新分頁(在同一個視窗中)給學習區
+        let learningAreaUrl = 'http://127.0.0.1:8000/learning/';
+        let newTab = window.open(learningAreaUrl, '_blank'); 
+
+        // 自learning.html中的filmInfoSave函數中拿過來的 --> 只有那些selector會用到learning.html中DOM的id或class時, 才需要加上newTab.document(下一行有例子), 其餘完全不用動!
+        // 舉例: $("#phase").empty() -> $("#phase", newTab.document).empty()
+        $(newTab).on('load', function(){
+                $.ajax({
+                    url: "/learning/",
+                    type: "post",
+                    data: {
+                        'purpose':'newTab',
+                        'url': videoLink,
+                        'lecturer': lecturer,
+                        'course': course,
+                        'videoId': videoId,
+                    },
+                    dataType: "JSON",
+                    success: function(res){
+                    if(res.status){
+                        let videoTitle = res.title;
+                        let videoDuration = res.duration;
+                        $('#videoTitle', newTab.document).text(videoTitle);
+                        $('#videoDuration', newTab.document).text(videoDuration);
+                        $('#videoId', newTab.document).text(videoId);
+
+                        $("#phase", newTab.document).empty()
+                        //填寫正確就在頁面中顯示
+                        $("#courLectName", newTab.document).text(res.course+"-"+res.lecturer)
+                        $("#filmUrl", newTab.document).attr('src', res.url)
+                        
+                        //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
+                        localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
+                        localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer); // 課名-講者名
+                        localStorage.setItem('lastWatchedVideoTitle', videoTitle); // 影片原始名稱
+                        localStorage.setItem('lastWatchedVideoDuration', videoDuration); // 影片片長
+                        localStorage.setItem('lastWatchedVideoId', videoId); // 影片id
+                        localStorage.setItem('lastWatchedVideoNotes', JSON.stringify(res.start_end_dict)); // 影片的筆記
+                        
+                        // 把url影片對應的資料夾裡面的每一份筆記檔案展示在段落重點區  
+                        $.each(res.start_end_dict, function(key, value){ 
+                        nameArray = key.split("-");
+                        // 創建li標籤, 裡頭包含icon, a和strong標籤
+                        let li = $('<li>').attr({'start':value.start, 'end':value.end})
+                        let a = $('<a>').attr('href', '#');
+                        let strong = $('<strong>').attr('class','film-second').text(nameArray[0]);
+                        let notePanelIcon = $('<i>').attr({'class': 'fa-solid fa-pen-to-square note-panel', 'style': 'margin-right:0.3rem;'})
+                        // 創建p標籤, 並且把它加進上面已經創好的li標籤裡
+                        let p = $('<p>').attr({'style': 'position:relative;',}).text(nameArray[1]);
+                        let deletePanelIcon = $('<i>').attr({'class': 'fa-solid fa-trash-can delete-panel', 'style': 'position: absolute; bottom: 0; right: 0;'});
+                        a.append(strong);
+                        p.append(deletePanelIcon);
+                        li.append(notePanelIcon);
+                        li.append(a);
+                        li.append(p);
+            
+                        // 把整個li標籤加進ul標籤
+                        $('#phase', newTab.document).append(li);
+                        });
+                        $("#filmInfoModal", newTab.document).modal("hide");
+                        }else{ 
+                        // 填寫錯誤就產生錯誤訊息
+                        $.each(res.errors, function(name,errorList){
+                            $('#id_' + name, newTab.document).next().text(errorList[0]);
+                        })
+                    }
+                    }
+                }); // end of ajax
+            });
+        });
+}
 
 </script>
 
