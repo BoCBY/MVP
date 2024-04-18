@@ -20,123 +20,30 @@ active
 {% block content %}
 
 <div class='container'>
-    <div class="dropdown d-flex justify-content-end" style='margin-top:1rem;'>
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-          選擇區域
-        </button>
-        <div class="dropdown-menu">
-          <a id='selectLearningArea' class="dropdown-item" href="#">學習影片區</a>
-          <a id='selectExerciseAnswer' class="dropdown-item" href="#">習題答案區</a>
-          <a id='selectSelfDefined' class="dropdown-item" href="#">自定義筆記區</a>
+    <div class='top-container d-flex align-items-center' style='margin-bottom:1rem;'>
+        <div class="dropdown mr-auto" style='margin-top:1rem;'>
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+            選擇區域
+            </button>
+            <div class="dropdown-menu">
+            <a id='selectLearningArea' class="dropdown-item" href="#">學習影片區</a>
+            <a id='selectExerciseAnswerArea' class="dropdown-item" href="#">習題答案區</a>
+            <a id='selectSelfDefinedArea' class="dropdown-item" href="#">自定義筆記區</a>
+            </div>
+        </div>
+        <div class='search-container'>
+            <a href='#'><i id='SearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+            <input id='SearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
         </div>
     </div>
     <div id='learningArea'>
-        <div class='each-video' lecturer='' course=''>
-            <div class="btn-group dropdown">
-                <a href='#' class='dropdown-toggle video-id' data-toggle="dropdown" aria-expanded="false" style='color:black;'><strong style='font-size:2rem;'>影片id</strong></a>
-                <div class="dropdown-menu" style="">
-                    <a href="#" class="dropdown-item copy-link">複製影片連結</a>
-                    <a href="#" class="dropdown-item to-learning-area">前往學習區</a>
-                </div>
-            </div>  
-            <div class='row'>
-                <div class='each-note-panel col-sm-3'>
-                    <div class='display-data-box' style='margin-right:1rem;'>                       
-                        <span class='description'>剖析一般項的係數數學結構3333</span>                       
-                    </div>
-                    <p class='period'>00:13:30~00:16:10</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                       
-                        <span class='description'>套入物理觀念解c.的泰勒展式, 最終化簡成矩陣形式.</span>                      
-                    </div>
-                    <p class='period'>00:13:30~00:16:10</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                       
-                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                        
-                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                
-                        <span class='description'>I want to test how many words it can contain.</span>                       
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>
-                        <span class='description'>二階項</span> 
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>
-                        <span class='description'>如果二維泰勒展式表達式為對(也確實是對的), 則求其係數的方法.</span>
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-            </div>
-        </div>
-        <div class='each-video' lecturer='' course=''>
-            <div class="btn-group dropdown">
-                <a href='#' class='dropdown-toggle video-id' data-toggle="dropdown" aria-expanded="false" style='color:black;'><strong style='font-size:2rem;'>影片id</strong></a>
-                <div class="dropdown-menu" style="">
-                    <a href="#" class="dropdown-item copy-link">複製影片連結</a>
-                    <a href="#" class="dropdown-item to-learning-area">前往學習區</a>
-                </div>
-            </div>  
-            <div class='row'>
-                <div class='each-note-panel col-sm-3'>
-                    <div class='display-data-box' style='margin-right:1rem;'>                       
-                        <span class='description'>剖析一般項的係數數學結構3333</span>                       
-                    </div>
-                    <p class='period'>00:13:30~00:16:10</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                       
-                        <span class='description'>套入物理觀念解c.的泰勒展式, 最終化簡成矩陣形式.</span>                      
-                    </div>
-                    <p class='period'>00:13:30~00:16:10</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                       
-                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                        
-                        <span class='description'>對simple harmonic oscillator現象的總結.</span>                       
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>                
-                        <span class='description'>I want to test how many words it can contain.</span>                       
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>
-                        <span class='description'>二階項</span> 
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-                <div class='col-sm-3'>
-                    <div class='display-data-box'  style='margin-right:1rem;'>
-                        <span class='description'>如果二維泰勒展式表達式為對(也確實是對的), 則求其係數的方法.</span>
-                    </div>
-                    <p class='period'>00:42:20~00:44:30</p>
-                </div>
-            </div>
-        </div>
+        
+    </div>
+    <div id='exerciseAnswerArea'>
+
+    </div>
+    <div id='selfDefinedArea'>
+
     </div>
 </div>
 
@@ -146,8 +53,203 @@ active
 
 <script>
     $(function(){
-      selectLearningArea();
+        searchModule.init('SearchIcon', 'SearchInput', '#learningArea .each-video');
+        selectLearningArea();
+        selectExerciseAnswerArea();
+        selectSelfDefinedArea();
+        copyLink();
+        toLearningArea();
     })
+
+const searchModule = (function() {
+    // Private functions
+    function toggleSearchInput(searchInputId) {
+        $(`#${searchInputId}`).toggle();
+        if ($(`#${searchInputId}`).is(":visible")) {
+            $(`#${searchInputId}`).focus(); // Focus on the input field when it becomes visible
+        }
+    
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.search-container').length && !$(event.target).is('.search-container')) {
+                $(`#${searchInputId}`).hide();
+            }
+        });
+    }
+    
+    function filter(searchInputId, searchArea) {
+        let searchText = $(`#${searchInputId}`).val();
+
+        if(searchArea === '#learningArea .each-video'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.video-id').text();
+
+                if (text.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+        }else if(searchArea === '#playlistVideoContainer .row'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.video').text().toLowerCase();
+        
+                if (text.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        
+        }else{
+            // for showMoreModal, periodPanelModal 
+            $(searchArea).each(function() {
+                let text = $(this).text().toLowerCase();
+        
+                if (text.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    }
+    
+    // Public function
+    function init(searchIconId, searchInputId, searchArea) {
+        $(`#${searchIconId}`).click(function(event) {
+            event.preventDefault();
+            toggleSearchInput(searchInputId);
+        });
+        $(`#${searchInputId}`).on('input', function() {
+            filter(searchInputId, searchArea);
+        });
+    }
+    
+    // Expose public functions
+    return {
+        init: init
+    };
+})();
+
+function copyLink(){
+    $('#learningArea').on('click', '.copy-link', function(event){
+        event.preventDefault();
+        let videoId = $(this).closest('.btn-group').find('.video-id').text();
+        let videoLink = undefined;
+        
+        if (videoId.length === 11){ // yt的video id包含11個字元
+            let ytPrefix = 'https://www.youtube.com/watch?v=';
+            videoLink = ytPrefix + videoId;
+        }else if (videoId.length === 12){ // bilibili的video id包含12個字元
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId;
+        }else{ // bilibili的播放清單: video id(12個字元)+&p=
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId.replace('&', '?');
+        }
+        
+        // Create a temporary textarea element
+        let $temp = $('<textarea>');
+        $('body').append($temp);
+        $temp.val(videoLink).select();
+        document.execCommand('copy');
+        $temp.remove();
+    })
+}
+
+function toLearningArea(){
+    $('#learningArea').on('click', '.to-learning-area', function(event){
+        event.preventDefault();
+        let lecturer = $(this).closest('.each-video').attr('lecturer');
+        let course = $(this).closest('.each-video').attr('course');
+        let videoId = $(this).closest('.btn-group').find('.video-id').text();
+        let videoLink = undefined;
+        
+        // 由video id得到影片連結
+        if (videoId.length === 11){ // yt的video id包含11個字元
+            let ytPrefix = 'https://www.youtube.com/watch?v=';
+            videoLink = ytPrefix + videoId;
+        }else if (videoId.length === 12){ // bilibili的video id包含12個字元
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId;
+        }else{ // bilibili的播放清單: video id(12個字元)+&p=
+            let biliPrefix = 'https://www.bilibili.com/video/';
+            videoLink = biliPrefix + videoId.replace('&', '?');
+        }
+
+        // 開一個新分頁(在同一個視窗中)給學習區
+        let learningAreaUrl = 'http://127.0.0.1:8000/learning/';
+        let newTab = window.open(learningAreaUrl, '_blank'); 
+
+        // 自learning.html中的filmInfoSave函數中拿過來的 --> 只有那些selector會用到learning.html中DOM的id或class時, 才需要加上newTab.document(下一行有例子), 其餘完全不用動!
+        // 舉例: $("#phase").empty() -> $("#phase", newTab.document).empty()
+        $(newTab).on('load', function(){
+                $.ajax({
+                    url: "/learning/",
+                    type: "post",
+                    data: {
+                        'purpose':'newTab',
+                        'url': videoLink,
+                        'lecturer': lecturer,
+                        'course': course,
+                        'videoId': videoId,
+                    },
+                    dataType: "JSON",
+                    success: function(res){
+                    if(res.status){
+                        let videoTitle = res.title;
+                        let videoDuration = res.duration;
+                        $('#videoTitle', newTab.document).text(videoTitle);
+                        $('#videoDuration', newTab.document).text(videoDuration);
+                        $('#videoId', newTab.document).text(videoId);
+
+                        $("#phase", newTab.document).empty()
+                        //填寫正確就在頁面中顯示
+                        $("#courLectName", newTab.document).text(res.course+"-"+res.lecturer)
+                        $("#filmUrl", newTab.document).attr('src', res.url)
+                        
+                        //把此部影片的資訊儲存到用戶的本地瀏覽器, 以使重新整理以後還可以是這部影片及其相關資訊
+                        localStorage.setItem('lastWatchedVideoUrl', res.url); // 影片的url
+                        localStorage.setItem('lastWatchedVideoName', res.course+"-"+res.lecturer); // 課名-講者名
+                        localStorage.setItem('lastWatchedVideoTitle', videoTitle); // 影片原始名稱
+                        localStorage.setItem('lastWatchedVideoDuration', videoDuration); // 影片片長
+                        localStorage.setItem('lastWatchedVideoId', videoId); // 影片id
+                        localStorage.setItem('lastWatchedVideoNotes', JSON.stringify(res.start_end_dict)); // 影片的筆記
+                        
+                        // 把url影片對應的資料夾裡面的每一份筆記檔案展示在段落重點區  
+                        $.each(res.start_end_dict, function(key, value){ 
+                        nameArray = key.split("-");
+                        // 創建li標籤, 裡頭包含icon, a和strong標籤
+                        let li = $('<li>').attr({'start':value.start, 'end':value.end})
+                        let a = $('<a>').attr('href', '#');
+                        let strong = $('<strong>').attr('class','film-second').text(nameArray[0]);
+                        let notePanelIcon = $('<i>').attr({'class': 'fa-solid fa-pen-to-square note-panel', 'style': 'margin-right:0.3rem;'})
+                        // 創建p標籤, 並且把它加進上面已經創好的li標籤裡
+                        let p = $('<p>').attr({'style': 'position:relative;',}).text(nameArray[1]);
+                        let deletePanelIcon = $('<i>').attr({'class': 'fa-solid fa-trash-can delete-panel', 'style': 'position: absolute; bottom: 0; right: 0;'});
+                        a.append(strong);
+                        p.append(deletePanelIcon);
+                        li.append(notePanelIcon);
+                        li.append(a);
+                        li.append(p);
+            
+                        // 把整個li標籤加進ul標籤
+                        $('#phase', newTab.document).append(li);
+                        });
+                        $("#filmInfoModal", newTab.document).modal("hide");
+                        }else{ 
+                        // 填寫錯誤就產生錯誤訊息
+                        $.each(res.errors, function(name,errorList){
+                            $('#id_' + name, newTab.document).next().text(errorList[0]);
+                        })
+                    }
+                    }
+                }); // end of ajax
+            });
+        });
+}
+
 
 function selectLearningArea(){
     $('#selectLearningArea').click(function(event){
@@ -159,9 +261,131 @@ function selectLearningArea(){
             dataType: 'JSON',
             success: function(res){
                 if(res.status){
-                    // 從後台拿到資料了 -> 要建標籤
+                    $('#learningArea').empty();
+                    $('#exerciseAnswerArea').empty();
+                    $('#selfDefinedArea').empty();
+                    $.each(res.data, function(index, video){
+                        let videoId = Object.keys(video)[0];
+                        let lecturer = video[videoId]['lecturer'];
+                        let course = video[videoId]['course'];
+                        let thumbnail = video[videoId]['thumbnail'];
+
+                        let divEachVideo = $('<div>').attr({'class':'each-video', 'lecturer':lecturer, 'course':course,});
+                        // 製作標題
+                        let divDropdown = $('<div>').attr({'class':'btn-group dropdown'});
+                        let aDropdownToggle = $('<a>').attr({'href':'#','class':'dropdown-toggle', 'data-toggle':'dropdown', 'aria-expanded':'false', 'style':'margin-bottom:0.5rem;'});
+                        let strongVideoIdText = $('<strong>').attr({'class':'video-id', 'style':'font-size:1rem;'}).text(videoId);
+                        aDropdownToggle.append(strongVideoIdText);
+                        let divDropdownMenu = $('<div>').attr({'class':'dropdown-menu'});
+                        let aCopyLink = $('<a>').attr({'href':'#','class':'dropdown-item copy-link'}).text('複製影片連結');
+                        let aToLearningArea = $('<a>').attr({'href':'#', 'class':'dropdown-item to-learning-area'}).text('前往學習區');
+                        divDropdownMenu.append(aCopyLink);
+                        divDropdownMenu.append(aToLearningArea);
+                        divDropdown.append(aDropdownToggle);
+                        divDropdown.append(divDropdownMenu);
+                        // 完成製作標題
+                        // 製作每一張筆記板
+                        let divRow = $('<div>').attr({'class':'row'});
+                        $.each(thumbnail, function(key, value){
+                            let divEachNotePanel = $('<div>').attr({'class':'each-note-panel col-sm-3'});
+                            let divDisplayDataBox = $('<div>').attr({'class':'display-data-box', 'style':'margin-right:1rem;'});
+                            let spanDescription = $('<span>').attr({'class':'description'}).text(value);
+                            let pPeriod = $('<p>').attr({'class':'period'}).text(key);
+                            divDisplayDataBox.append(spanDescription);
+                            divEachNotePanel.append(divDisplayDataBox);
+                            divEachNotePanel.append(pPeriod);
+                            divRow.append(divEachNotePanel);
+                        });
+                        divEachVideo.append(divDropdown);
+                        divEachVideo.append(divRow);
+                        $('#learningArea').append(divEachVideo);
+                        });
                 }else{
- 
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function selectExerciseAnswerArea(){
+    $('#selectExerciseAnswerArea').click(function(event){
+        event.preventDefault();
+        $.ajax({
+            url: '/all_notes/',
+            type: 'post',
+            data: {'purpose': 'selectExerciseAnswerArea',},
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#learningArea').empty();
+                    $('#exerciseAnswerArea').empty();
+                    $('#selfDefinedArea').empty();
+                    $.each(res.data, function(index, subject){
+                        let subjectName = Object.keys(subject)[0];
+                        let thumbnail = subject[subjectName]
+
+                        let divEachSubject = $('<div>').attr({'class':'each-subject',});
+                        let h4Header = $('<h4>').attr({'class':'subject-name'}).text(subjectName);
+                        // 製作每一張筆記板
+                        let divRow = $('<div>').attr({'class':'row'});
+                        $.each(thumbnail, function(index, ansInfo){
+                            let divEachNotePanel = $('<div>').attr({'class':'each-note-panel col-sm-3'});
+                            let divDisplayDataBox = $('<div>').attr({'class':'display-data-box', 'style':'margin-right:1rem;'});
+                            let spanDateAnswer = $('<span>').attr({'class':'date-answer'}).text(ansInfo[1]);
+                            let pAuthorId = $('<p>').attr({'class':'author-id'}).text(ansInfo[0]);
+                            divDisplayDataBox.append(spanDateAnswer);
+                            divEachNotePanel.append(divDisplayDataBox);
+                            divEachNotePanel.append(pAuthorId);
+                            divRow.append(divEachNotePanel);
+                        });
+                        divEachSubject.append(h4Header);
+                        divEachSubject.append(divRow);
+                        $('#exerciseAnswerArea').append(divEachSubject);
+                        });
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    });
+}
+
+function selectSelfDefinedArea(){
+    $('#selectSelfDefinedArea').click(function(event){
+        event.preventDefault();
+        $.ajax({
+            url: '/all_notes/',
+            type: 'post',
+            data: {'purpose': 'selectSelfDefinedArea',},
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    $('#learningArea').empty();
+                    $('#exerciseAnswerArea').empty();
+                    $('#selfDefinedArea').empty();
+                    $.each(res.data, function(index, path){
+                        let location = Object.keys(path)[0];
+                        let thumbnail = path[location]
+
+                        let divEachLocation = $('<div>').attr({'class':'each-location',});
+                        let h4Header = $('<h4>').attr({'class':'location', 'style':'margin-top:1rem; margin-bottom:0.3rem;'}).text(location);
+                        // 製作每一張筆記板
+                        let divRow = $('<div>').attr({'class':'row'});
+                        $.each(thumbnail, function(index, panelName){
+                            let divEachNotePanel = $('<div>').attr({'class':'each-note-panel col-sm-3'});
+                            let divDisplayDataBox = $('<div>').attr({'class':'display-data-box', 'style':'margin-right:1rem; margin-top:0.5rem;'});
+                            let spanPanelName = $('<span>').attr({'class':'panel-name'}).text(panelName);
+                            divDisplayDataBox.append(spanPanelName);
+                            divEachNotePanel.append(divDisplayDataBox);
+                            divRow.append(divEachNotePanel);
+                        });
+                        divEachLocation.append(h4Header);
+                        divEachLocation.append(divRow);
+                        $('#selfDefinedArea').append(divEachLocation);
+                        });
+                }else{
+                    alert(res.error);
                 }
             }
         }); // end of ajax
