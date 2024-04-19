@@ -31,9 +31,35 @@ active
             <a id='selectSelfDefinedArea' class="dropdown-item" href="#">自定義筆記區</a>
             </div>
         </div>
-        <div class='search-container'>
-            <a href='#'><i id='SearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
-            <input id='SearchInput' class='search-input' type='text' placeholder='搜尋' style='display:none;'>
+        <div id='learningSearch' class='search-container-group'>
+            <div id='learningHeaderSearch' class='search-container'>
+                <a href='#'><i id='learningHeaderSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='learningHeaderSearchInput' class='search-input' type='text' placeholder='影片ID、課名、講者'>
+            </div>
+            <div id='learningPanelSearch' class='search-container'>
+                <a href='#'><i id='learningPanelSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='learningPanelSearchInput' class='search-input' type='text' placeholder='標題'>
+            </div>
+        </div>
+        <div id='exerciseAnswerSearch' class='search-container-group'>
+            <div id='exerciseHeaderSearch' class='search-container'>
+                <a href='#'><i id='exerciseHeaderSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='exerciseHeaderSearchInput' class='search-input' type='text' placeholder='科目'>
+            </div>
+            <div id='exercisePanelSearch' class='search-container'>
+                <a href='#'><i id='exercisePanelSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='exercisePanelSearchInput' class='search-input' type='text' placeholder='期數、題號、作者ID' >
+            </div>
+        </div>
+        <div id='selfDefinedSearch' class='search-container-group'>
+            <div id='selfDefinedHeaderSearch' class='search-container'>
+                <a href='#'><i id='selfDefinedHeaderSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='selfDefinedHeaderSearchInput' class='search-input' type='text' placeholder='位址'>
+            </div>
+            <div id='selfDefinedPanelSearch' class='search-container'>
+                <a href='#'><i id='selfDefinedPanelSearchIcon' class="fa-solid fa-magnifying-glass search-icon"></i></a>
+                <input id='selfDefinedPanelSearchInput' class='search-input' type='text' placeholder='標題'>
+            </div>
         </div>
     </div>
     <div id='learningArea'>
@@ -53,17 +79,23 @@ active
 
 <script>
     $(function(){
-        searchModule.init('SearchIcon', 'SearchInput', '#learningArea .each-video');
+        searchModule.init('learningHeaderSearchIcon', 'learningHeaderSearchInput', '#learningArea .each-video');
+        searchModule.init('learningPanelSearchIcon', 'learningPanelSearchInput', '#learningArea .each-note-panel');
+        searchModule.init('exerciseHeaderSearchIcon', 'exerciseHeaderSearchInput', '#exerciseAnswerArea .each-subject');
+        searchModule.init('exercisePanelSearchIcon', 'exercisePanelSearchInput', '#exerciseAnswerArea .each-note-panel');
+        searchModule.init('selfDefinedHeaderSearchIcon', 'selfDefinedHeaderSearchInput', '#selfDefinedArea .each-location');
+        searchModule.init('selfDefinedPanelSearchIcon', 'selfDefinedPanelSearchInput', '#selfDefinedArea .each-note-panel');
         selectLearningArea();
         selectExerciseAnswerArea();
         selectSelfDefinedArea();
         copyLink();
         toLearningArea();
+        clickNotePanel();
     })
 
 const searchModule = (function() {
     // Private functions
-    function toggleSearchInput(searchInputId) {
+    /*function toggleSearchInput(searchInputId) {
         $(`#${searchInputId}`).toggle();
         if ($(`#${searchInputId}`).is(":visible")) {
             $(`#${searchInputId}`).focus(); // Focus on the input field when it becomes visible
@@ -74,25 +106,28 @@ const searchModule = (function() {
                 $(`#${searchInputId}`).hide();
             }
         });
-    }
+    }*/
     
     function filter(searchInputId, searchArea) {
-        let searchText = $(`#${searchInputId}`).val();
+        let searchText = $(`#${searchInputId}`).val().toLowerCase();
 
         if(searchArea === '#learningArea .each-video'){
             $(searchArea).each(function() {
-                let text = $(this).find('.video-id').text();
+                let videoId = $(this).find('.video-id').text().toLowerCase();
+                let lecturer = $(this).attr('lecturer').toLowerCase();
+                let course = $(this).attr('course').toLowerCase();
 
-                if (text.includes(searchText)) {
+                if (videoId.includes(searchText) || lecturer.includes(searchText) || course.includes(searchText)) {
                     $(this).show();
-                } else {
+                }else{
                     $(this).hide();
                 }
             });
 
-        }else if(searchArea === '#playlistVideoContainer .row'){
+        }else if(searchArea === '#learningArea .each-note-panel'){
+            //$('.each-video').show();
             $(searchArea).each(function() {
-                let text = $(this).find('.video').text().toLowerCase();
+                let text = $(this).find('.description').text().toLowerCase();
         
                 if (text.includes(searchText)) {
                     $(this).show();
@@ -100,11 +135,54 @@ const searchModule = (function() {
                     $(this).hide();
                 }
             });
+            /*$('.each-video').each(function() {
+                var hasDisplayedPanel = false;
+                $(this).find('.each-note-panel').each(function() {
+                    if ($(this).css('display') !== 'none') {
+                        hasDisplayedPanel = true;
+                        return false; // Exit the inner loop early
+                    }
+                });
+                if (!hasDisplayedPanel) {
+                    $(this).hide();
+                }
+            });*/
+
+        }else if(searchArea === '#exerciseAnswerArea .each-subject'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.subject-name').text().toLowerCase();
+
+                if (text.includes(searchText)) {
+                    $(this).show();
+                }else{
+                    $(this).hide();
+                }
+            });
+
+        }else if(searchArea === '#exerciseAnswerArea .each-note-panel'){
+            $(searchArea).each(function() {
+                let dateAnswer = $(this).find('.date-answer').text().toLowerCase();
+                let authorId = $(this).find('.author-id').text().toLowerCase();
         
+                if (dateAnswer.includes(searchText) || authorId.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }else if(searchArea === '#selfDefinedArea .each-location'){
+            $(searchArea).each(function() {
+                let text = $(this).find('.location').text().toLowerCase();
+
+                if (text.includes(searchText)) {
+                    $(this).show();
+                }else{
+                    $(this).hide();
+                }
+            });
         }else{
-            // for showMoreModal, periodPanelModal 
             $(searchArea).each(function() {
-                let text = $(this).text().toLowerCase();
+                let text = $(this).find('.panel-name').text().toLowerCase();
         
                 if (text.includes(searchText)) {
                     $(this).show();
@@ -114,13 +192,12 @@ const searchModule = (function() {
             });
         }
     }
-    
     // Public function
     function init(searchIconId, searchInputId, searchArea) {
-        $(`#${searchIconId}`).click(function(event) {
+        /*$(`#${searchIconId}`).click(function(event) {
             event.preventDefault();
             toggleSearchInput(searchInputId);
-        });
+        });*/
         $(`#${searchInputId}`).on('input', function() {
             filter(searchInputId, searchArea);
         });
@@ -254,6 +331,11 @@ function toLearningArea(){
 function selectLearningArea(){
     $('#selectLearningArea').click(function(event){
         event.preventDefault();
+        
+        $('#exerciseAnswerSearch').hide();
+        $('#selfDefinedSearch').hide();
+        $('#learningSearch').show();
+
         $.ajax({
             url: '/all_notes/',
             type: 'post',
@@ -311,6 +393,11 @@ function selectLearningArea(){
 function selectExerciseAnswerArea(){
     $('#selectExerciseAnswerArea').click(function(event){
         event.preventDefault();
+
+        $('#learningSearch').hide();
+        $('#selfDefinedSearch').hide();
+        $('#exerciseAnswerSearch').show();
+
         $.ajax({
             url: '/all_notes/',
             type: 'post',
@@ -354,6 +441,11 @@ function selectExerciseAnswerArea(){
 function selectSelfDefinedArea(){
     $('#selectSelfDefinedArea').click(function(event){
         event.preventDefault();
+
+        $('#learningSearch').hide();
+        $('#exerciseAnswerSearch').hide();
+        $('#selfDefinedSearch').show();
+
         $.ajax({
             url: '/all_notes/',
             type: 'post',
@@ -390,6 +482,112 @@ function selectSelfDefinedArea(){
             }
         }); // end of ajax
     });
+}
+
+function clickNotePanel(){
+    clickLearningNotePanel();
+    clickExerciseAnswerNotePanel();
+    clickSelfDefinedNotePanel();
+}
+
+function clickLearningNotePanel(){
+    $('#learningArea').on('click', '.display-data-box', function(){
+        let lecturer = $(this).closest('.each-video').attr('lecturer');
+        let course = $(this).closest('.each-video').attr('course');
+        let videoId = $(this).closest('.each-video').find('.video-id').text();
+        let directoryName = lecturer + '[]' + course + '[]' + videoId;
+        let description = $(this).find('.description').text();
+        let period = $(this).next().text();
+        let panelName = period + '-' + description; // 在後台還要把:改成;
+        $.ajax({
+            url: '/all_notes/',
+            type: 'post',
+            data: {
+                'purpose': 'clickLearningNotePanel',
+                'directoryName': directoryName,
+                'panelName': panelName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data) + '&panelName=' + encodeURIComponent(panelName), '_blank',);
+                    setInterval(function() { // 設置newTab的title, 重新整理以後也會正確
+                        if (newTab.closed) {
+                            clearInterval();
+                        }else {
+                                newTab.document.title = panelName;
+                            }
+                        }, 1000);
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    })
+}
+
+function clickExerciseAnswerNotePanel(){
+    $('#exerciseAnswerArea').on('click', '.display-data-box', function(){
+        let dateAnswer = $(this).find('.date-answer').text();
+        let authorId = $(this).next().text();
+        let panelName = authorId + '[]' + dateAnswer.replace('-', '[]');
+        let chineseSubject = $(this).closest('.each-subject').find('.subject-name').text(); //後台要把中文轉回英文才能找到對應的資料夾
+        $.ajax({
+            url: '/all_notes/',
+            type: 'post',
+            data: {
+                'purpose': 'clickExerciseAnswerNotePanel',
+                'chineseSubject': chineseSubject,
+                'panelName': panelName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data) + '&panelName=' + encodeURIComponent(panelName), '_blank',);
+                    setInterval(function() { // 設置newTab的title, 重新整理以後也會正確
+                        if (newTab.closed) {
+                            clearInterval();
+                        }else {
+                                newTab.document.title = panelName;
+                            }
+                        }, 1000);
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    })
+}
+
+function clickSelfDefinedNotePanel(){
+    $('#selfDefinedArea').on('click', '.display-data-box', function(){
+        let location = $(this).closest('.each-location').find('.location').text();
+        let panelName = $(this).find('.panel-name').text();
+        $.ajax({
+            url: '/all_notes/',
+            type: 'post',
+            data: {
+                'purpose': 'clickSelfDefinedNotePanel',
+                'location': location,
+                'panelName': panelName,
+            },
+            dataType: 'JSON',
+            success: function(res){
+                if(res.status){
+                    let newTab = window.open('/view_panel/?path=' + encodeURIComponent(res.data) + '&panelName=' + encodeURIComponent(panelName), '_blank',);
+                    setInterval(function() { // 設置newTab的title, 重新整理以後也會正確
+                        if (newTab.closed) {
+                            clearInterval();
+                        }else {
+                                newTab.document.title = panelName;
+                            }
+                        }, 1000);
+                }else{
+                    alert(res.error);
+                }
+            }
+        }); // end of ajax
+    })
 }
 
 </script>

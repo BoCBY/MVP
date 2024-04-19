@@ -82,9 +82,3 @@ def clean_self_defined(root_directory_path=SELF_DEFINED_AREA_PATH):
         location_list.append(location)
     return location_list
     
-video_list = clean_learning()
-subject_list = clean_exercise_answer()
-location_list = clean_self_defined()
-print(video_list,len(video_list) ,'\n')
-print(subject_list, '\n')
-print(location_list, '\n')

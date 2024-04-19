@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from apps.learning_area.utils import process_time
 
-# 學習區的路徑
+
 COMPUTER_DESK = os.path.join('C:\\', 'Users', 'admin', 'Desktop')
 NOTEBOOK_DESK = os.path.join('C:\\', 'Users', 'jerry', 'OneDrive', '桌面')
 USER_INFO = os.path.join('structure', 'Server', 'cust', 'user_info')
@@ -14,6 +14,7 @@ USER_INFO = os.path.join('structure', 'Server', 'cust', 'user_info')
 COMPUTER_USER_INFO_PATH = os.path.join(COMPUTER_DESK, USER_INFO)
 NOTEBOOK_USER_INFO_PATH = os.path.join(NOTEBOOK_DESK, USER_INFO)
 
+# 學習區的路徑
 LEARNING = os.path.join('email#1', 'learning') # 根據用戶所註冊的email來修改email#1, 也就是email#1要是動態的
 LEARNING_COMPUTER_PATH = os.path.join(COMPUTER_USER_INFO_PATH, LEARNING) # 到達此用戶學習區用來放置各個影片的筆記空間 -> 一個url對應一個資料夾
 LEARNING_NOTEBOOK_PATH = os.path.join(NOTEBOOK_USER_INFO_PATH, LEARNING)

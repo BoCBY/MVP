@@ -24,7 +24,7 @@ from apps.note_area.views import note, note_panel
 from apps.exercise_area.views import exercise, file, like_dislike
 from apps.all_notes_area.views import all_notes
 
-
+ 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     
