@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom TipTap Editor</title>
+  <style>
+    /* Styles for the highlight node */
+    .highlight {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor"></div>
+
+  
+  <script type='module'>
+  import { Editor } from 'https://esm.sh/@tiptap/core'
+  import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
+  import Highlight from 'https://esm.sh/@tiptap/extension-highlight'
+  
+
+    // Initialize the editor with the highlight node
+    const editor = new Editor({
+      element: document.getElementById('editor'),
+      extensions: [
+        Highlight,
+        StarterKit,
+      ],
+	  content: '<p>hello world!</p>',
+    });
+
+    // Add a button to highlight selected text
+    const highlightButton = document.createElement('button');
+    highlightButton.textContent = 'Highlight';
+    highlightButton.addEventListener('click', () => {
+      editor.chain().focus().toggleHighlight().run();
+    });
+
+    // Add the button to the document
+    document.body.prepend(highlightButton);
+  </script>
+</body>
+</html>

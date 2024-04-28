@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TipTap Editor Example</title>
+</head>
+<body>
+  <button id="noteButton">Open Note Panel</button>
+  <div id="notePanel" class="draggable-panel" style="display: none;">
+    <div class="panel-header">
+        <span class="close" id="closeButton">&times;</span>
+        <span class="drag-handle">&#9776;</span>
+    </div>
+    <div class="panel-content" id="editorContainer"></div>
+    <div class="panel-footer">
+        Transparency:
+        <input type="range" min="0" max="1" step="0.1" value="0.9" id="transparencyRange">
+    </div>
+</div>
+  
+  <script type='module'>
+	import { Editor } from 'https://esm.sh/@tiptap/core'
+	import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
+
+	let editor = null;
+	
+	document.getElementById("noteButton").addEventListener("click", function() {
+		var notePanel = document.getElementById("notePanel");
+		if (notePanel.style.display === "none") {
+			notePanel.style.display = "block";
+		} else {
+			notePanel.style.display = "none";
+		}
+	});
+
+	  editor = new Editor({
+		element: editorContainer,
+		content: '<p>Hello, world!</p>',
+		extensions: [
+		  StarterKit,
+		],
+	  });
+		
+	const boldButton = document.createElement('button');
+	boldButton.textContent = 'Bold';
+	boldButton.addEventListener('click', () => {
+	  editor.chain().focus().toggleBold().run();
+	});
+
+	// Add the button to the document
+	document.getElementById('editorContainer').prepend(boldButton);
+  </script>
+  
+</body>
+</html>

@@ -1,23 +1,36 @@
-<div class='each-video' lecturer='' course=''>
-	<div class="btn-group dropdown">
-		<a href='#' class='dropdown-toggle' data-toggle="dropdown" aria-expanded="false" style='color:black;'>
-			<strong class='video-id' style='font-size:2rem;'>影片id</strong>
-		</a>
-		<div class="dropdown-menu">
-			<a href="#" class="dropdown-item copy-link">複製影片連結</a>
-			<a href="#" class="dropdown-item to-learning-area">前往學習區</a>
-		</div>
-	</div>  
-	<div class='row'>
-		<div class='each-note-panel col-sm-3'>
-			<div class='display-data-box' style='margin-right:1rem;'>                       
-				<span class='description'>剖析一般項的係數數學結構3333</span>                       
-			</div>
-			<p class='period'>00:13:30~00:16:10</p>
-		</div>
-		<div class='each-note-panel col-sm-3'>
-			<div class='display-data-box' style='margin-right:1rem;'>                       
-				<span class='description'>剖析一般項的係數數學結構3333</span>                       
-			</div>
-			<p class='period'>00:13:30~00:16:10</p>
-		</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TipTap Editor Example</title>
+</head>
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+</div>
+  
+  <script type='module'>
+	const canvas = document.querySelector('#draw');
+const ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+
+// Draw a circle at position (100, 100) with radius 50,
+// starting at 0 radians and ending at Math.PI * 2 (a full circle)
+ctx.arc(100, 100, 50, 0, Math.PI * 2);
+
+// Set the fill style
+ctx.fillStyle = 'blue';
+// Fill the path (fill the circle)
+ctx.fill();
+
+// Draw a smaller circle inside the first circle
+ctx.beginPath();
+ctx.arc(100, 100, 30, 0, 2);
+ctx.fillStyle = 'white';
+ctx.fill();
+
+  </script>
+  
+</body>
+</html>
